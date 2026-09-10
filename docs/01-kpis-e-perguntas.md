@@ -665,6 +665,13 @@ Três consequências que importam:
 O teste dbt, então, é sobre `sum(unitprice * orderqty)` com `extract(year from orderdate)
 = 2011`, esperando `12646112.16`.
 
+⚠️ **O teste tem de comparar em centavos, não em igualdade exata.** A soma exata é
+`12646112.1607`: `unitprice` tem 4 casas decimais e **2.832 dos 5.642 itens de 2011** usam
+as quatro. O briefing informa o número já arredondado, então a asserção é
+`round(soma, 2) = 12646112.16`. Confirmado no Databricks e na aritmética decimal dos
+arquivos de origem, dígito por dígito — e é essa quarta casa que justifica
+`decimal(19, 4)` em vez de `double`.
+
 > Nota de leitura para a apresentação: 2011 tem só 1.607 pedidos dos 31.465 do dataset, e é
 > um ano dominado por revenda. Não use 2011 como retrato do negócio — ele é o ano do
 > **teste**, não da análise.

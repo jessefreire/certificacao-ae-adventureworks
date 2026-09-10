@@ -3331,15 +3331,27 @@ from workspace.adventure_works.salesorderheader;
 -- COMMAND ----------
 
 /* ------------------------------------------------------------------------
-4. O teste de aceite do CEO
-Tem de dar 12646112.16 exato. Se vier arredondado, o tipo virou float
-em algum ponto da carga.
+   4. O teste de aceite do CEO
+
+      Tem de dar 12646112.16 em centavos. A soma exata e 12646112.1607: o
+      unitprice tem 4 casas decimais e 2.832 dos 5.642 itens de 2011 usam as
+      quatro. O briefing informa o numero ja arredondado, entao a comparacao e
+      com round(soma, 2) — comparar com igualdade exata contra um literal de
+      duas casas nunca poderia fechar, e foi o erro da primeira versao deste
+      teste.
+
+A quarta casa e justamente o que se perderia com double: 2.832
+multiplicacoes de preco com 4 decimais acumulam residuo binario, e o
+arredondamento pode cair para .15 ou .17. Com decimal(19, 4) a soma bate
+digito por digito com a aritmetica exata medida nos arquivos de origem.
 ------------------------------------------------------------------------ */
 select
-    12646112.16 as esperado
+    12646112.16 as esperado_em_centavos
+    , 12646112.1607 as esperado_exato
     , sum(salesorderdetail.unitprice * salesorderdetail.orderqty) as receita_bruta_2011
     , case
-        when sum(salesorderdetail.unitprice * salesorderdetail.orderqty) = 12646112.16
+        when round(sum(salesorderdetail.unitprice * salesorderdetail.orderqty), 2)
+            = 12646112.16
             then 'FECHA'
         else 'DIVERGE'
     end as resultado
