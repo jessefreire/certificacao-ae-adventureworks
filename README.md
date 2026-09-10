@@ -49,8 +49,8 @@ Os três scripts de `databricks/` são a etapa de EL. Os nomes de tabela são ab
 
 **A forma recomendada de rodar** é importar
 [`00-ingestao-adventure-works.sql`](databricks/00-ingestao-adventure-works.sql) como
-notebook no Databricks (`Workspace → Import → File`). São 140 células: 5 de markdown
-explicando cada bloco e 135 de SQL, **uma instrução por célula**. Isso não é enfeite — o
+notebook no Databricks (`Workspace → Import → File`). São 144 células: 6 de markdown
+explicando cada bloco e 138 de SQL, **uma instrução por célula**. Isso não é enfeite — o
 `COPY INTO` roda com `mode = FAILFAST`, e com as 65 cargas numa célula só a falha diria
 "deu erro" sem dizer em qual tabela.
 
@@ -65,6 +65,7 @@ Alternativa: colar cada arquivo num editor SQL, na ordem.
 | # | Arquivo | O que faz |
 |---|---|---|
 | 1 | [`01-ddl-adventure-works.sql`](databricks/01-ddl-adventure-works.sql) | 65 tabelas vazias. Traduz o `install.sql` (Postgres) para Databricks. Dinheiro em `decimal(19, 4)`, nunca `double` |
+| 1.1 | [`01.01-conferencia-da-estrutura.sql`](databricks/01.01-conferencia-da-estrutura.sql) | 3 conferências antes de carregar 79 MB: as 65 tabelas nasceram, dinheiro ficou `decimal(19, 4)` e não sobrou ponto flutuante no schema |
 | 2 | [`02-carga-adventure-works.sql`](databricks/02-carga-adventure-works.sql) | 65 `COPY INTO` com 437 casts explícitos por posição, porque os TSV **não têm cabeçalho** |
 | 3 | [`03-verificacao-da-carga.sql`](databricks/03-verificacao-da-carga.sql) | 5 conferências. Roda **antes** de qualquer análise: se falhar, todo número da exploração fica suspeito |
 
@@ -114,6 +115,12 @@ resultado de `sqlfluff fix --force` sobre ela.
 Segue o [`indicium-code-style`](https://bitbucket.org/indiciumtech/indicium-code-style):
 prefixos `stg_`/`dim_`/`fact_`/`agg_`/`bridge_`, sqlfluff 1.4.5, 4 espaços, ≤100 colunas,
 vírgula à frente, `inner join` explícito.
+
+Toda consulta deste repositório vem comentada, declarando **o que se confere**, **o que
+se espera ver** e **por que importa** — e, nas de verificação, **o que fazer se
+divergir**. Quando existe um número de referência, ele entra como coluna `esperado` e o
+SQL calcula `resultado` (`ok`/`DIVERGE`): quem roda não precisa saber de cor que são 65
+tabelas ou que a receita de 2011 é 12.646.112,16.
 
 Detalhes de cada decisão, e o que ainda está aberto, ficam nos anexos do documento da
 Etapa 1.
