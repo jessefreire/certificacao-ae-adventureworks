@@ -1,26 +1,18 @@
-# O sqlfluff 1.4.5 — a versao que o code style da Indicium fixa — nao conhece
-# a sintaxe COPY INTO do Databricks: o parser devolve "unparsable section" nos
-# 65 comandos. Nao e erro do SQL; e limitacao do parser daquela versao, que e
-# de 2022.
+# Uma linha, um motivo.
 #
-# Consequencia pratica: este arquivo nao passa por lint. O DDL
-# (01-ddl-adventure-works.sql) e a conferencia (01.01) passam e estao limpos, e todo SQL do notebook de
-# analise tambem vai passar, porque e select puro.
+# O sqlfluff 1.4.5 — a versao que o code style da Indicium fixa, de 2022 — nao
+# parseia a sintaxe de ingestao do Databricks. Nem `COPY INTO`, nem o parametro
+# nomeado do `read_files` (`format => 'csv'`). Nao e erro do SQL: e limitacao do
+# parser daquela versao.
 #
-# Se algum dia o guia da casa subir a versao fixada, remover esta linha e
-# conferir de novo.
-# A carga vem em cinco arquivos, um por schema da origem: rodar as 65 instrucoes
-# de uma vez estoura o limite da Free Edition (RESOURCE_EXHAUSTED).
-02.00-carga-escopo-minimo.sql
-02.01-carga-person.sql
-02.02-carga-human-resources.sql
-02.03-carga-production.sql
-02.04-carga-purchasing.sql
-02.05-carga-sales.sql
-02.99-recarga-limpa.sql
-
-# Fonte de notebook do Databricks, gerada a partir dos tres arquivos acima. Contem
-# os mesmos 65 COPY INTO, logo o mesmo problema de parse. Nao perdemos cobertura:
-# o SQL dele e linteado na ORIGEM (01 e 03), e editar o notebook a mao e proibido
-# pela propria nota no topo do arquivo — para mudar algo, muda-se o gerador.
-00-ingestao-adventure-works.sql
+# Sem esta linha, o `sqlfluff lint databricks/` acusaria 65 secoes ilegiveis e
+# afogaria qualquer violacao de verdade.
+#
+# Nao perdemos cobertura por isso. O `scripts/linta_notebook.py` abre este mesmo
+# arquivo celula por celula e SEPARA as duas familias: as 65 de ingestao sao
+# declaradas como nao suportadas, e as 6 de conferencia sao linteadas de verdade,
+# com exigencia de zero violacao. O mesmo vale para as 31 celulas do notebook de
+# analise.
+#
+# Se algum dia o guia da casa subir a versao fixada, apagar esta linha e conferir.
+ingestao-adventure-works.sql
