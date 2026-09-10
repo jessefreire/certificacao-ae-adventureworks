@@ -65,7 +65,7 @@ Alternativa: colar cada arquivo num editor SQL, na ordem.
 | # | Arquivo | O que faz |
 |---|---|---|
 | 1 | [`01-ddl-adventure-works.sql`](databricks/01-ddl-adventure-works.sql) | 65 tabelas vazias. Traduz o `install.sql` (Postgres) para Databricks. Dinheiro em `decimal(19, 4)`, nunca `double` |
-| 1.1 | [`01.01-conferencia-da-estrutura.sql`](databricks/01.01-conferencia-da-estrutura.sql) | 3 conferências antes de carregar 79 MB: as 65 tabelas nasceram, dinheiro ficou `decimal(19, 4)` e não sobrou ponto flutuante no schema |
+| 1.1 | [`01.01-conferencia-da-estrutura.sql`](databricks/01.01-conferencia-da-estrutura.sql) | 3 conferências antes de carregar 79 MB: as 65 tabelas nasceram, dinheiro veio `DECIMAL` e a precisão é 19 e 4 |
 | 2 | [`02-carga-adventure-works.sql`](databricks/02-carga-adventure-works.sql) | 65 `COPY INTO` com 437 casts explícitos por posição, porque os TSV **não têm cabeçalho** |
 | 3 | [`03-verificacao-da-carga.sql`](databricks/03-verificacao-da-carga.sql) | 5 conferências. Roda **antes** de qualquer análise: se falhar, todo número da exploração fica suspeito |
 
@@ -116,11 +116,9 @@ Segue o [`indicium-code-style`](https://bitbucket.org/indiciumtech/indicium-code
 prefixos `stg_`/`dim_`/`fact_`/`agg_`/`bridge_`, sqlfluff 1.4.5, 4 espaços, ≤100 colunas,
 vírgula à frente, `inner join` explícito.
 
-Toda consulta deste repositório vem comentada, declarando **o que se confere**, **o que
-se espera ver** e **por que importa** — e, nas de verificação, **o que fazer se
-divergir**. Quando existe um número de referência, ele entra como coluna `esperado` e o
-SQL calcula `resultado` (`ok`/`DIVERGE`): quem roda não precisa saber de cor que são 65
-tabelas ou que a receita de 2011 é 12.646.112,16.
+Toda consulta deste repositório vem comentada, em uma ou duas linhas, dizendo **o que se
+confere** e **qual o valor esperado**. Comentário curto: o objetivo é entender a consulta
+de relance, não ler um parágrafo antes de rodá-la.
 
 Detalhes de cada decisão, e o que ainda está aberto, ficam nos anexos do documento da
 Etapa 1.
