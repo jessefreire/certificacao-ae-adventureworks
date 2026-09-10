@@ -4,12 +4,18 @@
 # de 2022.
 #
 # Consequencia pratica: este arquivo nao passa por lint. O DDL
-# (01-ddl-adventure-works.sql) passa e esta limpo, e todo SQL do notebook de
+# (01-ddl-adventure-works.sql) e a conferencia (01.01) passam e estao limpos, e todo SQL do notebook de
 # analise tambem vai passar, porque e select puro.
 #
 # Se algum dia o guia da casa subir a versao fixada, remover esta linha e
 # conferir de novo.
-02-carga-adventure-works.sql
+# A carga vem em cinco arquivos, um por schema da origem: rodar as 65 instrucoes
+# de uma vez estoura o limite da Free Edition (RESOURCE_EXHAUSTED).
+02.01-carga-person.sql
+02.02-carga-human-resources.sql
+02.03-carga-production.sql
+02.04-carga-purchasing.sql
+02.05-carga-sales.sql
 
 # Fonte de notebook do Databricks, gerada a partir dos tres arquivos acima. Contem
 # os mesmos 65 COPY INTO, logo o mesmo problema de parse. Nao perdemos cobertura:

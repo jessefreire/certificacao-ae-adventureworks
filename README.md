@@ -44,17 +44,17 @@ Indicium são nativas.
 
 ## Ingestão no Databricks
 
-Os três scripts de `databricks/` são a etapa de EL. Os nomes de tabela são absolutos
+Os scripts de `databricks/` são a etapa de EL. Os nomes de tabela são absolutos
 (`workspace.adventure_works.<tabela>`), então não depende do catálogo selecionado.
 
 **A forma recomendada de rodar** é importar
 [`00-ingestao-adventure-works.sql`](databricks/00-ingestao-adventure-works.sql) como
-notebook no Databricks (`Workspace → Import → File`). São 144 células: 6 de markdown
+notebook no Databricks (`Workspace → Import → File`). São 149 células: 11 de markdown
 explicando cada bloco e 138 de SQL, **uma instrução por célula**. Isso não é enfeite — o
 `COPY INTO` roda com `mode = FAILFAST`, e com as 65 cargas numa célula só a falha diria
 "deu erro" sem dizer em qual tabela.
 
-Esse notebook é **gerado** a partir dos três arquivos abaixo, que continuam sendo a fonte
+Esse notebook é **gerado** a partir dos arquivos abaixo, que continuam sendo a fonte
 versionada e linteada. Editar célula à mão cria duas versões do mesmo SQL; para mudar algo,
 muda-se o gerador e regera. Rodar tudo de novo é seguro: `create or replace` e
 `force = true` recriam e recarregam do Volume, chegando ao mesmo resultado — o custo é
@@ -66,8 +66,29 @@ Alternativa: colar cada arquivo num editor SQL, na ordem.
 |---|---|---|
 | 1 | [`01-ddl-adventure-works.sql`](databricks/01-ddl-adventure-works.sql) | 65 tabelas vazias. Traduz o `install.sql` (Postgres) para Databricks. Dinheiro em `decimal(19, 4)`, nunca `double` |
 | 1.1 | [`01.01-conferencia-da-estrutura.sql`](databricks/01.01-conferencia-da-estrutura.sql) | 3 conferências antes de carregar 79 MB: as 65 tabelas nasceram, dinheiro veio `DECIMAL` e a precisão é 19 e 4 |
-| 2 | [`02-carga-adventure-works.sql`](databricks/02-carga-adventure-works.sql) | 65 `COPY INTO` com 437 casts explícitos por posição, porque os TSV **não têm cabeçalho** |
+| 2.1 | [`02.01-carga-person.sql`](databricks/02.01-carga-person.sql) | 13 tabelas. `Person` guarda `address`, `stateprovince` e `countryregion` — sem ele não existe corte por cidade, estado ou país |
+| 2.2 | [`02.02-carga-human-resources.sql`](databricks/02.02-carga-human-resources.sql) | 6 tabelas |
+| 2.3 | [`02.03-carga-production.sql`](databricks/02.03-carga-production.sql) | 22 tabelas. É onde vive a hierarquia produto → subcategoria → categoria |
+| 2.4 | [`02.04-carga-purchasing.sql`](databricks/02.04-carga-purchasing.sql) | 5 tabelas |
+| 2.5 | [`02.05-carga-sales.sql`](databricks/02.05-carga-sales.sql) | 19 tabelas. O núcleo do desafio: pedido, item, motivo de venda, oferta, território |
 | 3 | [`03-verificacao-da-carga.sql`](databricks/03-verificacao-da-carga.sql) | 5 conferências. Roda **antes** de qualquer análise: se falhar, todo número da exploração fica suspeito |
+
+### Por que a carga vem em cinco arquivos
+
+Rodar as 65 instruções de `COPY INTO` numa requisição só **estoura o limite da Free
+Edition**, com `RESOURCE_EXHAUSTED` (a mensagem chega disfarçada de
+`ValueError: Code in Status proto ... doesn't match status code`, que é o cliente se
+confundindo ao traduzir o status). Aconteceu aqui, e não é erro de dado: o SQL está
+correto, o compute é que não aceita o lote.
+
+O corte segue os cinco schemas da origem — os mesmos que o briefing descreve —, então
+cada arquivo é uma área do negócio e o maior lote cai de 65 para 22 instruções.
+
+Repetir um arquivo depois de falha é seguro: `force = true` reescreve a tabela em vez de
+duplicar. Então, se estourar no meio, roda de novo o arquivo que faltou.
+
+Rodar pelo notebook contorna o problema por outro caminho: cada célula é uma requisição
+separada.
 
 ### Antes de rodar
 

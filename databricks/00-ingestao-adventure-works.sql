@@ -986,17 +986,27 @@ where table_schema = 'adventure_works'
 
 -- COMMAND ----------
 
--- Carga do AdventureWorks no Databricks
--- 65 tabelas. Cast explicito por posicao (_c0.._cN) porque o TSV
--- nao tem cabecalho. O caminho ja aponta para o volume real; se os arquivos
--- estiverem em outro lugar, o script e regerado a partir de uma variavel.
+-- MAGIC %md
+-- MAGIC ## 2.1 Schema Person
+
+-- COMMAND ----------
+
+-- Carga do AdventureWorks: schema Person (1 de 5)
+-- 13 tabelas. Cast explicito por posicao (_c0.._cN) porque o TSV
+-- nao tem cabecalho.
+--
+-- Por que a carga vem quebrada em cinco arquivos: rodar as 65 instrucoes de
+-- uma vez estoura o limite de recurso da Free Edition (RESOURCE_EXHAUSTED).
+-- O corte segue os cinco schemas da origem, entao cada arquivo e uma area do
+-- negocio. Rodar na ordem 02.01 a 02.05 e o esperado, mas eles sao
+-- independentes entre si: cada tabela le do seu proprio arquivo.
 --
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- Se voce subir os arquivos para outro caminho, avise: o script e regerado,
--- e melhor do que ajustar 65 caminhos a mao.
-
+-- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
+-- Entao repetir um arquivo depois de uma falha nao suja o dado.
+--
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
 
@@ -1304,6 +1314,30 @@ copy_options ('force' = 'true');
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## 2.2 Schema HumanResources
+
+-- COMMAND ----------
+
+-- Carga do AdventureWorks: schema HumanResources (2 de 5)
+-- 6 tabelas. Cast explicito por posicao (_c0.._cN) porque o TSV
+-- nao tem cabecalho.
+--
+-- Por que a carga vem quebrada em cinco arquivos: rodar as 65 instrucoes de
+-- uma vez estoura o limite de recurso da Free Edition (RESOURCE_EXHAUSTED).
+-- O corte segue os cinco schemas da origem, entao cada arquivo e uma area do
+-- negocio. Rodar na ordem 02.01 a 02.05 e o esperado, mas eles sao
+-- independentes entre si: cada tabela le do seu proprio arquivo.
+--
+-- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
+-- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
+--
+-- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
+-- Entao repetir um arquivo depois de uma falha nao suja o dado.
+--
+-- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
+-- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
+
 -- HumanResources.Department: 4 colunas
 copy into workspace.adventure_works.department
 from (
@@ -1451,6 +1485,30 @@ format_options (
 copy_options ('force' = 'true');
 
 -- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## 2.3 Schema Production
+
+-- COMMAND ----------
+
+-- Carga do AdventureWorks: schema Production (3 de 5)
+-- 22 tabelas. Cast explicito por posicao (_c0.._cN) porque o TSV
+-- nao tem cabecalho.
+--
+-- Por que a carga vem quebrada em cinco arquivos: rodar as 65 instrucoes de
+-- uma vez estoura o limite de recurso da Free Edition (RESOURCE_EXHAUSTED).
+-- O corte segue os cinco schemas da origem, entao cada arquivo e uma area do
+-- negocio. Rodar na ordem 02.01 a 02.05 e o esperado, mas eles sao
+-- independentes entre si: cada tabela le do seu proprio arquivo.
+--
+-- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
+-- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
+--
+-- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
+-- Entao repetir um arquivo depois de uma falha nao suja o dado.
+--
+-- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
+-- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
 
 -- Production.BillOfMaterials: 9 colunas
 copy into workspace.adventure_works.billofmaterials
@@ -1989,6 +2047,30 @@ copy_options ('force' = 'true');
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## 2.4 Schema Purchasing
+
+-- COMMAND ----------
+
+-- Carga do AdventureWorks: schema Purchasing (4 de 5)
+-- 5 tabelas. Cast explicito por posicao (_c0.._cN) porque o TSV
+-- nao tem cabecalho.
+--
+-- Por que a carga vem quebrada em cinco arquivos: rodar as 65 instrucoes de
+-- uma vez estoura o limite de recurso da Free Edition (RESOURCE_EXHAUSTED).
+-- O corte segue os cinco schemas da origem, entao cada arquivo e uma area do
+-- negocio. Rodar na ordem 02.01 a 02.05 e o esperado, mas eles sao
+-- independentes entre si: cada tabela le do seu proprio arquivo.
+--
+-- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
+-- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
+--
+-- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
+-- Entao repetir um arquivo depois de uma falha nao suja o dado.
+--
+-- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
+-- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
+
 -- Purchasing.ProductVendor: 11 colunas
 copy into workspace.adventure_works.productvendor
 from (
@@ -2127,6 +2209,30 @@ format_options (
 copy_options ('force' = 'true');
 
 -- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## 2.5 Schema Sales
+
+-- COMMAND ----------
+
+-- Carga do AdventureWorks: schema Sales (5 de 5)
+-- 19 tabelas. Cast explicito por posicao (_c0.._cN) porque o TSV
+-- nao tem cabecalho.
+--
+-- Por que a carga vem quebrada em cinco arquivos: rodar as 65 instrucoes de
+-- uma vez estoura o limite de recurso da Free Edition (RESOURCE_EXHAUSTED).
+-- O corte segue os cinco schemas da origem, entao cada arquivo e uma area do
+-- negocio. Rodar na ordem 02.01 a 02.05 e o esperado, mas eles sao
+-- independentes entre si: cada tabela le do seu proprio arquivo.
+--
+-- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
+-- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
+--
+-- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
+-- Entao repetir um arquivo depois de uma falha nao suja o dado.
+--
+-- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
+-- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
 
 -- Sales.CountryRegionCurrency: 3 colunas
 copy into workspace.adventure_works.countryregioncurrency
