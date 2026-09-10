@@ -118,6 +118,12 @@ select cast(_c0 as int) as addressid, ...
 from read_files('.../Address.csv', format => 'csv', sep => '\t', header => false, ...)
 ```
 
+As opções de leitura, e o que cada uma evita: `sep => '\t'` porque os arquivos têm extensão
+`.csv` mas são separados por tab; `nullValue => ''` porque sem ele campo vazio em coluna `int`
+recebe **0**, e "sem vendedor" viraria "vendedor 0"; `quote => '"'` porque o XML de algumas
+tabelas está entre aspas com as internas duplicadas, que é a convenção CSV; e
+`mode => 'FAILFAST'` para linha ruim derrubar a carga em vez de virar `NULL` em silêncio.
+
 Repetir uma célula **substitui** os dados em vez de somar. Não existe como duplicar. É a
 correção do pior erro desta etapa, e ela vive no código em vez de depender de quem roda — ver
 [Armadilhas pagas](#armadilhas-pagas).
@@ -243,6 +249,19 @@ de trabalho (`ValueError: Paths don't have the same drive`); o crash saía silen
 relatório dizia zero violação quando eram 78. As duas só apareceram por **teste negativo** —
 introduzir violação de propósito e confirmar que a ferramenta reprova. Vale repetir isso antes
 de confiar em qualquer "zero".
+
+**Duas tabelas quebravam a carga por defeito de origem, e a aspa CSV era a causa.** Eu havia
+desabilitado `quote` no leitor, com o raciocínio de que o XML de algumas tabelas tem aspas
+dentro do campo. Errado: o arquivo escapa aquelas aspas **duplicando-as**, que é exatamente a
+convenção CSV. Com a aspa desabilitada, um TAB dentro do XML partia o campo — e o `FAILFAST`
+derrubava a carga do `jobcandidate` (1 linha com 5 campos onde há 4) e do `productmodel` (6
+linhas fora do padrão, uma com **22** campos onde há 6). Habilitando `quote => '"'` as 65
+tabelas ficam consistentes, nenhuma contagem muda, e o XML entra limpo em vez de escapado —
+conferido campo a campo nas 17 da análise.
+
+E a auditoria que deveria ter pego isso antes conferia apenas a **primeira linha** de cada
+arquivo. Hoje o gerador confere **todas**, e falha alto se uma tabela tiver linhas com
+contagens diferentes de campos.
 
 **`group by all` não é parseável pela 1.4.5**, e eu havia usado em 37 lugares. O guia da casa
 também marca `group by 1, 2` como prática ruim — então a coluna vai escrita, uma por linha e com

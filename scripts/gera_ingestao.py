@@ -37,8 +37,16 @@ disciplina e passa a ser propriedade do codigo.
   - campo vazio precisa virar NULL. So no salesorderheader sao 27.659 salespersonid
     vazios. Sem `nullValue`, coluna int recebe 0 e "sem vendedor" viraria
     "vendedor 0" — um vendedor que nao existe, e a analise de canal iria por agua
-  - o person tem XML com aspas dentro do campo, entao `quote` fica desabilitado
-  - `mode => 'FAILFAST'`: linha ruim falha alto, em vez de virar NULL em silencio
+  - `quote => '"'`, ou seja aspa CSV HABILITADA. Eu havia desabilitado, com o
+    raciocinio de que o XML do `person` tem aspas dentro do campo. Estava errado: o
+    arquivo escapa aquelas aspas duplicando-as, que e exatamente a convencao CSV.
+    Desabilitar a aspa fazia o TAB dentro do XML partir o campo, e o FAILFAST
+    derrubava a carga do `jobcandidate` (1 linha ruim) e do `productmodel` (6, uma
+    delas com 22 campos onde ha 6 colunas). Com a aspa habilitada, as 65 tabelas
+    ficam consistentes, nenhuma contagem muda, e o XML entra limpo em vez de
+    escapado — conferido campo a campo nas 17 da analise.
+  - `mode => 'FAILFAST'`: linha ruim falha alto, em vez de virar NULL em silencio.
+    Foi ele que pegou o problema acima, e por isso fica
   - dinheiro em `decimal(19, 4)`, nunca `double`: o teste de aceite do briefing tem
     de fechar ao centavo, e a soma exata tem 4 casas decimais
 
@@ -186,12 +194,25 @@ def conta_linhas(arquivo):
 
 
 def campos_no_tsv(arquivo):
+    """Quantos campos por linha o arquivo tem — conferindo TODAS as linhas.
+
+    A primeira versao disto olhava so a primeira linha, e essa falha custou uma
+    carga interrompida: o `jobcandidate` tem 12 linhas com 4 campos e UMA com 5,
+    e o `productmodel` tem seis linhas fora do padrao, uma delas com 22 campos
+    onde ha 6 colunas. Com `mode = FAILFAST` — que e o certo — isso derruba a
+    carga na linha ruim, e nao no comeco.
+
+    Le com a aspa CSV habilitada, que e como o Databricks vai ler. Assim a
+    conferencia aqui e a carga la enxergam o mesmo arquivo.
+    """
     with open(ORIGEM / "data" / f"{arquivo}.csv", encoding="utf-8",
               errors="replace", newline="") as f:
-        for r in csv.reader(f, delimiter="\t", quoting=csv.QUOTE_NONE):
-            if r:
-                return len(r)
-    return 0
+        contagens = {len(r) for r in csv.reader(f, delimiter="\t", quotechar='"') if r}
+    assert len(contagens) == 1, (
+        f"{arquivo}.csv tem linhas com contagens diferentes de campos: "
+        f"{sorted(contagens)}. Com FAILFAST a carga vai quebrar. Ou a tabela entra "
+        f"em EXCLUIDAS, ou o arquivo precisa de tratamento.")
+    return contagens.pop()
 
 
 def md(texto):
@@ -212,7 +233,7 @@ def celula_da_tabela(schema, original, tabela, cols):
         f"    , sep => '\\t'\n"
         f"    , header => false\n"
         f"    , nullValue => ''\n"
-        f"    , quote => ''\n"
+        f"    , quote => '\"'\n"
         f"    , mode => 'FAILFAST'\n"
         f");"
     )

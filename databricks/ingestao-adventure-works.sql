@@ -96,7 +96,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -119,7 +119,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -143,7 +143,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -171,7 +171,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -192,7 +192,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -214,7 +214,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -235,7 +235,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -254,7 +254,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -274,7 +274,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -314,7 +314,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -340,7 +340,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -365,7 +365,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -389,7 +389,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -408,7 +408,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -449,7 +449,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -475,7 +475,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -493,7 +493,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -532,7 +532,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -551,7 +551,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -571,7 +571,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -589,7 +589,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -609,7 +609,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -629,7 +629,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -649,7 +649,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -667,7 +667,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -686,7 +686,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -710,7 +710,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -741,7 +741,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -762,7 +762,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -782,7 +782,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -801,7 +801,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -821,7 +821,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -850,7 +850,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -868,7 +868,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -889,7 +889,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -909,7 +909,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -928,7 +928,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -946,7 +946,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -966,7 +966,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -988,7 +988,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1008,7 +1008,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1026,7 +1026,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1044,7 +1044,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1063,7 +1063,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1082,7 +1082,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1100,7 +1100,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1124,7 +1124,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1148,7 +1148,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1166,7 +1166,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1191,7 +1191,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1218,7 +1218,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1249,7 +1249,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1275,7 +1275,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1303,7 +1303,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1324,7 +1324,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1347,7 +1347,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1370,7 +1370,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1388,7 +1388,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1410,7 +1410,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1428,7 +1428,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1448,7 +1448,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1470,7 +1470,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1491,7 +1491,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1512,7 +1512,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1531,7 +1531,7 @@ from read_files(
     , sep => '\t'
     , header => false
     , nullValue => ''
-    , quote => ''
+    , quote => '"'
     , mode => 'FAILFAST'
 );
 
