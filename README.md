@@ -9,7 +9,7 @@ dbt com testes e documentação, e dashboard.
 | # | Etapa | Entregável | Status |
 |---|---|---|---|
 | 1 | KPIs e perguntas de negócio | [`docs/01-kpis-e-perguntas.md`](docs/01-kpis-e-perguntas.md) · [mapa](docs/01.01-mapa-completo.md) · slides (fora do git, ver abaixo) | **completa** |
-| 2 | Análise exploratória | [`databricks/`](databricks/) (ingestão, pronta) + notebook | **em andamento** |
+| 2 | Análise exploratória | [`databricks/`](databricks/) (ingestão, pronta: notebook + 3 scripts) + notebook de EDA | **em andamento** |
 | 3 | Modelo conceitual | PDF | — |
 | 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | — |
 | 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
@@ -44,9 +44,23 @@ Indicium são nativas.
 
 ## Ingestão no Databricks
 
-Os três scripts de `databricks/` são a etapa de EL. Rodam **nesta ordem**, uma vez, num
-editor SQL com warehouse ligado. Os nomes de tabela são absolutos
+Os três scripts de `databricks/` são a etapa de EL. Os nomes de tabela são absolutos
 (`workspace.adventure_works.<tabela>`), então não depende do catálogo selecionado.
+
+**A forma recomendada de rodar** é importar
+[`00-ingestao-adventure-works.sql`](databricks/00-ingestao-adventure-works.sql) como
+notebook no Databricks (`Workspace → Import → File`). São 140 células: 5 de markdown
+explicando cada bloco e 135 de SQL, **uma instrução por célula**. Isso não é enfeite — o
+`COPY INTO` roda com `mode = FAILFAST`, e com as 65 cargas numa célula só a falha diria
+"deu erro" sem dizer em qual tabela.
+
+Esse notebook é **gerado** a partir dos três arquivos abaixo, que continuam sendo a fonte
+versionada e linteada. Editar célula à mão cria duas versões do mesmo SQL; para mudar algo,
+muda-se o gerador e regera. Rodar tudo de novo é seguro: `create or replace` e
+`force = true` recriam e recarregam do Volume, chegando ao mesmo resultado — o custo é
+tempo, não perda, porque o dado bruto mora no Volume.
+
+Alternativa: colar cada arquivo num editor SQL, na ordem.
 
 | # | Arquivo | O que faz |
 |---|---|---|
