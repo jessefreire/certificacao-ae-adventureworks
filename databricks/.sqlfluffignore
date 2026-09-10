@@ -11,6 +11,7 @@
 # conferir de novo.
 # A carga vem em cinco arquivos, um por schema da origem: rodar as 65 instrucoes
 # de uma vez estoura o limite da Free Edition (RESOURCE_EXHAUSTED).
+02.00-carga-escopo-minimo.sql
 02.01-carga-person.sql
 02.02-carga-human-resources.sql
 02.03-carga-production.sql
