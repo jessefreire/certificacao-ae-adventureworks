@@ -13,8 +13,13 @@ São **dois** arquivos, e os dois são notebooks do Databricks (`Workspace → I
 | 1 | [`databricks/ingestao-adventure-works.sql`](databricks/ingestao-adventure-works.sql) | Cria e carrega a camada bruta. **Pré-requisito**, roda uma vez |
 | 2 | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | A análise da Etapa 2. **Entregável** |
 
-Nada mais precisa ser executado. Se você estiver procurando os antigos `01-ddl`, `02.x-carga` e
-`03-verificacao`: eles foram consolidados no arquivo 1 — ver [Armadilhas pagas](#armadilhas-pagas).
+Nada mais precisa ser executado. Os antigos `01-ddl`, `02.x-carga`, `02.99-recarga-limpa` e
+`03-verificacao` foram consolidados no arquivo 1.
+
+⚠️ **No workspace do Databricks eles continuam existindo, e isso é deliberado** — ficam como
+registro do caminho. Mas **não devem ser executados**: o `COPY INTO` deles acrescenta linhas, e
+o `force = true` desliga a proteção contra recarga. Rodar um por engano soma a carga de novo.
+O notebook de ingestão traz essa lista com o motivo de cada um, na abertura.
 
 ## Estrutura
 

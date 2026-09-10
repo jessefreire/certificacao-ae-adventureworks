@@ -288,6 +288,27 @@ celulas sao independentes.
 | 2 | As outras 48 da camada bruta, por schema de origem |
 | 3 | As conferencias. **Rodar antes de qualquer analise** |
 
+## ⚠️ O que este notebook substitui, e o que NAO rodar
+
+Este arquivo consolida seis artefatos anteriores. Eles foram **mantidos de proposito**
+no workspace, como registro do caminho — e por isso vale dizer alto o que fazer com
+eles: **nada.** Nenhum deles deve ser executado.
+
+| Artefato antigo | Por que nao rodar |
+|---|---|
+| notebook `Ingestao Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas secoes 1 e 3 daqui |
+| query `02.00-carga-escopo-minimo.sql` | **DUPLICA** — usa `COPY INTO` com `force = true` |
+| query `02.99-recarga-limpa.sql` | resolvia a duplicacao que hoje nao acontece mais |
+| query `03-verificacao-da-carga.sql` | virou a secao 3 deste notebook |
+
+O risco concreto: o `COPY INTO` daqueles arquivos **acrescenta** linhas, e o
+`force = true` desliga a protecao que ignoraria arquivo ja carregado. Rodar um deles
+por engano soma a carga de novo — foi assim que `address` chegou a 3x e
+`employeepayhistory` a 5x. Aqui isso nao existe: `create or replace` substitui.
+
+Se um dia a duvida voltar, o sinal e este: contagem sendo **multiplo exato** do
+esperado (2x, 3x…) e duplicacao, nao dado corrompido.
+
 ## Este arquivo e gerado
 
 Fonte: `scripts/gera_ingestao.py`, que le o `install.sql` do repositorio oficial —

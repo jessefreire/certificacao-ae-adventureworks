@@ -44,6 +44,27 @@
 -- MAGIC | 2 | As outras 48 da camada bruta, por schema de origem |
 -- MAGIC | 3 | As conferencias. **Rodar antes de qualquer analise** |
 -- MAGIC
+-- MAGIC ## ⚠️ O que este notebook substitui, e o que NAO rodar
+-- MAGIC
+-- MAGIC Este arquivo consolida seis artefatos anteriores. Eles foram **mantidos de proposito**
+-- MAGIC no workspace, como registro do caminho — e por isso vale dizer alto o que fazer com
+-- MAGIC eles: **nada.** Nenhum deles deve ser executado.
+-- MAGIC
+-- MAGIC | Artefato antigo | Por que nao rodar |
+-- MAGIC |---|---|
+-- MAGIC | notebook `Ingestao Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas secoes 1 e 3 daqui |
+-- MAGIC | query `02.00-carga-escopo-minimo.sql` | **DUPLICA** — usa `COPY INTO` com `force = true` |
+-- MAGIC | query `02.99-recarga-limpa.sql` | resolvia a duplicacao que hoje nao acontece mais |
+-- MAGIC | query `03-verificacao-da-carga.sql` | virou a secao 3 deste notebook |
+-- MAGIC
+-- MAGIC O risco concreto: o `COPY INTO` daqueles arquivos **acrescenta** linhas, e o
+-- MAGIC `force = true` desliga a protecao que ignoraria arquivo ja carregado. Rodar um deles
+-- MAGIC por engano soma a carga de novo — foi assim que `address` chegou a 3x e
+-- MAGIC `employeepayhistory` a 5x. Aqui isso nao existe: `create or replace` substitui.
+-- MAGIC
+-- MAGIC Se um dia a duvida voltar, o sinal e este: contagem sendo **multiplo exato** do
+-- MAGIC esperado (2x, 3x…) e duplicacao, nao dado corrompido.
+-- MAGIC
 -- MAGIC ## Este arquivo e gerado
 -- MAGIC
 -- MAGIC Fonte: `scripts/gera_ingestao.py`, que le o `install.sql` do repositorio oficial —
