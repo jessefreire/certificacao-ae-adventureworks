@@ -17,11 +17,18 @@
 -- MAGIC Os nomes de tabela sao absolutos (`workspace.adventure_works.<tabela>`), entao nao
 -- MAGIC depende de qual catalogo esta selecionado.
 -- MAGIC
--- MAGIC ## Reexecutar e seguro
+-- MAGIC ## Reexecutar: leia antes
 -- MAGIC
--- MAGIC O DDL usa `create or replace` e a carga usa `force = true`. Rodar tudo de novo
--- MAGIC recria e recarrega a partir do Volume, chegando ao mesmo resultado — o dado bruto
--- MAGIC mora no Volume, nao aqui. O custo de reexecutar e tempo, nao perda.
+-- MAGIC Rodar o notebook **inteiro** de novo e seguro, porque o DDL vem antes e o
+-- MAGIC `create or replace` esvazia cada tabela.
+-- MAGIC
+-- MAGIC Rodar **so uma celula de carga** de novo NAO e seguro: `COPY INTO` sempre
+-- MAGIC acrescenta, e o `force = true` desliga a protecao que ignoraria arquivo ja
+-- MAGIC carregado. Repetir uma celula dobra as linhas daquela tabela. Ja aconteceu aqui:
+-- MAGIC `address` chegou a 3x e `employeepayhistory` a 5x.
+-- MAGIC
+-- MAGIC Para recarregar uma tabela so, use `02.99-recarga-limpa.sql`, que traz o
+-- MAGIC `create or replace` e o `copy into` no mesmo bloco.
 -- MAGIC
 -- MAGIC ## Este notebook e gerado
 -- MAGIC
@@ -1004,8 +1011,10 @@ where table_schema = 'adventure_works'
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
--- Entao repetir um arquivo depois de uma falha nao suja o dado.
+-- CUIDADO: rodar este arquivo duas vezes DUPLICA as linhas. O COPY INTO
+-- sempre acrescenta, e `force = true` desliga a protecao de idempotencia
+-- que ignoraria arquivo ja carregado. Para recarregar, use o
+-- 02.99-recarga-limpa.sql, que esvazia a tabela antes.
 --
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
@@ -1332,8 +1341,10 @@ copy_options ('force' = 'true');
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
--- Entao repetir um arquivo depois de uma falha nao suja o dado.
+-- CUIDADO: rodar este arquivo duas vezes DUPLICA as linhas. O COPY INTO
+-- sempre acrescenta, e `force = true` desliga a protecao de idempotencia
+-- que ignoraria arquivo ja carregado. Para recarregar, use o
+-- 02.99-recarga-limpa.sql, que esvazia a tabela antes.
 --
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
@@ -1504,8 +1515,10 @@ copy_options ('force' = 'true');
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
--- Entao repetir um arquivo depois de uma falha nao suja o dado.
+-- CUIDADO: rodar este arquivo duas vezes DUPLICA as linhas. O COPY INTO
+-- sempre acrescenta, e `force = true` desliga a protecao de idempotencia
+-- que ignoraria arquivo ja carregado. Para recarregar, use o
+-- 02.99-recarga-limpa.sql, que esvazia a tabela antes.
 --
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
@@ -2065,8 +2078,10 @@ copy_options ('force' = 'true');
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
--- Entao repetir um arquivo depois de uma falha nao suja o dado.
+-- CUIDADO: rodar este arquivo duas vezes DUPLICA as linhas. O COPY INTO
+-- sempre acrescenta, e `force = true` desliga a protecao de idempotencia
+-- que ignoraria arquivo ja carregado. Para recarregar, use o
+-- 02.99-recarga-limpa.sql, que esvazia a tabela antes.
 --
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.
@@ -2228,8 +2243,10 @@ copy_options ('force' = 'true');
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
--- Entao repetir um arquivo depois de uma falha nao suja o dado.
+-- CUIDADO: rodar este arquivo duas vezes DUPLICA as linhas. O COPY INTO
+-- sempre acrescenta, e `force = true` desliga a protecao de idempotencia
+-- que ignoraria arquivo ja carregado. Para recarregar, use o
+-- 02.99-recarga-limpa.sql, que esvazia a tabela antes.
 --
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.

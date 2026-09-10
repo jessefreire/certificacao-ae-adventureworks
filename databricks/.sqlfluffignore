@@ -17,6 +17,7 @@
 02.03-carga-production.sql
 02.04-carga-purchasing.sql
 02.05-carga-sales.sql
+02.99-recarga-limpa.sql
 
 # Fonte de notebook do Databricks, gerada a partir dos tres arquivos acima. Contem
 # os mesmos 65 COPY INTO, logo o mesmo problema de parse. Nao perdemos cobertura:

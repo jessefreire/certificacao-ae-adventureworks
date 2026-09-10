@@ -56,9 +56,9 @@ explicando cada bloco e 138 de SQL, **uma instrução por célula**. Isso não �
 
 Esse notebook é **gerado** a partir dos arquivos abaixo, que continuam sendo a fonte
 versionada e linteada. Editar célula à mão cria duas versões do mesmo SQL; para mudar algo,
-muda-se o gerador e regera. Rodar tudo de novo é seguro: `create or replace` e
-`force = true` recriam e recarregam do Volume, chegando ao mesmo resultado — o custo é
-tempo, não perda, porque o dado bruto mora no Volume.
+muda-se o gerador e regera. Rodar o notebook **inteiro** de novo é seguro, porque o DDL
+vem antes e o `create or replace` esvazia cada tabela. Rodar **só uma célula de carga**
+não é — veja o aviso sobre duplicação abaixo.
 
 Alternativa: colar cada arquivo num editor SQL, na ordem.
 
@@ -99,8 +99,26 @@ O que de fato ajuda, em ordem:
 3. **Carregar só o escopo da análise** (`02.00`), 17 tabelas em vez de 65, e completar
    a camada bruta quando a cota renovar.
 
-Repetir um arquivo depois de falha é sempre seguro: `force = true` reescreve a tabela em
-vez de duplicar.
+⚠️ **Repetir um arquivo de carga NÃO é seguro** — veja a seção seguinte.
+
+### ⚠️ Recarregar duplica
+
+`COPY INTO` **sempre acrescenta**. Por padrão ele é idempotente — registra os arquivos
+que já carregou e ignora repetição —, e é exatamente essa proteção que
+`copy_options ('force' = 'true')` **desliga**. Então rodar um arquivo de carga duas vezes
+dobra as linhas da tabela.
+
+Aconteceu aqui, e os múltiplos denunciam: `address` ficou com 3× as linhas,
+`employeepayhistory` com 5×. Não era dado corrompido — era a mesma carga somada várias
+vezes. O sintoma na conferência 1 do `03` é `DIVERGE` com `carregado` sendo múltiplo
+exato de `esperado`.
+
+Para recarregar uma tabela, use
+[`02.99-recarga-limpa.sql`](databricks/02.99-recarga-limpa.sql): ele traz o
+`create or replace` e o `copy into` **no mesmo bloco**, então esvazia antes de carregar.
+Rodar o bloco inteiro de novo é seguro; rodar só o `copy into`, não.
+
+O par correto é sempre **esvaziar + carregar**. `force = true` sozinho não protege nada.
 
 ### Por que a carga vem em cinco arquivos
 

@@ -11,8 +11,10 @@
 -- nullValue = '' e obrigatorio: sem ele, coluna int com campo vazio recebe
 -- 0 em vez de NULL. So no salesorderheader sao 27.659 pedidos sem vendedor.
 --
--- force = true faz a recarga ser segura: reescreve a tabela, nao duplica.
--- Entao repetir um arquivo depois de uma falha nao suja o dado.
+-- CUIDADO: rodar este arquivo duas vezes DUPLICA as linhas. O COPY INTO
+-- sempre acrescenta, e `force = true` desliga a protecao de idempotencia
+-- que ignoraria arquivo ja carregado. Para recarregar, use o
+-- 02.99-recarga-limpa.sql, que esvazia a tabela antes.
 --
 -- Nome em tres niveis de proposito: nao depende do catalogo selecionado no
 -- editor. O `use catalog` faria o mesmo, mas quebra o parser do sqlfluff 1.4.5.

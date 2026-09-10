@@ -1,20 +1,35 @@
--- Carga do escopo minimo da analise: 17 tabelas
+-- Recarga limpa: create or replace + copy into, por tabela
 --
--- ATALHO OPERACIONAL, nao mudanca de arquitetura. A camada bruta continua
--- sendo as 65 tabelas dos arquivos 02.01 a 02.05; este arquivo carrega apenas
--- o que as seis perguntas do briefing e os catorze aprofundamentos exigem,
--- para a Etapa 2 poder andar quando a cota da Free Edition nao permite a
--- carga completa numa sentada.
+-- QUANDO USAR: a conferencia 1 do 03 acusou DIVERGE com o carregado sendo
+-- multiplo do esperado (2x, 3x...). Isso e duplicacao por recarga, nao dado
+-- corrompido.
 --
--- As quatro tabelas do schema Person ja entram pelo 02.01 e estao marcadas:
--- se aquele arquivo rodou, pule as quatro.
+-- POR QUE ACONTECE: `force = true` nao reescreve a tabela, ele desliga a
+-- protecao de idempotencia do COPY INTO. O COPY INTO sempre acrescenta.
+-- Rodar um arquivo de carga duas vezes dobra as linhas.
 --
--- Depois, quando a cota renovar, rodar 02.02 a 02.05 completa a camada bruta.
--- CUIDADO: rodar de novo DUPLICA. O COPY INTO acrescenta, e force = true
--- desliga a idempotencia. Para recarregar, use o 02.99-recarga-limpa.sql.
+-- COMO USAR: rode apenas os blocos das tabelas que acusaram DIVERGE. Cada
+-- bloco tem duas instrucoes que andam juntas: o create or replace esvazia,
+-- o copy into carrega uma vez. Rodar o bloco inteiro de novo e seguro; rodar
+-- so o copy into, nao.
 
--- Ja entra pelo 02.01-carga-person.sql: se aquele arquivo rodou,
--- pule esta instrucao e economize cota.
+-- Person.Person: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.person (
+    businessentityid int
+    , persontype string
+    , namestyle boolean
+    , title string
+    , firstname string
+    , middlename string
+    , lastname string
+    , suffix string
+    , emailpromotion int
+    , additionalcontactinfo string
+    , demographics string
+    , rowguid string
+    , modifieddate timestamp
+);
+
 -- Person.Person: 13 colunas
 copy into workspace.adventure_works.person
 from (
@@ -44,8 +59,18 @@ format_options (
 )
 copy_options ('force' = 'true');
 
--- Ja entra pelo 02.01-carga-person.sql: se aquele arquivo rodou,
--- pule esta instrucao e economize cota.
+-- Person.StateProvince: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.stateprovince (
+    stateprovinceid int
+    , stateprovincecode string
+    , countryregioncode string
+    , isonlystateprovinceflag boolean
+    , name string
+    , territoryid int
+    , rowguid string
+    , modifieddate timestamp
+);
+
 -- Person.StateProvince: 8 colunas
 copy into workspace.adventure_works.stateprovince
 from (
@@ -70,8 +95,19 @@ format_options (
 )
 copy_options ('force' = 'true');
 
--- Ja entra pelo 02.01-carga-person.sql: se aquele arquivo rodou,
--- pule esta instrucao e economize cota.
+-- Person.Address: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.address (
+    addressid int
+    , addressline1 string
+    , addressline2 string
+    , city string
+    , stateprovinceid int
+    , postalcode string
+    , spatiallocation string
+    , rowguid string
+    , modifieddate timestamp
+);
+
 -- Person.Address: 9 colunas
 copy into workspace.adventure_works.address
 from (
@@ -97,8 +133,13 @@ format_options (
 )
 copy_options ('force' = 'true');
 
--- Ja entra pelo 02.01-carga-person.sql: se aquele arquivo rodou,
--- pule esta instrucao e economize cota.
+-- Person.CountryRegion: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.countryregion (
+    countryregioncode string
+    , name string
+    , modifieddate timestamp
+);
+
 -- Person.CountryRegion: 3 colunas
 copy into workspace.adventure_works.countryregion
 from (
@@ -117,6 +158,14 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Production.ProductCategory: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.productcategory (
+    productcategoryid int
+    , name string
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Production.ProductCategory: 4 colunas
 copy into workspace.adventure_works.productcategory
@@ -138,6 +187,15 @@ format_options (
 )
 copy_options ('force' = 'true');
 
+-- Production.ProductSubcategory: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.productsubcategory (
+    productsubcategoryid int
+    , productcategoryid int
+    , name string
+    , rowguid string
+    , modifieddate timestamp
+);
+
 -- Production.ProductSubcategory: 5 colunas
 copy into workspace.adventure_works.productsubcategory
 from (
@@ -158,6 +216,35 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Production.Product: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.product (
+    productid int
+    , name string
+    , productnumber string
+    , makeflag boolean
+    , finishedgoodsflag boolean
+    , color string
+    , safetystocklevel smallint
+    , reorderpoint smallint
+    , standardcost decimal(19, 4)
+    , listprice decimal(19, 4)
+    , size string
+    , sizeunitmeasurecode string
+    , weightunitmeasurecode string
+    , weight decimal(19, 4)
+    , daystomanufacture int
+    , productline string
+    , class string
+    , style string
+    , productsubcategoryid int
+    , productmodelid int
+    , sellstartdate timestamp
+    , sellenddate timestamp
+    , discontinueddate timestamp
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Production.Product: 25 colunas
 copy into workspace.adventure_works.product
@@ -200,6 +287,16 @@ format_options (
 )
 copy_options ('force' = 'true');
 
+-- Sales.CreditCard: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.creditcard (
+    creditcardid int
+    , cardtype string
+    , cardnumber string
+    , expmonth smallint
+    , expyear smallint
+    , modifieddate timestamp
+);
+
 -- Sales.CreditCard: 6 colunas
 copy into workspace.adventure_works.creditcard
 from (
@@ -221,6 +318,17 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Sales.Customer: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.customer (
+    customerid int
+    , personid int
+    , storeid int
+    , territoryid int
+    , accountnumber string
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Sales.Customer: 7 colunas
 copy into workspace.adventure_works.customer
@@ -244,6 +352,21 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Sales.SalesOrderDetail: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.salesorderdetail (
+    salesorderid int
+    , salesorderdetailid int
+    , carriertrackingnumber string
+    , orderqty smallint
+    , productid int
+    , specialofferid int
+    , unitprice decimal(19, 4)
+    , unitpricediscount decimal(19, 4)
+    , linetotal decimal(19, 4)
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Sales.SalesOrderDetail: 11 colunas
 copy into workspace.adventure_works.salesorderdetail
@@ -271,6 +394,36 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Sales.SalesOrderHeader: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.salesorderheader (
+    salesorderid int
+    , revisionnumber smallint
+    , orderdate timestamp
+    , duedate timestamp
+    , shipdate timestamp
+    , status smallint
+    , onlineorderflag boolean
+    , salesordernumber string
+    , purchaseordernumber string
+    , accountnumber string
+    , customerid int
+    , salespersonid int
+    , territoryid int
+    , billtoaddressid int
+    , shiptoaddressid int
+    , shipmethodid int
+    , creditcardid int
+    , creditcardapprovalcode string
+    , currencyrateid int
+    , subtotal decimal(19, 4)
+    , taxamt decimal(19, 4)
+    , freight decimal(19, 4)
+    , totaldue decimal(19, 4)
+    , comment string
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Sales.SalesOrderHeader: 26 colunas
 copy into workspace.adventure_works.salesorderheader
@@ -314,6 +467,13 @@ format_options (
 )
 copy_options ('force' = 'true');
 
+-- Sales.SalesOrderHeaderSalesReason: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.salesorderheadersalesreason (
+    salesorderid int
+    , salesreasonid int
+    , modifieddate timestamp
+);
+
 -- Sales.SalesOrderHeaderSalesReason: 3 colunas
 copy into workspace.adventure_works.salesorderheadersalesreason
 from (
@@ -332,6 +492,19 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Sales.SalesPerson: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.salesperson (
+    businessentityid int
+    , territoryid int
+    , salesquota decimal(19, 4)
+    , bonus decimal(19, 4)
+    , commissionpct decimal(19, 4)
+    , salesytd decimal(19, 4)
+    , saleslastyear decimal(19, 4)
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Sales.SalesPerson: 9 colunas
 copy into workspace.adventure_works.salesperson
@@ -358,6 +531,14 @@ format_options (
 )
 copy_options ('force' = 'true');
 
+-- Sales.SalesReason: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.salesreason (
+    salesreasonid int
+    , name string
+    , reasontype string
+    , modifieddate timestamp
+);
+
 -- Sales.SalesReason: 4 colunas
 copy into workspace.adventure_works.salesreason
 from (
@@ -377,6 +558,20 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Sales.SalesTerritory: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.salesterritory (
+    territoryid int
+    , name string
+    , countryregioncode string
+    , `group` string
+    , salesytd decimal(19, 4)
+    , saleslastyear decimal(19, 4)
+    , costytd decimal(19, 4)
+    , costlastyear decimal(19, 4)
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Sales.SalesTerritory: 10 colunas
 copy into workspace.adventure_works.salesterritory
@@ -404,6 +599,21 @@ format_options (
 )
 copy_options ('force' = 'true');
 
+-- Sales.SpecialOffer: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.specialoffer (
+    specialofferid int
+    , description string
+    , discountpct decimal(19, 4)
+    , type string
+    , category string
+    , startdate timestamp
+    , enddate timestamp
+    , minqty int
+    , maxqty int
+    , rowguid string
+    , modifieddate timestamp
+);
+
 -- Sales.SpecialOffer: 11 colunas
 copy into workspace.adventure_works.specialoffer
 from (
@@ -430,6 +640,16 @@ format_options (
     , 'mode' = 'FAILFAST'
 )
 copy_options ('force' = 'true');
+
+-- Sales.Store: esvazia e carrega uma vez
+create or replace table workspace.adventure_works.store (
+    businessentityid int
+    , name string
+    , salespersonid int
+    , demographics string
+    , rowguid string
+    , modifieddate timestamp
+);
 
 -- Sales.Store: 6 colunas
 copy into workspace.adventure_works.store
