@@ -9,7 +9,7 @@ dbt com testes e documentação, e dashboard.
 | # | Etapa | Entregável | Status |
 |---|---|---|---|
 | 1 | KPIs e perguntas de negócio | [`docs/01-kpis-e-perguntas.md`](docs/01-kpis-e-perguntas.md) · [mapa](docs/01.01-mapa-completo.md) · slides (fora do git, ver abaixo) | **completa** |
-| 2 | Análise exploratória | [`databricks/`](databricks/) (ingestão, pronta: notebook + 3 scripts) + notebook de EDA | **em andamento** |
+| 2 | Análise exploratória | [`notebooks/02-analise-exploratoria.py`](notebooks/02-analise-exploratoria.py) | **completa** |
 | 3 | Modelo conceitual | PDF | — |
 | 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | — |
 | 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
@@ -167,6 +167,37 @@ Duas armadilhas já pagas: o limite padrão de 20.000 bytes faz o linter **pular
 grande em silêncio, terminando com `All Finished!` sem ter checado nada — está desligado no
 `.sqlfluff`. E a saída crua dos geradores **não** passa no linter: o arquivo entregue é o
 resultado de `sqlfluff fix --force` sobre ela.
+
+## Análise exploratória (Etapa 2)
+
+[`notebooks/02-analise-exploratoria.py`](notebooks/02-analise-exploratoria.py) — notebook
+do Databricks, linguagem padrão **Python** (os gráficos exigem), com o SQL em células
+`%sql`. 76 células: 40 de markdown, 31 de SQL e 5 de gráfico.
+
+**A pergunta não se descobre nele.** A estrutura segue exatamente a Etapa 1: as seis
+perguntas do briefing e os catorze aprofundamentos (`a.1`…`f.2`), na ordem, cada um com
+consulta, evidência e comentário. Antes disso vêm duas seções que existem para o resto
+poder ser confiável: **perfil do dado** e a **reconciliação** com o número do CEO.
+
+Importar: `Workspace → Import → File`. Rodar **depois** da ingestão conferida.
+
+### O code style alcança o SQL de dentro do notebook
+
+O sqlfluff não lê `.py`, então sem ferramenta o padrão da casa não chega justamente ao
+SQL que o avaliador vai ler. O ciclo é: extrair as células `%sql` para arquivos, rodar
+`sqlfluff fix`, devolver o SQL corrigido para dentro das células. As 31 passam com zero
+violação.
+
+Duas armadilhas pagas nesse caminho, ambas do tipo que devolve **falso sucesso**:
+
+- **`group by all` não é parseado** pela versão 1.4.5 que o guia fixa. E o guia também
+  marca `group by 1, 2` como *Bad* — então o `group by` vai com a coluna escrita, uma por
+  linha e vírgula à frente, como `sql_best_practices.md` manda.
+- **o sqlfluff 1.4.5 quebra quando o alvo está em outro drive** que o diretório de
+  trabalho (`ValueError: Paths don't have the same drive`, no `os.path.commonpath`). O
+  crash saía silencioso e o relatório dizia "zero violação" — eram 78. Hoje a ferramenta
+  falha alto se o linter não concluir, e um teste negativo confirma que ela reprova
+  código errado de propósito.
 
 ## Convenções de código
 
