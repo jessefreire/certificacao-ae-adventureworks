@@ -1,0 +1,77 @@
+# Configuracao do sqlfluff derivada do code style da Indicium.
+#
+# Por que este arquivo existe: o repositorio `indiciumtech/indicium-code-style`
+# descreve as regras em prosa e diz que "o resto usa o comportamento padrao do
+# SQLFluff", mas NAO entrega um .sqlfluff. E o padrao do linter contradiz o
+# guia num ponto central: ele exige virgula no fim da linha, e o guia exige
+# virgula a frente. Sem esta configuracao, rodar sqlfluff reprova codigo que
+# esta correto pelo padrao da casa.
+#
+# Versao fixada pelo guia: sqlfluff 1.4.5.
+# Fonte das regras: sql_style_guide.md e sql_best_practices.md.
+
+[sqlfluff]
+dialect = databricks
+max_line_length = 100
+exclude_rules = L044
+# O padrao de 20.000 bytes faz o linter PULAR o arquivo em silencio, com um
+# aviso facil de confundir com sucesso. O DDL das 65 tabelas passa de 20 KB;
+# sem isto, "All Finished!" nao significa nada.
+large_file_skip_byte_limit = 0
+
+[sqlfluff:indentation]
+tab_space_size = 4
+indent_unit = space
+indented_joins = False
+indented_using_on = True
+
+# --- virgula A FRENTE: e a regra mais visivel do guia, e o padrao do
+# --- sqlfluff e o contrario. `comma_style` foi depreciado em favor de
+# --- line_position na secao de layout, mesmo na 1.4.5.
+[sqlfluff:layout:type:comma]
+line_position = leading
+
+# --- minusculas em palavra-chave, funcao, identificador, literal e tipo
+[sqlfluff:rules:L010]
+capitalisation_policy = lower
+
+[sqlfluff:rules:L030]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:L014]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:L040]
+capitalisation_policy = lower
+
+[sqlfluff:rules:L063]
+extended_capitalisation_policy = lower
+
+# --- `as` sempre, ao apelidar coluna e tabela
+[sqlfluff:rules:L011]
+aliasing = explicit
+
+[sqlfluff:rules:L012]
+aliasing = explicit
+
+# --- aspas so quando necessario: a camada bruta espelha nomes reservados da
+# --- origem, e o rename acontece no staging do dbt
+[sqlfluff:rules:L059]
+prefer_quoted_identifiers = False
+
+# --- `inner join` explicito, nunca `join` solto
+[sqlfluff:rules:L051]
+fully_qualified_join_types = inner
+
+# --- alias de tabela: o guia manda NAO apelidar tabela de ate tres palavras.
+# --- L031 pega justamente o alias desnecessario em from/join.
+[sqlfluff:rules:L031]
+force_enable = True
+
+# --- L016 (linha longa) nao herda o max_line_length do core nesta versao, e
+# --- passou a acusar comentario de 90 caracteres com o limite em 100.
+# --- O limite de 100 do guia e sobre legibilidade de CODIGO; comentario de
+# --- cabecalho fica de fora, e o proprio sqlfluff tem a opcao para isso.
+[sqlfluff:rules:L016]
+max_line_length = 100
+ignore_comment_lines = True

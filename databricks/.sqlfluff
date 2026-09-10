@@ -1,0 +1,19 @@
+# Herda o .sqlfluff da raiz e afrouxa UMA regra, só para a camada bruta.
+#
+# L029 — "keywords should not be used as identifiers" — acusa seis colunas:
+# class, comment, name, size, style e type. São nomes reais do AdventureWorks.
+#
+# O code style da Indicium concorda com a regra ("never use reserved words as
+# identifiers"), mas diz ONDE corrigir: "source models should alias source
+# columns as necessary to conform to our naming conventions". Ou seja, o rename
+# acontece no modelo de source do dbt, não na tabela bruta.
+#
+# A camada bruta espelha a origem de propósito: é o que permite rastrear
+# qualquer número até o arquivo que veio do repositório oficial. Renomear aqui
+# quebraria essa rastreabilidade e mascararia a dívida.
+#
+# Então a regra segue ativa na raiz, valendo para os modelos dbt da Etapa 5, e
+# fica desligada apenas neste diretório.
+
+[sqlfluff]
+exclude_rules = L044, L029

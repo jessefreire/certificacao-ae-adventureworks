@@ -1,0 +1,12 @@
+# O sqlfluff 1.4.5 — a versao que o code style da Indicium fixa — nao conhece
+# a sintaxe COPY INTO do Databricks: o parser devolve "unparsable section" nos
+# 17 comandos. Nao e erro do SQL; e limitacao do parser daquela versao, que e
+# de 2022.
+#
+# Consequencia pratica: este arquivo nao passa por lint. O DDL
+# (01-ddl-adventure-works.sql) passa e esta limpo, e todo SQL do notebook de
+# analise tambem vai passar, porque e select puro.
+#
+# Se algum dia o guia da casa subir a versao fixada, remover esta linha e
+# conferir de novo.
+02-carga-adventure-works.sql
