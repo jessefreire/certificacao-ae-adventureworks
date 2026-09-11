@@ -107,6 +107,38 @@ def linta(pasta):
     return saida
 
 
+def confere_celulas(caminho, texto):
+    """Nenhuma celula pode ser markdown sem o `%md`.
+
+    Existe por um bug que chegou a rodar: ao inserir consultas novas, eu emendei no
+    MEIO de celulas de markdown existentes, e o pedaco de baixo ficou sem o cabecalho
+    `%md`. O Databricks entao executou texto como codigo, e a celula falhou com
+    `SyntaxError: invalid character '—'` — o travessao do comentario.
+
+    Foram tres celulas, e uma delas era a SINTESE, a secao que o briefing pede
+    explicitamente. O linter de SQL nao pegava, porque essas celulas nao tem SQL.
+    """
+    prefixo = "# MAGIC" if caminho.suffix == ".py" else "-- MAGIC"
+    sep = SEPARADOR_PY if caminho.suffix == ".py" else SEPARADOR
+    erros = []
+    for i, celula in enumerate(texto.split(sep), 1):   # o Databricks numera de 1
+        corpo = celula.replace("# Databricks notebook source\n", "", 1)
+        corpo = corpo.replace("-- Databricks notebook source\n", "", 1)
+        uteis = [l for l in corpo.split("\n") if l.strip()]
+        if not uteis:
+            erros.append(f"celula {i} esta vazia")
+            continue
+        if not all(l.strip().startswith(prefixo) for l in uteis):
+            continue          # celula de codigo, nada a conferir
+        if not uteis[0].strip().startswith((f"{prefixo} %md", f"{prefixo} %sql")):
+            erros.append(f"celula {i} e markdown SEM %md — o Databricks vai executar "
+                         f"como codigo: {uteis[0][:60]}")
+        if len(uteis) > 1 and uteis[0].strip() == f"{prefixo} %md" \
+                and uteis[1].strip() == f"{prefixo} %md":
+            erros.append(f"celula {i} tem %md duplicado")
+    return erros
+
+
 def confere_abertura(caminho, texto):
     """A celula de abertura promete uma estrutura. Ela tem de ser verdade.
 
@@ -177,6 +209,14 @@ for alvo in alvos:
     print(f"celulas de SQL: {len(celulas)}"
           f"  |  linteadas: {len(linta_veis)}"
           f"  |  ingestao, sintaxe nao suportada pela 1.4.5: {len(ingestao)}")
+
+    erros_celula = confere_celulas(alvo, texto)
+    if erros_celula:
+        falhou = True
+        for erro in erros_celula:
+            print(f"  CELULA QUEBRADA: {erro}")
+    else:
+        print("celulas: todas com o magic correto")
 
     erros_abertura = confere_abertura(alvo, texto)
     if erros_abertura:

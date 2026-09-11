@@ -5,11 +5,31 @@
 # MAGIC Etapa 2 do desafio, e o entregavel que o briefing pede em "notebook com codigo,
 # MAGIC graficos e comentario sobre cada insight".
 # MAGIC
-# MAGIC **A pergunta nao se descobre aqui.** Ela foi definida na Etapa 1, em
-# MAGIC `docs/01-kpis-e-perguntas.md`. Este notebook responde as **seis perguntas do
-# MAGIC briefing** e os **catorze aprofundamentos** que a Etapa 1 derivou delas — cada um com
-# MAGIC consulta, evidencia e comentario. Os codigos `a.1`, `b.2`, `f.2` remetem aquele
-# MAGIC documento; nenhum aprofundamento e tema solto.
+# MAGIC **A pergunta nao se descobre aqui.** Ela foi definida na Etapa 1 do desafio, e este
+# MAGIC notebook responde. Sao as **seis perguntas do briefing**:
+# MAGIC
+# MAGIC | | Pergunta |
+# MAGIC |---|---|
+# MAGIC | **(a)** | Pedidos, quantidade e valor por produto, tipo de cartao, motivo da venda, data, cliente, status, cidade, estado e pais |
+# MAGIC | **(b)** | Quais produtos tem o maior valor medio por pedido, por mes, ano, cidade, estado e pais |
+# MAGIC | **(c)** | Os 10 principais clientes por valor total |
+# MAGIC | **(d)** | As 5 principais cidades por valor total |
+# MAGIC | **(e)** | Pedidos, quantidade e valor por mes e ano |
+# MAGIC | **(f)** | Qual produto vendeu mais unidades quando o motivo da venda foi promocao |
+# MAGIC
+# MAGIC Cada uma tem sua propria secao, que abre com o enunciado do briefing e responde o que
+# MAGIC ele pede.
+# MAGIC
+# MAGIC Ao apurar os dados na Etapa 1, cada pergunta abriu desdobramentos — coisas que a
+# MAGIC pergunta original nao cobre mas que mudam a leitura da resposta. Por exemplo: a (a)
+# MAGIC pede nove cortes, e dois deles nao separam nada; a (f) pergunta sobre promocao, e
+# MAGIC promocao existe apenas no varejo online. Esses desdobramentos aparecem como
+# MAGIC subsecoes ao longo do notebook, identificados por codigo (`a.1`, `b.2`, `f.2`), e
+# MAGIC **nenhum deles e tema solto** — cada um nasceu de uma das seis.
+# MAGIC
+# MAGIC O documento completo da Etapa 1, com o catalogo de indicadores e a justificativa de
+# MAGIC cada pergunta, esta no repositorio do projeto:
+# MAGIC <https://github.com/jessefreire/formacao-analytics-engineering/tree/master/Desafio/desafio-adventureworks/docs>
 # MAGIC
 # MAGIC ## Como ler
 # MAGIC
@@ -223,7 +243,6 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC %md
 # MAGIC A checagem anterior olhou o elo produto -> subcategoria. Esta olha o de cima,
 # MAGIC subcategoria -> categoria, porque afirmar que "a hierarquia esta completa" sem
 # MAGIC conferir os dois niveis e afirmar o que nao se mediu.
@@ -245,6 +264,7 @@
 
 # COMMAND ----------
 
+# MAGIC %md
 # MAGIC **O furo do cadastro coincide com o furo de venda.** 209 produtos sem subcategoria,
 # MAGIC e nenhum deles vende. A hierarquia esta completa para 100% do que gera receita —
 # MAGIC ou seja, a dimensao de produto da Etapa 3 pode usar categoria e subcategoria sem
@@ -497,7 +517,7 @@
 # MAGIC
 # MAGIC E o 4.482 e a evidencia de que `SalesReason` e **muitos-para-muitos**: receita por
 # MAGIC motivo **nao soma** ao total. E a decisao de modelagem aberta da Etapa 3
-# MAGIC (bridge table ou nao), documentada no Anexo B.1 da Etapa 1.
+# MAGIC (bridge table ou nao), documentada na Etapa 1 — ver o link na abertura.
 
 # COMMAND ----------
 
@@ -891,7 +911,6 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC %md
 # MAGIC ### O corte que sobra quando cidade nao serve
 # MAGIC
 # MAGIC Se as cinco maiores cidades sao 11% e a receita esta espalhada por 558 delas, o
@@ -929,6 +948,7 @@
 
 # COMMAND ----------
 
+# MAGIC %md
 # MAGIC ## d.2 — A top 5 de valor e a mesma de volume?
 # MAGIC
 # MAGIC Se as duas listas divergem, ha cidade de ticket alto e cidade de giro alto — e
@@ -1534,6 +1554,7 @@ plt.show()
 
 # COMMAND ----------
 
+# MAGIC %md
 # MAGIC # 9. Sintese — o que a exploracao mudou no entendimento
 # MAGIC
 # MAGIC O briefing pede explicitamente esta secao: como os insights ajudaram a entender o
@@ -1573,4 +1594,5 @@ plt.show()
 # MAGIC - **O grao da tabela fato** — item de pedido, dado que a pergunta (f) precisa de
 # MAGIC   unidade por produto.
 # MAGIC
-# MAGIC Ambas estao no Anexo B do documento da Etapa 1, marcadas como decisao conjunta.
+# MAGIC As duas estao registradas no documento da Etapa 1, marcadas como decisao conjunta,
+# MAGIC e o link esta na abertura deste notebook.
