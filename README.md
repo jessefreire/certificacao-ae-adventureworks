@@ -183,7 +183,8 @@ para 20.777, `employeepayhistory` de 1.580 para 316. O `create or replace` subst
 ## Análise exploratória (Etapa 2)
 
 [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) — 84 células:
-42 de markdown, 33 de SQL e 9 de gráfico. Lê **16** das 17 tabelas do escopo da análise. Linguagem padrão **Python**, porque os gráficos
+43 de markdown, 33 de SQL e 9 de gráfico, em **10 seções**. Lê **16** das 17 tabelas do
+escopo da análise. Linguagem padrão **Python**, porque os gráficos
 exigem, com o SQL em células `%sql`.
 
 **A pergunta não se descobre nele.** A estrutura segue a Etapa 1: perfil do dado, reconciliação
@@ -222,16 +223,47 @@ O sqlfluff não lê notebook. A ferramenta extrai cada célula para um arquivo, 
 com `--fix` devolve o SQL corrigido. Cobertura atual: **33 de 33** células do notebook de
 análise e **6 de 6** células de conferência da ingestão, zero violação.
 
-Ela também confere a **integridade das células** nos dois notebooks: markdown sem `%md` (que o
+Ela também confere os **títulos**: únicos, com prefixo numérico, sequência contígua por seção,
+seções em ordem crescente, e rótulo em prosa que caiba no painel (nome de tabela é exceto — não
+há o que encurtar em `ProductModelProductDescriptionCulture` sem inventar abreviação).
+
+E confere a **integridade das células** nos dois notebooks: markdown sem `%md` (que o
 Databricks executaria como código), `%md` em célula que tem código (que faria nada executar),
 magic duplicado, célula vazia, e **célula de código sem `DBTITLE`**.
 
-O `DBTITLE` é o título da célula. Sem ele, cada uma aparece sem nome na navegação do Databricks
-— e "Cell 37" não ajuda ninguém a voltar a uma consulta. São 70 títulos na ingestão (uma por
-tabela, mais as seis conferências) e 42 no de análise, onde o título carrega **o código da
-pergunta** a que a célula pertence: `a.1 Tipo de cartao discrimina?`, `(d) As 5 maiores cidades
-por valor`, `grafico — Pareto dos produtos que vendem`. Nenhum é texto inventado: sai do
-cabeçalho da seção e da primeira linha de comentário da própria célula.
+O `DBTITLE` é o título da célula. Sem ele cada uma aparece sem nome na navegação do Databricks,
+e "Cell 37" não ajuda ninguém a voltar a uma consulta. São **70** títulos na ingestão e **42**
+no de análise, todos no formato `<seção>.<sequência> <rótulo curto>`:
+
+```
+ingestão                      análise
+1.01 CountryRegion            1.1 Tamanho e janela      6.1 Top 5 cidades
+1.02 StateProvince            1.2 Canais e receita      6.3 Por territorio
+2.01 BusinessEntity           2.1 Aceite do CEO         9.3 Pareto de produtos
+3.5 Aceite do briefing        3.2 Cartao discrimina?    9.8 (d) Cidades x resto
+```
+
+Três decisões, e todas vêm de uma medição: **o painel corta o título em torno de 22
+caracteres.**
+
+O **número vem primeiro** porque sobrevive ao corte — `3.4 Catalogo sem venda` truncado ainda é
+localizável — e é o mesmo número da seção no markdown, o que dá ordenação.
+
+**Nada de prefixo repetido.** A primeira versão derivava o título do comentário da célula, e o
+resultado tinha 58 caracteres de mediana com `grafico` abrindo nove títulos e `perfil` sete: a
+palavra repetida consumia o espaço visível antes de chegar ao que distingue. Na ingestão, o
+prefixo de schema (`Production.`) gastava 11 caracteres pelo mesmo motivo — ele saiu, e o schema
+continua no cabeçalho de markdown do bloco.
+
+**O código do aprofundamento (`a.1`, `b.2`) não entra no título**, porque não distingue células:
+havia dois `a.1`, dois `a.2`, dois `b.1`. Ele fica onde pertence, no cabeçalho imediatamente
+acima. A exceção são os quatro últimos gráficos, onde a letra da pergunta é a informação útil.
+
+Os títulos do notebook de análise são uma **lista explícita** em
+[`scripts/titula_celulas.py`](scripts/titula_celulas.py), não derivados de comentário —
+derivação foi o que produziu a primeira versão, e ela não tem como saber que um prefixo
+repetido desperdiça espaço. Lista explícita é revisável e estável, e o script falha se o número
+de células não casar com o de títulos.
 
 Ela também **confere se a abertura do notebook de EDA está dizendo a verdade**: se as seções
 prometidas existem, se a contagem de consultas por seção bate, se o número de gráficos e de

@@ -170,6 +170,67 @@ def confere_celulas(caminho, texto):
     return erros
 
 
+def confere_titulos(caminho, texto):
+    """Os titulos das celulas: unicos, numerados, contiguos e na ordem.
+
+    O painel do Databricks corta o titulo em torno de 22 caracteres, entao titulo
+    longo e titulo com prefixo repetido sao a mesma falha: quem le nao consegue
+    distinguir uma celula da outra. A primeira versao dos titulos tinha 58
+    caracteres de mediana e `grafico` abrindo nove deles.
+
+    O numero tem de crescer junto com a ordem das celulas, senao a navegacao ordena
+    diferente do notebook — e ai o titulo atrapalha em vez de ajudar.
+    """
+    marca = "# DBTITLE 1," if caminho.suffix == ".py" else "-- DBTITLE 1,"
+    titulos = [l[len(marca):] for l in texto.split("\n") if l.startswith(marca)]
+    if not titulos:
+        return ["nenhuma celula tem titulo"]
+
+    erros = []
+
+    repetidos = {x for x in titulos if titulos.count(x) > 1}
+    if repetidos:
+        erros.append(f"titulo repetido: {sorted(repetidos)[:3]}")
+
+    sem_numero = [x for x in titulos if not re.match(r"\d+\.\d+ ", x)]
+    if sem_numero:
+        erros.append(f"titulo sem prefixo numerico: {sem_numero[:3]}")
+
+    # Rotulo em prosa tem de caber; nome de tabela nao tem o que encurtar sem
+    # inventar abreviacao, e o numero mantem a celula localizavel mesmo cortada.
+    # Duas tabelas do AdventureWorks passam de 32 caracteres so no nome:
+    # SalesOrderHeaderSalesReason e ProductModelProductDescriptionCulture.
+    def rotulo(x):
+        return re.sub(r"^\d+\.\d+ ", "", x)
+
+    longos = [x for x in titulos
+              if len(x) > 32 and " " in rotulo(x)]
+    if longos:
+        erros.append(f"titulo em prosa longo demais para o painel: {longos[:2]}")
+    gigantes = [x for x in titulos if len(x) > 48]
+    if gigantes:
+        erros.append(f"titulo passa de 48 caracteres: {gigantes[:2]}")
+
+    # numeracao contigua por secao, e secoes em ordem crescente
+    ordem_secoes, por_secao = [], {}
+    for x in titulos:
+        m = re.match(r"(\d+)\.(\d+) ", x)
+        if not m:
+            continue
+        s, n = int(m.group(1)), int(m.group(2))
+        if s not in por_secao:
+            por_secao[s] = []
+            ordem_secoes.append(s)
+        por_secao[s].append(n)
+    for s, seq in por_secao.items():
+        if seq != list(range(1, len(seq) + 1)):
+            erros.append(f"secao {s} com furo ou fora de ordem na sequencia: {seq}")
+    if ordem_secoes != sorted(ordem_secoes):
+        erros.append(f"as secoes nao aparecem em ordem crescente: {ordem_secoes}")
+
+    return erros
+
+
 def confere_abertura(caminho, texto):
     """A celula de abertura promete uma estrutura. Ela tem de ser verdade.
 
@@ -192,8 +253,8 @@ def confere_abertura(caminho, texto):
             erros.append(f"a abertura cita `{morto}`, que nao existe mais")
 
     # 2. as secoes prometidas existem
-    for prometido in ("# 1. Perfil do dado", "# 2. Reconciliacao", "# Graficos",
-                      "# 9. Sintese"):
+    for prometido in ("# 1. Perfil do dado", "# 2. Reconciliacao", "# 9. Graficos",
+                      "# 10. Sintese"):
         if f"# MAGIC {prometido}" not in texto:
             erros.append(f"a abertura promete `{prometido}`, que nao existe")
 
@@ -201,7 +262,7 @@ def confere_abertura(caminho, texto):
     marcos = []
     for i, c in enumerate(celulas):
         for nome in ("# 1. Perfil", "# 2. Reconciliacao", "# 3. Pergunta",
-                     "# Graficos", "# 9. Sintese"):
+                     "# 9. Graficos", "# 10. Sintese"):
             if f"# MAGIC {nome}" in c:
                 marcos.append((nome, i))
     marcos.sort(key=lambda x: x[1])
@@ -248,6 +309,16 @@ for alvo in alvos:
             print(f"  CELULA QUEBRADA: {erro}")
     else:
         print("celulas: todas com o magic correto")
+
+    erros_titulo = confere_titulos(alvo, texto)
+    if erros_titulo:
+        falhou = True
+        for erro in erros_titulo:
+            print(f"  TITULO: {erro}")
+    else:
+        marca = "# DBTITLE 1," if alvo.suffix == ".py" else "-- DBTITLE 1,"
+        n = sum(1 for l in texto.split("\n") if l.startswith(marca))
+        print(f"titulos: {n}, unicos, numerados e em ordem")
 
     erros_abertura = confere_abertura(alvo, texto)
     if erros_abertura:

@@ -84,7 +84,7 @@
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.CountryRegion
+-- DBTITLE 1,1.01 CountryRegion
 -- Person.CountryRegion: 3 colunas
 create or replace table workspace.adventure_works.countryregion as
 select
@@ -104,7 +104,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.StateProvince
+-- DBTITLE 1,1.02 StateProvince
 -- Person.StateProvince: 8 colunas
 create or replace table workspace.adventure_works.stateprovince as
 select
@@ -129,7 +129,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.Address
+-- DBTITLE 1,1.03 Address
 -- Person.Address: 9 colunas
 create or replace table workspace.adventure_works.address as
 select
@@ -155,7 +155,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.Person
+-- DBTITLE 1,1.04 Person
 -- Person.Person: 13 colunas
 create or replace table workspace.adventure_works.person as
 select
@@ -185,7 +185,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.Store
+-- DBTITLE 1,1.05 Store
 -- Sales.Store: 6 colunas
 create or replace table workspace.adventure_works.store as
 select
@@ -208,7 +208,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.Customer
+-- DBTITLE 1,1.06 Customer
 -- Sales.Customer: 7 colunas
 create or replace table workspace.adventure_works.customer as
 select
@@ -232,7 +232,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.CreditCard
+-- DBTITLE 1,1.07 CreditCard
 -- Sales.CreditCard: 6 colunas
 create or replace table workspace.adventure_works.creditcard as
 select
@@ -255,7 +255,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductCategory
+-- DBTITLE 1,1.08 ProductCategory
 -- Production.ProductCategory: 4 colunas
 create or replace table workspace.adventure_works.productcategory as
 select
@@ -276,7 +276,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductSubcategory
+-- DBTITLE 1,1.09 ProductSubcategory
 -- Production.ProductSubcategory: 5 colunas
 create or replace table workspace.adventure_works.productsubcategory as
 select
@@ -298,7 +298,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.Product
+-- DBTITLE 1,1.10 Product
 -- Production.Product: 25 colunas
 create or replace table workspace.adventure_works.product as
 select
@@ -340,7 +340,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SpecialOffer
+-- DBTITLE 1,1.11 SpecialOffer
 -- Sales.SpecialOffer: 11 colunas
 create or replace table workspace.adventure_works.specialoffer as
 select
@@ -368,7 +368,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesTerritory
+-- DBTITLE 1,1.12 SalesTerritory
 -- Sales.SalesTerritory: 10 colunas
 create or replace table workspace.adventure_works.salesterritory as
 select
@@ -395,7 +395,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesPerson
+-- DBTITLE 1,1.13 SalesPerson
 -- Sales.SalesPerson: 9 colunas
 create or replace table workspace.adventure_works.salesperson as
 select
@@ -421,7 +421,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesReason
+-- DBTITLE 1,1.14 SalesReason
 -- Sales.SalesReason: 4 colunas
 create or replace table workspace.adventure_works.salesreason as
 select
@@ -442,7 +442,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesOrderHeader
+-- DBTITLE 1,1.15 SalesOrderHeader
 -- Sales.SalesOrderHeader: 26 colunas
 create or replace table workspace.adventure_works.salesorderheader as
 select
@@ -485,7 +485,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesOrderDetail
+-- DBTITLE 1,1.16 SalesOrderDetail
 -- Sales.SalesOrderDetail: 11 colunas
 create or replace table workspace.adventure_works.salesorderdetail as
 select
@@ -513,7 +513,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesOrderHeaderSalesReason
+-- DBTITLE 1,1.17 SalesOrderHeaderSalesReason
 -- Sales.SalesOrderHeaderSalesReason: 3 colunas
 create or replace table workspace.adventure_works.salesorderheadersalesreason as
 select
@@ -555,7 +555,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.BusinessEntity
+-- DBTITLE 1,2.01 BusinessEntity
 -- Person.BusinessEntity: 3 colunas
 create or replace table workspace.adventure_works.businessentity as
 select
@@ -575,7 +575,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.AddressType
+-- DBTITLE 1,2.02 AddressType
 -- Person.AddressType: 4 colunas
 create or replace table workspace.adventure_works.addresstype as
 select
@@ -596,7 +596,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.BusinessEntityAddress
+-- DBTITLE 1,2.03 BusinessEntityAddress
 -- Person.BusinessEntityAddress: 5 colunas
 create or replace table workspace.adventure_works.businessentityaddress as
 select
@@ -618,7 +618,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.ContactType
+-- DBTITLE 1,2.04 ContactType
 -- Person.ContactType: 3 colunas
 create or replace table workspace.adventure_works.contacttype as
 select
@@ -638,7 +638,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.BusinessEntityContact
+-- DBTITLE 1,2.05 BusinessEntityContact
 -- Person.BusinessEntityContact: 5 colunas
 create or replace table workspace.adventure_works.businessentitycontact as
 select
@@ -660,7 +660,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.EmailAddress
+-- DBTITLE 1,2.06 EmailAddress
 -- Person.EmailAddress: 5 colunas
 create or replace table workspace.adventure_works.emailaddress as
 select
@@ -682,7 +682,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.Password
+-- DBTITLE 1,2.07 Password
 -- Person.Password: 5 colunas
 create or replace table workspace.adventure_works.password as
 select
@@ -704,7 +704,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.PhoneNumberType
+-- DBTITLE 1,2.08 PhoneNumberType
 -- Person.PhoneNumberType: 3 colunas
 create or replace table workspace.adventure_works.phonenumbertype as
 select
@@ -724,7 +724,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Person.PersonPhone
+-- DBTITLE 1,2.09 PersonPhone
 -- Person.PersonPhone: 4 colunas
 create or replace table workspace.adventure_works.personphone as
 select
@@ -750,7 +750,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,HumanResources.Department
+-- DBTITLE 1,2.10 Department
 -- HumanResources.Department: 4 colunas
 create or replace table workspace.adventure_works.department as
 select
@@ -771,7 +771,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,HumanResources.Employee
+-- DBTITLE 1,2.11 Employee
 -- HumanResources.Employee: 16 colunas
 create or replace table workspace.adventure_works.employee as
 select
@@ -804,7 +804,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,HumanResources.EmployeeDepartmentHistory
+-- DBTITLE 1,2.12 EmployeeDepartmentHistory
 -- HumanResources.EmployeeDepartmentHistory: 6 colunas
 create or replace table workspace.adventure_works.employeedepartmenthistory as
 select
@@ -827,7 +827,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,HumanResources.EmployeePayHistory
+-- DBTITLE 1,2.13 EmployeePayHistory
 -- HumanResources.EmployeePayHistory: 5 colunas
 create or replace table workspace.adventure_works.employeepayhistory as
 select
@@ -849,7 +849,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,HumanResources.JobCandidate
+-- DBTITLE 1,2.14 JobCandidate
 -- HumanResources.JobCandidate: 4 colunas
 create or replace table workspace.adventure_works.jobcandidate as
 select
@@ -870,7 +870,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,HumanResources.Shift
+-- DBTITLE 1,2.15 Shift
 -- HumanResources.Shift: 5 colunas
 create or replace table workspace.adventure_works.shift as
 select
@@ -897,7 +897,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.BillOfMaterials
+-- DBTITLE 1,2.16 BillOfMaterials
 -- Production.BillOfMaterials: 9 colunas
 create or replace table workspace.adventure_works.billofmaterials as
 select
@@ -923,7 +923,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.Culture
+-- DBTITLE 1,2.17 Culture
 -- Production.Culture: 3 colunas
 create or replace table workspace.adventure_works.culture as
 select
@@ -943,7 +943,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductCostHistory
+-- DBTITLE 1,2.18 ProductCostHistory
 -- Production.ProductCostHistory: 5 colunas
 create or replace table workspace.adventure_works.productcosthistory as
 select
@@ -965,7 +965,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductDescription
+-- DBTITLE 1,2.19 ProductDescription
 -- Production.ProductDescription: 4 colunas
 create or replace table workspace.adventure_works.productdescription as
 select
@@ -986,7 +986,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductDocument
+-- DBTITLE 1,2.20 ProductDocument
 -- Production.ProductDocument: 3 colunas
 create or replace table workspace.adventure_works.productdocument as
 select
@@ -1006,7 +1006,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.Location
+-- DBTITLE 1,2.21 Location
 -- Production.Location: 5 colunas
 create or replace table workspace.adventure_works.location as
 select
@@ -1028,7 +1028,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductInventory
+-- DBTITLE 1,2.22 ProductInventory
 -- Production.ProductInventory: 7 colunas
 create or replace table workspace.adventure_works.productinventory as
 select
@@ -1052,7 +1052,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductListPriceHistory
+-- DBTITLE 1,2.23 ProductListPriceHistory
 -- Production.ProductListPriceHistory: 5 colunas
 create or replace table workspace.adventure_works.productlistpricehistory as
 select
@@ -1074,7 +1074,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.Illustration
+-- DBTITLE 1,2.24 Illustration
 -- Production.Illustration: 3 colunas
 create or replace table workspace.adventure_works.illustration as
 select
@@ -1094,7 +1094,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductModelIllustration
+-- DBTITLE 1,2.25 ProductModelIllustration
 -- Production.ProductModelIllustration: 3 colunas
 create or replace table workspace.adventure_works.productmodelillustration as
 select
@@ -1114,7 +1114,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductModelProductDescriptionCulture
+-- DBTITLE 1,2.26 ProductModelProductDescriptionCulture
 -- Production.ProductModelProductDescriptionCulture: 4 colunas
 create or replace table workspace.adventure_works.productmodelproductdescriptionculture as
 select
@@ -1135,7 +1135,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ProductProductPhoto
+-- DBTITLE 1,2.27 ProductProductPhoto
 -- Production.ProductProductPhoto: 4 colunas
 create or replace table workspace.adventure_works.productproductphoto as
 select
@@ -1156,7 +1156,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.ScrapReason
+-- DBTITLE 1,2.28 ScrapReason
 -- Production.ScrapReason: 3 colunas
 create or replace table workspace.adventure_works.scrapreason as
 select
@@ -1176,7 +1176,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.TransactionHistory
+-- DBTITLE 1,2.29 TransactionHistory
 -- Production.TransactionHistory: 9 colunas
 create or replace table workspace.adventure_works.transactionhistory as
 select
@@ -1202,7 +1202,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.TransactionHistoryArchive
+-- DBTITLE 1,2.30 TransactionHistoryArchive
 -- Production.TransactionHistoryArchive: 9 colunas
 create or replace table workspace.adventure_works.transactionhistoryarchive as
 select
@@ -1228,7 +1228,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.UnitMeasure
+-- DBTITLE 1,2.31 UnitMeasure
 -- Production.UnitMeasure: 3 colunas
 create or replace table workspace.adventure_works.unitmeasure as
 select
@@ -1248,7 +1248,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.WorkOrder
+-- DBTITLE 1,2.32 WorkOrder
 -- Production.WorkOrder: 10 colunas
 create or replace table workspace.adventure_works.workorder as
 select
@@ -1275,7 +1275,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Production.WorkOrderRouting
+-- DBTITLE 1,2.33 WorkOrderRouting
 -- Production.WorkOrderRouting: 12 colunas
 create or replace table workspace.adventure_works.workorderrouting as
 select
@@ -1309,7 +1309,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Purchasing.ProductVendor
+-- DBTITLE 1,2.34 ProductVendor
 -- Purchasing.ProductVendor: 11 colunas
 create or replace table workspace.adventure_works.productvendor as
 select
@@ -1337,7 +1337,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Purchasing.PurchaseOrderDetail
+-- DBTITLE 1,2.35 PurchaseOrderDetail
 -- Purchasing.PurchaseOrderDetail: 11 colunas
 create or replace table workspace.adventure_works.purchaseorderdetail as
 select
@@ -1365,7 +1365,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Purchasing.PurchaseOrderHeader
+-- DBTITLE 1,2.36 PurchaseOrderHeader
 -- Purchasing.PurchaseOrderHeader: 13 colunas
 create or replace table workspace.adventure_works.purchaseorderheader as
 select
@@ -1395,7 +1395,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Purchasing.ShipMethod
+-- DBTITLE 1,2.37 ShipMethod
 -- Purchasing.ShipMethod: 6 colunas
 create or replace table workspace.adventure_works.shipmethod as
 select
@@ -1418,7 +1418,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Purchasing.Vendor
+-- DBTITLE 1,2.38 Vendor
 -- Purchasing.Vendor: 8 colunas
 create or replace table workspace.adventure_works.vendor as
 select
@@ -1448,7 +1448,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.CountryRegionCurrency
+-- DBTITLE 1,2.39 CountryRegionCurrency
 -- Sales.CountryRegionCurrency: 3 colunas
 create or replace table workspace.adventure_works.countryregioncurrency as
 select
@@ -1468,7 +1468,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.Currency
+-- DBTITLE 1,2.40 Currency
 -- Sales.Currency: 3 colunas
 create or replace table workspace.adventure_works.currency as
 select
@@ -1488,7 +1488,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.CurrencyRate
+-- DBTITLE 1,2.41 CurrencyRate
 -- Sales.CurrencyRate: 7 colunas
 create or replace table workspace.adventure_works.currencyrate as
 select
@@ -1512,7 +1512,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.PersonCreditCard
+-- DBTITLE 1,2.42 PersonCreditCard
 -- Sales.PersonCreditCard: 3 colunas
 create or replace table workspace.adventure_works.personcreditcard as
 select
@@ -1532,7 +1532,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesPersonQuotaHistory
+-- DBTITLE 1,2.43 SalesPersonQuotaHistory
 -- Sales.SalesPersonQuotaHistory: 5 colunas
 create or replace table workspace.adventure_works.salespersonquotahistory as
 select
@@ -1554,7 +1554,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesTaxRate
+-- DBTITLE 1,2.44 SalesTaxRate
 -- Sales.SalesTaxRate: 7 colunas
 create or replace table workspace.adventure_works.salestaxrate as
 select
@@ -1578,7 +1578,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SalesTerritoryHistory
+-- DBTITLE 1,2.45 SalesTerritoryHistory
 -- Sales.SalesTerritoryHistory: 6 colunas
 create or replace table workspace.adventure_works.salesterritoryhistory as
 select
@@ -1601,7 +1601,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.ShoppingCartItem
+-- DBTITLE 1,2.46 ShoppingCartItem
 -- Sales.ShoppingCartItem: 6 colunas
 create or replace table workspace.adventure_works.shoppingcartitem as
 select
@@ -1624,7 +1624,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,Sales.SpecialOfferProduct
+-- DBTITLE 1,2.47 SpecialOfferProduct
 -- Sales.SpecialOfferProduct: 4 colunas
 create or replace table workspace.adventure_works.specialofferproduct as
 select
@@ -1657,7 +1657,7 @@ from read_files(
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.1 Dinheiro ficou decimal(19, 4)?
+-- DBTITLE 1,3.1 Tipo do dinheiro
 -- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas tres.
 --     Com double, o teste de aceite sai arredondado e a causa fica escondida no tipo.
 select
@@ -1673,7 +1673,7 @@ order by column_name asc;
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.2 A contagem bate com a origem?
+-- DBTITLE 1,3.2 Contagem por tabela
 -- 3.2 A contagem bate com o arquivo de origem? As 17 da analise tem de dar `ok`.
 --     `nao carregada` em camada bruta e esperado se voce parou na secao 1.
 with contagem as (
@@ -2144,7 +2144,7 @@ order by
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.3 As sete juncoes tem orfao?
+-- DBTITLE 1,3.3 As sete juncoes
 -- 3.3 As sete juncoes que a analise usa: alguma tem orfao? Tem de dar ZERO em todas.
 --     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.
 select
@@ -2221,7 +2221,7 @@ where person.businessentityid is null
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.4 O NULL sobreviveu a carga?
+-- DBTITLE 1,3.4 NULL sobreviveu
 -- 3.4 O NULL sobreviveu? Tem de dar 27.659 sem vendedor e ZERO com vendedor 0.
 --     Sem o nullValue, campo vazio em coluna int recebe 0 e inventa um vendedor.
 select
@@ -2233,7 +2233,7 @@ from workspace.adventure_works.salesorderheader;
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.5 O teste de aceite do briefing
+-- DBTITLE 1,3.5 Aceite do briefing
 -- 3.5 O teste de aceite do briefing. Tem de dar FECHA.
 --     Soma exata = 12646112.1607; o briefing informa arredondado a centavos, porque
 --     unitprice tem 4 casas e 2.832 dos 5.642 itens de 2011 usam as quatro.
@@ -2253,7 +2253,7 @@ where year(salesorderheader.orderdate) = 2011;
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.6 A integridade do linetotal
+-- DBTITLE 1,3.6 Integridade linetotal
 -- 3.6 A integridade do linetotal. Tem de dar 121317 linhas e ZERO fora de um centavo.
 --     Nesta base o campo vem do arquivo, nao e calculado pelo banco.
 select

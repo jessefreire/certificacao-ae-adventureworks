@@ -259,14 +259,18 @@ def md(texto):
     return "\n".join(["-- MAGIC %md"] + [f"-- MAGIC {l}".rstrip() for l in texto.split("\n")])
 
 
-def celula_da_tabela(schema, original, tabela, cols):
+def celula_da_tabela(schema, original, tabela, cols, titulo):
+    """`titulo` e o DBTITLE, o nome da celula na navegacao do Databricks.
+
+    Formato `<secao>.<NN> NomeDaTabela`, sem o schema. O painel corta o titulo em
+    torno de 22 caracteres, entao o prefixo de schema (`Production.`) gastaria 11
+    deles antes de chegar ao que distingue a celula. O schema continua visivel no
+    cabecalho de markdown do bloco e no comentario da propria celula.
+    """
     casts = [f"cast(_c{i} as {tipo_databricks(c, t)}) as {ident(c)}"
              for i, (c, t) in enumerate(cols)]
     return (
-        # DBTITLE e o titulo da celula no Databricks. Sem ele a celula aparece sem
-        # nome na navegacao do notebook, e 64 celulas sem nome nao ajudam ninguem a
-        # achar a tabela que falhou.
-        f"-- DBTITLE 1,{schema}.{original}\n"
+        f"-- DBTITLE 1,{titulo}\n"
         f"-- {schema}.{original}: {len(cols)} colunas\n"
         f"create or replace table {ALVO}.{tabela} as\n"
         f"select\n"
@@ -402,9 +406,10 @@ dbt — declarar source e assumir o teste e a documentacao dela.
 Se a cota interromper a carga aqui, a Etapa 2 esta desbloqueada mesmo assim."""))
 
 n_cast = 0
-for tabela in ESCOPO_ANALISE:
+for n, tabela in enumerate(ESCOPO_ANALISE, 1):
     schema, original, cols = tabelas[tabela]
-    celulas.append(celula_da_tabela(schema, original, tabela, cols))
+    celulas.append(celula_da_tabela(schema, original, tabela, cols,
+                                    f"1.{n:02d} {original}"))
     n_cast += len(cols)
 
 # ---------------------------------------------------------------- secao 2: o resto
@@ -424,13 +429,18 @@ escolha:
 
 """ + "\n".join(f"- **`{t}`** — {motivo}" for t, motivo in EXCLUIDAS.items())))
 
+# a sequencia da secao 2 corre pelas cinco subsecoes de schema sem reiniciar:
+# o numero tem de crescer junto com a ordem das celulas no notebook
+n_resto = 0
 for schema in ["Person", "HumanResources", "Production", "Purchasing", "Sales"]:
     if schema not in por_schema:
         continue
     celulas.append(md(f"## 2.{list(NOME_SCHEMA).index(schema) + 1} {NOME_SCHEMA[schema]}"))
     for tabela in por_schema[schema]:
         s, original, cols = tabelas[tabela]
-        celulas.append(celula_da_tabela(s, original, tabela, cols))
+        n_resto += 1
+        celulas.append(celula_da_tabela(s, original, tabela, cols,
+                                        f"2.{n_resto:02d} {original}"))
         n_cast += len(cols)
 
 # ---------------------------------------------------------------- secao 3: conferencias
@@ -443,7 +453,7 @@ Os valores esperados estao embutidos no SQL, medidos nos proprios arquivos de or
 Quem roda nao precisa saber de cor que sao 65 tabelas ou que a receita de 2011 e
 12.646.112,16."""))
 
-celulas.append("""-- DBTITLE 1,3.1 Dinheiro ficou decimal(19, 4)?
+celulas.append("""-- DBTITLE 1,3.1 Tipo do dinheiro
 -- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas tres.
 --     Com double, o teste de aceite sai arredondado e a causa fica escondida no tipo.
 select
@@ -468,7 +478,7 @@ sel = "\n    union all\n".join(
     f"    from {ALVO}.{t}"
     for t, n in linhas_esperadas)
 
-celulas.append(f"""-- DBTITLE 1,3.2 A contagem bate com a origem?
+celulas.append(f"""-- DBTITLE 1,3.2 Contagem por tabela
 -- 3.2 A contagem bate com o arquivo de origem? As 17 da analise tem de dar `ok`.
 --     `nao carregada` em camada bruta e esperado se voce parou na secao 1.
 with contagem as (
@@ -522,12 +532,12 @@ blocos.append(
     "where person.businessentityid is null\n    and store.businessentityid is null")
 
 celulas.append(
-    "-- DBTITLE 1,3.3 As sete juncoes tem orfao?\n"
+    "-- DBTITLE 1,3.3 As sete juncoes\n"
     "-- 3.3 As sete juncoes que a analise usa: alguma tem orfao? Tem de dar ZERO em todas.\n"
     "--     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.\n"
     + "\n\nunion all\n\n".join(blocos) + ";")
 
-celulas.append(f"""-- DBTITLE 1,3.4 O NULL sobreviveu a carga?
+celulas.append(f"""-- DBTITLE 1,3.4 NULL sobreviveu
 -- 3.4 O NULL sobreviveu? Tem de dar 27.659 sem vendedor e ZERO com vendedor 0.
 --     Sem o nullValue, campo vazio em coluna int recebe 0 e inventa um vendedor.
 select
@@ -537,7 +547,7 @@ select
     , count(*) - count(salespersonid) as sem_vendedor_esperado_27659
 from {ALVO}.salesorderheader;""")
 
-celulas.append(f"""-- DBTITLE 1,3.5 O teste de aceite do briefing
+celulas.append(f"""-- DBTITLE 1,3.5 Aceite do briefing
 -- 3.5 O teste de aceite do briefing. Tem de dar FECHA.
 --     Soma exata = 12646112.1607; o briefing informa arredondado a centavos, porque
 --     unitprice tem 4 casas e 2.832 dos 5.642 itens de 2011 usam as quatro.
@@ -555,7 +565,7 @@ inner join {ALVO}.salesorderheader
     on salesorderdetail.salesorderid = salesorderheader.salesorderid
 where year(salesorderheader.orderdate) = 2011;""")
 
-celulas.append(f"""-- DBTITLE 1,3.6 A integridade do linetotal
+celulas.append(f"""-- DBTITLE 1,3.6 Integridade linetotal
 -- 3.6 A integridade do linetotal. Tem de dar 121317 linhas e ZERO fora de um centavo.
 --     Nesta base o campo vem do arquivo, nao e calculado pelo banco.
 select
