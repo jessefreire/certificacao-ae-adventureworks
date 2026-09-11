@@ -15,9 +15,9 @@
 # MAGIC
 # MAGIC | Secao | O que tem | Celulas |
 # MAGIC |---|---|---|
-# MAGIC | **1. Perfil do dado** | O que existe aqui dentro: tamanho, canais, nulos, unicidade das chaves. Nao responde pergunta de negocio — estabelece o que da para perguntar | 6 consultas |
+# MAGIC | **1. Perfil do dado** | O que existe aqui dentro: tamanho, canais, nulos, unicidade das chaves. Nao responde pergunta de negocio — estabelece o que da para perguntar | 7 consultas |
 # MAGIC | **2. Reconciliacao** | O numero que o CEO cobra, antes de qualquer conclusao. Se este nao fecha, nada depois vale | 1 consulta |
-# MAGIC | **3 a 8** | Uma secao por pergunta, de (a) a (f). Cada uma abre com o enunciado do briefing, responde o minimo pedido, e depois percorre seus aprofundamentos | 24 consultas |
+# MAGIC | **3 a 8** | Uma secao por pergunta, de (a) a (f). Cada uma abre com o enunciado do briefing, responde o minimo pedido, e depois percorre seus aprofundamentos | 25 consultas |
 # MAGIC | **Graficos** | Nove, em dois grupos — ver abaixo | 9 celulas Python |
 # MAGIC | **9. Sintese** | O que a exploracao mudou no entendimento do dataset, que e a frase que o briefing pede | — |
 # MAGIC
@@ -46,8 +46,14 @@
 # MAGIC orfao nas sete juncoes, 27.659 pedidos sem vendedor preservados como NULL, o aceite
 # MAGIC fechando em `12.646.112,1607` e zero linha fora de um centavo no `linetotal`.
 # MAGIC
-# MAGIC Este notebook usa **17** dessas tabelas — as que as seis perguntas exigem. Ele so le:
-# MAGIC nao cria, nao carrega, nao altera nada. Rodar de novo e sempre seguro.
+# MAGIC Este notebook le **16** tabelas. O escopo declarado da analise tem 17, e a que
+# MAGIC sobra e `salesperson`: canal vem de `onlineorderflag`, nao do vendedor, entao ela
+# MAGIC nao e usada aqui e entra na Etapa 3 como dimensao. Vale dizer isso em vez de
+# MAGIC arredondar para 17 — a diferenca entre o que se declara e o que se usa e
+# MAGIC exatamente o que o dbt vai cobrar na Etapa 5, quando cada `source` declarado
+# MAGIC passa a exigir teste e documentacao.
+# MAGIC
+# MAGIC Ele so **le**: nao cria, nao carrega, nao altera nada. Rodar de novo e sempre seguro.
 # MAGIC
 # MAGIC Precisa de **compute de notebook** anexado, e nao apenas do SQL warehouse: as celulas
 # MAGIC de grafico rodam `toPandas()` e matplotlib, que e codigo Python.
@@ -217,6 +223,28 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC %md
+# MAGIC A checagem anterior olhou o elo produto -> subcategoria. Esta olha o de cima,
+# MAGIC subcategoria -> categoria, porque afirmar que "a hierarquia esta completa" sem
+# MAGIC conferir os dois niveis e afirmar o que nao se mediu.
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- A hierarquia fecha de ponta a ponta? Tem de dar ZERO orfao nos dois niveis,
+# MAGIC -- e 4 categorias com 37 subcategorias.
+# MAGIC select
+# MAGIC     count(distinct productcategory.productcategoryid) as categorias
+# MAGIC     , count(distinct productsubcategory.productsubcategoryid) as subcategorias
+# MAGIC     , sum(
+# MAGIC         case when productcategory.productcategoryid is null then 1 else 0 end
+# MAGIC     ) as subcategoria_sem_categoria
+# MAGIC from workspace.adventure_works.productsubcategory
+# MAGIC left join workspace.adventure_works.productcategory
+# MAGIC     on productsubcategory.productcategoryid = productcategory.productcategoryid
+
+# COMMAND ----------
+
 # MAGIC **O furo do cadastro coincide com o furo de venda.** 209 produtos sem subcategoria,
 # MAGIC e nenhum deles vende. A hierarquia esta completa para 100% do que gera receita —
 # MAGIC ou seja, a dimensao de produto da Etapa 3 pode usar categoria e subcategoria sem
@@ -856,11 +884,51 @@
 # MAGIC oposto: **nao existe praca que mova o ponteiro** — estrategia por cidade e
 # MAGIC desperdicio, e o corte relevante e pais ou territorio.
 # MAGIC
-# MAGIC Uma coluna errada inverteu a recomendacao. E por isso que o `03-verificacao` existe.
+# MAGIC Uma coluna errada inverteu a recomendacao, e ninguem teria notado pelo formato do
+# MAGIC resultado. E por isso que as conferencias da ingestao existem, e por isso que
+# MAGIC este notebook abre com perfil e reconciliacao antes de qualquer conclusao.
 
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC %md
+# MAGIC ### O corte que sobra quando cidade nao serve
+# MAGIC
+# MAGIC Se as cinco maiores cidades sao 11% e a receita esta espalhada por 558 delas, o
+# MAGIC corte geografico util nao e cidade. O `salesterritory` e a alternativa que a base
+# MAGIC oferece, e ele agrupa por regiao comercial em vez de por municipio.
+# MAGIC
+# MAGIC Isto nao esta nas seis perguntas — entra porque a conclusao de `d.1` recomenda o
+# MAGIC corte por territorio, e recomendar sem mostrar seria pedir confianca no lugar de
+# MAGIC evidencia.
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- Receita por territorio comercial, o corte que a conclusao de d.1 recomenda.
+# MAGIC -- Sao 10 territorios contra 558 cidades: cada linha aqui move o ponteiro.
+# MAGIC select
+# MAGIC     salesterritory.name as territorio
+# MAGIC     , salesterritory.countryregioncode as pais
+# MAGIC     , count(distinct salesorderheader.salesorderid) as pedidos
+# MAGIC     , round(sum(salesorderdetail.linetotal), 2) as receita_liquida
+# MAGIC     , round(
+# MAGIC         100.0 * sum(salesorderdetail.linetotal)
+# MAGIC         / sum(sum(salesorderdetail.linetotal)) over ()
+# MAGIC         , 1
+# MAGIC     ) as pct_da_receita
+# MAGIC from workspace.adventure_works.salesorderheader
+# MAGIC inner join workspace.adventure_works.salesorderdetail
+# MAGIC     on salesorderheader.salesorderid = salesorderdetail.salesorderid
+# MAGIC inner join workspace.adventure_works.salesterritory
+# MAGIC     on salesorderheader.territoryid = salesterritory.territoryid
+# MAGIC group by
+# MAGIC     salesterritory.name
+# MAGIC     , salesterritory.countryregioncode
+# MAGIC order by receita_liquida desc
+
+# COMMAND ----------
+
 # MAGIC ## d.2 — A top 5 de valor e a mesma de volume?
 # MAGIC
 # MAGIC Se as duas listas divergem, ha cidade de ticket alto e cidade de giro alto — e

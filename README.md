@@ -182,8 +182,8 @@ para 20.777, `employeepayhistory` de 1.580 para 316. O `create or replace` subst
 
 ## Análise exploratória (Etapa 2)
 
-[`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) — 80 células:
-40 de markdown, 31 de SQL e 9 de gráfico. Linguagem padrão **Python**, porque os gráficos
+[`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) — 84 células:
+42 de markdown, 33 de SQL e 9 de gráfico. Lê **16** das 17 tabelas do escopo da análise. Linguagem padrão **Python**, porque os gráficos
 exigem, com o SQL em células `%sql`.
 
 **A pergunta não se descobre nele.** A estrutura segue a Etapa 1: perfil do dado, reconciliação
@@ -219,8 +219,16 @@ python scripts/linta_notebook.py --fix    # corrige e devolve às células
 ```
 
 O sqlfluff não lê notebook. A ferramenta extrai cada célula para um arquivo, roda o linter, e
-com `--fix` devolve o SQL corrigido. Cobertura atual: **31 de 31** células do notebook de
+com `--fix` devolve o SQL corrigido. Cobertura atual: **33 de 33** células do notebook de
 análise e **6 de 6** células de conferência da ingestão, zero violação.
+
+Ela também **confere se a abertura do notebook de EDA está dizendo a verdade**: se as seções
+prometidas existem, se a contagem de consultas por seção bate, se o número de gráficos e de
+tabelas lidas confere, e se não sobrou referência a arquivo apagado. Isso existe porque aquela
+abertura já mentiu três vezes — citava os scripts de ingestão depois da consolidação, dizia
+cinco conferências quando eram seis, e afirmava 17 tabelas quando o notebook lia 13.
+Documentação que desvia do artefato é pior que documentação nenhuma, então o desvio passou a
+falhar no linter em vez de ser descoberto por leitura.
 
 As 65 células de ingestão **não** são linteadas, e isso é declarado em vez de escondido: a
 versão 1.4.5 não parseia `read_files(format => 'csv')` nem `COPY INTO`. A ferramenta separa as

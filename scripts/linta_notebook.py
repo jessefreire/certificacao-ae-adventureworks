@@ -107,6 +107,66 @@ def linta(pasta):
     return saida
 
 
+def confere_abertura(caminho, texto):
+    """A celula de abertura promete uma estrutura. Ela tem de ser verdade.
+
+    Existe porque a abertura ja mentiu tres vezes: citava arquivos de ingestao que
+    foram apagados na consolidacao, dizia "cinco conferencias" quando eram seis, e
+    afirmava 17 tabelas quando o notebook lia 13. Documentacao que desvia do
+    artefato e pior do que documentacao nenhuma — entao o desvio passa a falhar
+    aqui, e nao a ser descoberto por leitura.
+    """
+    if caminho.name != "02-analise-exploratoria.py":
+        return []
+
+    celulas = texto.split(SEPARADOR_PY)
+    erros = []
+
+    # 1. nada de referencia a arquivo que nao existe mais
+    for morto in ("00-ingestao", "01-ddl", "02-carga", "02.99", "03-verificacao",
+                  "notebooks/"):
+        if morto in texto:
+            erros.append(f"a abertura cita `{morto}`, que nao existe mais")
+
+    # 2. as secoes prometidas existem
+    for prometido in ("# 1. Perfil do dado", "# 2. Reconciliacao", "# Graficos",
+                      "# 9. Sintese"):
+        if f"# MAGIC {prometido}" not in texto:
+            erros.append(f"a abertura promete `{prometido}`, que nao existe")
+
+    # 3. a contagem por secao na tabela da abertura bate com a realidade
+    marcos = []
+    for i, c in enumerate(celulas):
+        for nome in ("# 1. Perfil", "# 2. Reconciliacao", "# 3. Pergunta",
+                     "# Graficos", "# 9. Sintese"):
+            if f"# MAGIC {nome}" in c:
+                marcos.append((nome, i))
+    marcos.sort(key=lambda x: x[1])
+    real = {}
+    for (nome, ini), (_, fim) in zip(marcos, marcos[1:] + [("fim", len(celulas))]):
+        real[nome] = sum(1 for c in celulas[ini:fim]
+                         if c.lstrip().startswith("# MAGIC %sql"))
+    for nome, rotulo in (("# 1. Perfil", "perfil"), ("# 2. Reconciliacao", "reconciliacao"),
+                         ("# 3. Pergunta", "as seis perguntas")):
+        n = real.get(nome, 0)
+        # singular e plural: a tabela escreve "1 consulta", nao "1 consultas"
+        if f"| {n} consulta |" not in texto and f"| {n} consultas |" not in texto:
+            erros.append(
+                f"{rotulo} tem {n} consulta(s), e a tabela da abertura diz outro numero")
+
+    # 4. quantos graficos
+    n_graficos = texto.count("plt.show()")
+    if f"| {n_graficos} celulas Python |" not in texto:
+        erros.append(f"sao {n_graficos} graficos, e a tabela da abertura diz outro numero")
+
+    # 5. quantas tabelas o notebook LE, contra o que a abertura afirma
+    lidas = len(set(re.findall(r"workspace\.adventure_works\.(\w+)", texto)))
+    if f"le **{lidas}** tabelas" not in texto:
+        erros.append(f"o notebook le {lidas} tabelas, e a abertura afirma outro numero")
+
+    return erros
+
+
 falhou = False
 for alvo in alvos:
     texto, celulas = celulas_de(alvo)
@@ -117,6 +177,14 @@ for alvo in alvos:
     print(f"celulas de SQL: {len(celulas)}"
           f"  |  linteadas: {len(linta_veis)}"
           f"  |  ingestao, sintaxe nao suportada pela 1.4.5: {len(ingestao)}")
+
+    erros_abertura = confere_abertura(alvo, texto)
+    if erros_abertura:
+        falhou = True
+        for erro in erros_abertura:
+            print(f"  ABERTURA MENTINDO: {erro}")
+    elif alvo.name == "02-analise-exploratoria.py":
+        print("abertura: confere com o notebook")
 
     if not linta_veis:
         continue
