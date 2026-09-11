@@ -551,7 +551,7 @@ from read_files(
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## 2.1 Person — pessoas, endereco e geografia
+-- MAGIC ## 2.1 Person — pessoas, endereço e geografia
 
 -- COMMAND ----------
 

@@ -7,7 +7,7 @@ referencial de processos da Indicium AI, e medição direta nos CSVs da base.
 
 ## Decisão 1 — grão da tabela fato
 
-**Uma `fact_vendas`, no grão do item de pedido.** PK `salesorderdetailid`.
+**Uma `fact_sales`, no grão do item de pedido.** PK `salesorderdetailid`.
 
 | Evidência | Fonte |
 |---|---|
@@ -33,8 +33,8 @@ descreve como problema a evitar no Power BI. Uma fato elimina o problema inteiro
 
 ## Decisão 2 — tratamento de `SalesReason`
 
-**`dim_motivo_venda` + `bridge_venda_motivo`**, ligada por `salesorderid`, mais
-`tem_promocao` degenerada na fato.
+**`dim_sales_reason` + `bridge_order_sales_reason`**, ligada por `salesorderid`, mais
+`has_promotion_reason` degenerada na fato.
 
 O que o dado é, medido nos CSVs:
 
@@ -51,10 +51,10 @@ O que o dado é, medido nos CSVs:
 regra de prioridade que a origem não oferece — não há coluna de ordem, peso ou "principal".
 A informação descartada não volta.
 
-**Por que `tem_promocao` também:** a pergunta (f) é a única das seis que é *sobre* motivo, e
+**Por que `has_promotion_reason` também:** a pergunta (f) é a única das seis que é *sobre* motivo, e
 assim ela se responde sem atravessar a ponte — que é o que se demonstra no vídeo.
 
-**Membro "Não informado" é obrigatório** em `dim_motivo_venda`: sem ele, os 26,9% sem motivo
+**Membro "Não informado" é obrigatório** em `dim_sales_reason`: sem ele, os 26,9% sem motivo
 e os 100% da revenda somem de qualquer visual filtrado por motivo, e somem justamente no
 dashboard, onde ninguém confere.
 

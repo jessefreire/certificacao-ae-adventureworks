@@ -147,7 +147,7 @@ AMBIGUAS = {
     # singular contra plural do verbo
     "tem", "vem",
     # verbo contra substantivo ou contra infinitivo com pronome (`ligá-la`)
-    "liga", "acompanha", "caia", "continuo", "valido", "conta", "torna", "sabia",
+    "liga", "acompanha", "caia", "gera", "continuo", "valido", "conta", "torna", "sabia",
     "critica", "medida", "secretaria", "duvida", "publica", "pratica",
 }
 
@@ -178,7 +178,12 @@ SUFIXOS = [
 # `ignoraria`, `derrubaria` — e com `varia`. Foi o teste que mostrou, não o raciocínio.
 
 # Palavras que casam um sufixo mas não são português.
-ESTRANGEIRAS = {"scenario", "primario", "ratio", "level", "novel", "travel", "ario"}
+ESTRANGEIRAS = {
+    "scenario", "primario", "ratio", "level", "novel", "travel", "ario",
+    # termos tecnicos usados o tempo todo neste repositorio, e que NAO sao portugues:
+    # `alias` de SQL nao e `aliás`, `medio` em ingles nao existe mas `media` sim.
+    "alias", "media", "grid", "index", "series",
+}
 
 
 def suspeita_por_sufixo(palavra):
@@ -192,18 +197,37 @@ def suspeita_por_sufixo(palavra):
     return None
 
 
+# A derivação tem um segundo ponto cego, e este chegou a passar: uma palavra comuníssima
+# cuja forma acentuada existe em um caso raro. `Para quê` numa tabela ensinou o corretor que
+# `que` deveria virar `quê` — e `que` aparece 523 vezes contra 1 de `quê`. Teria reescrito o
+# repositório inteiro.
+#
+# A defesa é a própria frequência: num erro genuíno as duas formas convivem em ordem de
+# grandeza parecida (medido: no máximo 4x). Numa ambiguidade a forma sem acento domina.
+RAZAO_SUSPEITA = 10
+MINIMO_PARA_JULGAR = 10
+
+
 def deriva_do_corpus(textos):
     """Mapa `forma errada -> forma certa` extraído das palavras acentuadas do próprio texto."""
-    derivado = {}
+    frequencia = Counter()
     for texto in textos:
-        for palavra in re.findall(r"\b\w+\b", texto, re.UNICODE):
-            if not any(ord(c) > 127 for c in palavra):
-                continue
-            correta = palavra.lower()
-            errada = _sem_acento(correta)
-            if errada == correta or not errada.isalpha() or errada in AMBIGUAS:
-                continue
-            derivado[errada] = correta
+        frequencia.update(p.lower() for p in re.findall(r"\b\w+\b", texto, re.UNICODE))
+
+    derivado = {}
+    for palavra, _ in frequencia.items():
+        if not any(ord(c) > 127 for c in palavra):
+            continue
+        correta = palavra
+        errada = _sem_acento(correta)
+        if errada == correta or not errada.isalpha():
+            continue
+        if errada in AMBIGUAS or errada in ESTRANGEIRAS:
+            continue
+        n_errada, n_correta = frequencia[errada], frequencia[correta]
+        if n_errada >= MINIMO_PARA_JULGAR and n_errada > n_correta * RAZAO_SUSPEITA:
+            continue          # a forma sem acento domina: é palavra por direito próprio
+        derivado[errada] = correta
     return derivado
 
 MOJIBAKE = re.compile(r"Ã[\x80-\xbf]|Â[\x80-\xbf]|â€|�")
@@ -217,7 +241,8 @@ PROTEGIDO = [
                r"linta_notebook|titula_celulas|audita_tipos|confere_portugues|"
                r"01-kpis-e-perguntas|01\.01-mapa-completo|desafio-adventureworks|"
                r"adventureworks-oficial|raw_adventure_works|adventure_works|"
-               r"formacao-analytics-engineering)\b"),
+               r"formacao-analytics-engineering|certificacao-ae-adventureworks|"
+               r"entregaveis|gera_html_modelo|03\.01-modelo-conceitual)\b"),
     # Subscrito de string é nome de coluna vindo do alias do SQL, que fica em ASCII.
     # Sem esta linha o corretor lê `grupo["mes"]` como prosa, escreve `mês`, e o
     # gráfico morre com KeyError na execução — foi o que aconteceu.
@@ -226,6 +251,8 @@ PROTEGIDO = [
 
 BLOCO_CODIGO = re.compile(r"```.*?```", re.S)
 CRASE = re.compile(r"`[^`\n]+`")
+TEM_CSS_JS = re.compile(
+    r"<!doctype|<style|@media|@page|document\.|querySelector|function\s*\(", re.I)
 TEM_SQL = re.compile(r"\b(select|create or replace|read_files|union all|from workspace)\b", re.I)
 
 # A partir do Python 3.12 a f-string deixou de ser um token STRING e passou a ser
@@ -239,6 +266,26 @@ FSTRING_END = getattr(tokenize, "FSTRING_END", -3)
 IGNORA = {"confere_portugues.py"}
 PADROES = ["README.md", "docs/*.md", "databricks/*.sql", "databricks/*.py",
            "scripts/*.py", "entrega/*.txt"]
+
+
+def _comentarios_de_css_ou_js(texto, base=0):
+    """Spans dos comentários de um template CSS/JS. O resto é código.
+
+    Irmão de `_linhas_de_comentario_sql`, e existe pelo mesmo motivo: o
+    `gera_html_modelo.py` guarda uma página inteira dentro de uma string de Python, e a
+    regra "string de Python é prosa" acentuaria código. Foram três achados numa passagem
+    só — `@media print` virando `@média`, o seletor `pre > code` virando `pré`, e o
+    segmento de caminho `"entregaveis"` virando `"entregáveis"`, que abriria pasta
+    inexistente.
+
+    Os comentários continuam sendo prosa e continuam sendo conferidos, que é o ponto.
+    """
+    spans = []
+    for m in re.finditer(r"/\*.*?\*/", texto, re.S):
+        spans.append((base + m.start() + 2, base + m.end() - 2))
+    for m in re.finditer(r"(?m)^\s*//(.*)$", texto):
+        spans.append((base + m.start(1), base + m.end(1)))
+    return spans
 
 
 def _linhas_de_comentario_sql(texto, base=0):
@@ -349,7 +396,9 @@ def regioes_prosa(caminho, texto):
             depois = texto[fim:].lstrip()
             if antes.endswith("[") and depois.startswith("]"):
                 continue
-            if TEM_SQL.search(tok.string) and not markdown:
+            if TEM_CSS_JS.search(tok.string) and not markdown:
+                spans += _comentarios_de_css_ou_js(tok.string, base)
+            elif TEM_SQL.search(tok.string) and not markdown:
                 spans += _linhas_de_comentario_sql(tok.string, base)
             else:
                 spans.append((base, base + len(tok.string)))

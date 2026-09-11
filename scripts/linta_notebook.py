@@ -202,7 +202,7 @@ def confere_titulos(caminho, texto):
         erros.append(f"título sem prefixo numérico: {sem_numero[:3]}")
 
     # Rótulo em prosa tem de caber; nome de tabela não tem o que encurtar sem
-    # inventar abreviação, e o número mantem a célula localizável mesmo cortada.
+    # inventar abreviação, e o número mantém a célula localizável mesmo cortada.
     # Duas tabelas do AdventureWorks passam de 32 caracteres só no nome:
     # SalesOrderHeaderSalesReason e ProductModelProductDescriptionCulture.
     def rotulo(x):

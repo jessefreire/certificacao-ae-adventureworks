@@ -166,7 +166,7 @@
 # MAGIC %sql
 # DBTITLE 1,1.4 Nulos por coluna
 # MAGIC -- Nulos nas colunas que a análise usa. Esperado: 27.659 sem vendedor (= online),
-# MAGIC -- 1.131 sem cartão, e ZERO pedido sem território ou sem endereco.
+# MAGIC -- 1.131 sem cartão, e ZERO pedido sem território ou sem endereço.
 # MAGIC select
 # MAGIC     count(*) as pedidos
 # MAGIC     , count(*) - count(salesorderheader.salespersonid) as sem_vendedor
@@ -926,7 +926,7 @@
 # MAGIC vendem (de 613 cadastradas). A receita e **pulverizada**, não concentrada.
 # MAGIC
 # MAGIC Registro de um erro meu na Etapa 1, porque ele ilustra o risco desta pergunta: eu
-# MAGIC calculei 39,7% ao ler a coluna errada do endereco (`addressline2` em vez de `city`).
+# MAGIC calculei 39,7% ao ler a coluna errada do endereço (`addressline2` em vez de `city`).
 # MAGIC Com 39,7% a conclusão seria "concentre esforço em cinco praças". Com 11,0% e o
 # MAGIC oposto: **não existe praça que mova o ponteiro** — estratégia por cidade e
 # MAGIC desperdicio, e o corte relevante e pais ou território.

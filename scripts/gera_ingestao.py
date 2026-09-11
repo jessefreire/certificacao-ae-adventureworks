@@ -134,7 +134,7 @@ set some start table tablesample then time to trailing true truncate union uniqu
 unknown update user using values when where window with""".split())
 
 NOME_SCHEMA = {
-    "Person": "Person — pessoas, endereco e geografia",
+    "Person": "Person — pessoas, endereço e geografia",
     "HumanResources": "HumanResources — funcionarios e departamentos",
     "Production": "Production — produto, categoria e produção",
     "Purchasing": "Purchasing — fornecedor e compras",
