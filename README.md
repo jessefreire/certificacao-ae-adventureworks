@@ -38,9 +38,9 @@ entrega/       links.txt, que o briefing exige em arquivo de texto
 | # | Etapa | Entregável | Status |
 |---|---|---|---|
 | 1 | KPIs e perguntas de negócio | [`docs/01-kpis-e-perguntas.md`](docs/01-kpis-e-perguntas.md) · [mapa](docs/01.01-mapa-completo.md) | **completa** |
-| 2 | Análise exploratória | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | escrita, falta executar |
+| 2 | Análise exploratória | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | escrita, pronta para executar |
 | 3 | Modelo conceitual | PDF | — |
-| 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | ingestão feita |
+| 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | **ingestão completa e conferida** |
 | 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
 | 6 | Mockup do dashboard | JPEG, no Figma | — |
 | 7 | Dashboard | Power BI ou Databricks AI/BI | — |
@@ -173,7 +173,12 @@ Os valores esperados estão embutidos no SQL, medidos nos próprios arquivos de 
 | 3.5 | o aceite do briefing | `FECHA`, com soma exata `12.646.112,1607` |
 | 3.6 | integridade do `linetotal` | 121.317 linhas, zero fora de um centavo |
 
-Resultado da última execução: **todas passaram.**
+Resultado da última execução: **todas passaram** — as 64 tabelas em `ok`, com a contagem
+idêntica à dos arquivos de origem, e o aceite fechando em `12.646.112,1607`.
+
+Essa execução também é a prova prática de que a duplicação morreu: as 13 tabelas que estavam
+em 2x, 3x e 5x voltaram ao número exato sem nenhuma intervenção. `businessentity` de 41.554
+para 20.777, `employeepayhistory` de 1.580 para 316. O `create or replace` substitui.
 
 ## Análise exploratória (Etapa 2)
 
