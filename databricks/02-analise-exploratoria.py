@@ -1077,8 +1077,22 @@
 # MAGIC %md
 # MAGIC # Graficos
 # MAGIC
-# MAGIC Cinco, um por achado forte. Cada um existe porque a tabela nao mostra o que o
-# MAGIC grafico mostra.
+# MAGIC Dois grupos, com propositos diferentes.
+# MAGIC
+# MAGIC **Os cinco primeiros existem porque a tabela nao mostra o que o grafico mostra:** a
+# MAGIC quebra estrutural da serie, a uniformidade que desqualifica um corte, a cauda longa
+# MAGIC do catalogo, a confusao entre canal e mercado, e a comparacao que so vale dentro do
+# MAGIC mesmo canal. Servem aos aprofundamentos `e.1`, `a.1`, `a.2`, `b.2` e `f.2`.
+# MAGIC
+# MAGIC **Os quatro ultimos respondem visualmente as perguntas (b), (c), (d) e (f)**, que sao
+# MAGIC rankings — e ranking se le melhor em barra que em tabela.
+# MAGIC
+# MAGIC Com os nove, cada uma das seis perguntas do briefing tem ao menos um visual: a (a)
+# MAGIC pelo tipo de cartao e pelo Pareto, a (e) pela serie mensal, e as outras quatro no
+# MAGIC segundo grupo.
+# MAGIC
+# MAGIC Os quatro ultimos sao tambem o rascunho do dashboard da Etapa 7 — mesmo corte, mesmo
+# MAGIC aviso de escopo.
 
 # COMMAND ----------
 
@@ -1273,6 +1287,155 @@ plt.show()
 # COMMAND ----------
 
 # MAGIC %md
+# Pergunta (b): produtos com maior ticket medio. O corte de 30 pedidos esta no
+# TITULO do grafico, e nao escondido na consulta — sem ele o topo do ranking vira
+# produto que vendeu duas vezes com ticket altissimo.
+ticket_produto = spark.sql("""
+    select
+        product.name as produto
+        , cast(
+            sum(salesorderdetail.linetotal)
+            / count(distinct salesorderdetail.salesorderid)
+            as double
+        ) as ticket_medio
+    from workspace.adventure_works.salesorderdetail
+    inner join workspace.adventure_works.product
+        on salesorderdetail.productid = product.productid
+    group by product.name
+    having count(distinct salesorderdetail.salesorderid) >= 30
+    order by ticket_medio desc
+    limit 15
+""").toPandas()
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.barh(ticket_produto["produto"], ticket_produto["ticket_medio"], color="steelblue")
+ax.invert_yaxis()
+ax.set_title("(b) Maior ticket medio por produto — so produtos com 30+ pedidos")
+ax.set_xlabel("ticket medio (receita liquida / pedidos)")
+ax.grid(axis="x", alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# COMMAND ----------
+
+# Pergunta (c): os 10 maiores clientes. O titulo carrega o peso deles no total,
+# porque o ranking sozinho sugere que aqueles dez nomes sao a empresa — e nao sao.
+top_clientes = spark.sql("""
+    with por_cliente as (
+        select
+            coalesce(store.name, concat_ws(' ', person.firstname, person.lastname))
+                as cliente
+            , sum(salesorderdetail.linetotal) as receita
+        from workspace.adventure_works.salesorderheader
+        inner join workspace.adventure_works.salesorderdetail
+            on salesorderheader.salesorderid = salesorderdetail.salesorderid
+        inner join workspace.adventure_works.customer
+            on salesorderheader.customerid = customer.customerid
+        left join workspace.adventure_works.person
+            on customer.personid = person.businessentityid
+        left join workspace.adventure_works.store
+            on customer.storeid = store.businessentityid
+        group by coalesce(store.name, concat_ws(' ', person.firstname, person.lastname))
+    )
+
+    select
+        cliente
+        , cast(receita as double) as receita
+        , cast(100.0 * receita / sum(receita) over () as double) as pct
+    from por_cliente
+    order by receita desc
+    limit 10
+""").toPandas()
+
+peso = top_clientes["pct"].sum()
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.barh(top_clientes["cliente"], top_clientes["receita"], color="steelblue")
+ax.invert_yaxis()
+ax.set_title(f"(c) Os 10 maiores clientes — juntos, {peso:.1f}% da receita")
+ax.set_xlabel("receita liquida")
+ax.grid(axis="x", alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# COMMAND ----------
+
+# Pergunta (d): as 5 maiores cidades, com o resto ao lado. A barra do "outras" e
+# o ponto do grafico: sem ela, cinco barras grandes sugerem concentracao onde nao
+# ha. Foi exatamente o erro que eu cometi na Etapa 1, lendo a coluna errada.
+cidades = spark.sql("""
+    with por_cidade as (
+        select
+            address.city as cidade
+            , sum(salesorderdetail.linetotal) as receita
+        from workspace.adventure_works.salesorderheader
+        inner join workspace.adventure_works.salesorderdetail
+            on salesorderheader.salesorderid = salesorderdetail.salesorderid
+        inner join workspace.adventure_works.address
+            on salesorderheader.billtoaddressid = address.addressid
+        group by address.city
+    )
+
+    , ranqueado as (
+        select
+            cidade
+            , receita
+            , row_number() over (order by receita desc) as posicao
+        from por_cidade
+    )
+
+    select
+        case when posicao <= 5 then cidade else 'todas as outras cidades' end as grupo
+        , cast(sum(receita) as double) as receita
+    from ranqueado
+    group by case when posicao <= 5 then cidade else 'todas as outras cidades' end
+    order by receita desc
+""").toPandas()
+
+cores = ["indianred" if g.startswith("todas") else "steelblue" for g in cidades["grupo"]]
+fig, ax = plt.subplots(figsize=(10, 4.5))
+ax.barh(cidades["grupo"], cidades["receita"], color=cores)
+ax.invert_yaxis()
+ax.set_title("(d) As 5 maiores cidades contra o resto — a receita e pulverizada")
+ax.set_xlabel("receita liquida")
+ax.grid(axis="x", alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# COMMAND ----------
+
+# Pergunta (f): unidades vendidas quando o motivo e Promotion. O rotulo de escopo
+# no titulo nao e enfeite — motivo de venda existe SO no online, entao este
+# grafico descreve o varejo e nao a empresa.
+promo_produto = spark.sql("""
+    select
+        product.name as produto
+        , sum(salesorderdetail.orderqty) as unidades
+    from workspace.adventure_works.salesorderdetail
+    inner join workspace.adventure_works.product
+        on salesorderdetail.productid = product.productid
+    inner join workspace.adventure_works.salesorderheadersalesreason
+        on salesorderdetail.salesorderid = salesorderheadersalesreason.salesorderid
+    inner join workspace.adventure_works.salesreason
+        on salesorderheadersalesreason.salesreasonid = salesreason.salesreasonid
+    where salesreason.reasontype = 'Promotion'
+    group by product.name
+    order by unidades desc
+    limit 10
+""").toPandas()
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.barh(promo_produto["produto"], promo_produto["unidades"], color="steelblue")
+ax.invert_yaxis()
+ax.set_title("(f) Unidades no motivo Promotion — APENAS vendas online")
+ax.set_xlabel("unidades")
+ax.grid(axis="x", alpha=0.3)
+for i, v in enumerate(promo_produto["unidades"]):
+    ax.text(v, i, f" {v}", va="center", fontsize=8)
+plt.tight_layout()
+plt.show()
+
+# COMMAND ----------
+
 # MAGIC # 9. Sintese — o que a exploracao mudou no entendimento
 # MAGIC
 # MAGIC O briefing pede explicitamente esta secao: como os insights ajudaram a entender o

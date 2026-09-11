@@ -182,8 +182,8 @@ para 20.777, `employeepayhistory` de 1.580 para 316. O `create or replace` subst
 
 ## Análise exploratória (Etapa 2)
 
-[`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) — 76 células:
-40 de markdown, 31 de SQL e 5 de gráfico. Linguagem padrão **Python**, porque os gráficos
+[`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) — 80 células:
+40 de markdown, 31 de SQL e 9 de gráfico. Linguagem padrão **Python**, porque os gráficos
 exigem, com o SQL em células `%sql`.
 
 **A pergunta não se descobre nele.** A estrutura segue a Etapa 1: perfil do dado, reconciliação
@@ -193,6 +193,14 @@ com o número do CEO, e então uma seção por pergunta do briefing com seus apr
 O que cada seção entrega além da resposta é o aviso que impede a leitura errada: motivo de venda
 existe só no online, o ticket por país varia por mistura de canal, as cinco maiores cidades são
 11% da receita, e a série tem quebra estrutural em jul/2013.
+
+Os **nove gráficos** vêm em dois grupos, e a divisão é proposital. Os cinco primeiros existem
+onde o gráfico mostra algo que a tabela não mostra — a quebra da série, a uniformidade que
+desqualifica um corte, a cauda longa do catálogo, a confusão entre canal e mercado, e a
+comparação que só vale dentro do mesmo canal. Os quatro últimos respondem visualmente as
+perguntas **(b)**, **(c)**, **(d)** e **(f)**, que são rankings. Com os nove, cada uma das seis
+perguntas do briefing tem ao menos um visual — e os quatro últimos já são o rascunho do
+dashboard da Etapa 7, com o mesmo corte e o mesmo aviso de escopo.
 
 ## Convenções de código
 
