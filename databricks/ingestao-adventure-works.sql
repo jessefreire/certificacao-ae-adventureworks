@@ -519,7 +519,7 @@ from read_files(
 -- MAGIC %md
 -- MAGIC # 2. O resto da camada bruta
 -- MAGIC
--- MAGIC As outras 48 tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 nao
+-- MAGIC As outras 47 tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 nao
 -- MAGIC depende delas — mas subir tudo que carrega custa quase nada (79 MB, 759 mil linhas) e
 -- MAGIC remove o atrito de ingestao se o trabalho crescer para compras ou producao.
 -- MAGIC
@@ -529,6 +529,7 @@ from read_files(
 -- MAGIC - **`Document`** — coluna binaria (varbinary) nao atravessa TSV
 -- MAGIC - **`ProductPhoto`** — duas colunas binarias: ThumbNailPhoto e LargePhoto
 -- MAGIC - **`ProductReview`** — arquivo quebrado na origem: 7 campos onde o DDL declara 8, e quebra de linha dentro de campo (34 linhas para 31 registros)
+-- MAGIC - **`ProductModel`** — o XML de CatalogDescription tem 48 TABs dentro de campo aspado, e o leitor de CSV do Spark nao honra a aspa nesse caso: 6 das 128 linhas se partem, uma delas em 22 campos onde ha 6 colunas. Tentado com quote, com escape e sem: nenhuma combinacao resolve. O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega normalmente — entao o limite e a quantidade, nao a estrutura
 
 -- COMMAND ----------
 
@@ -897,28 +898,6 @@ select
     , cast(_c2 as timestamp) as modifieddate
 from read_files(
     '/Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/Culture.csv'
-    , format => 'csv'
-    , sep => '\t'
-    , header => false
-    , nullValue => ''
-    , quote => '"'
-    , escape => '"'
-    , mode => 'FAILFAST'
-);
-
--- COMMAND ----------
-
--- Production.ProductModel: 6 colunas
-create or replace table workspace.adventure_works.productmodel as
-select
-    cast(_c0 as int) as productmodelid
-    , cast(_c1 as string) as name
-    , cast(_c2 as string) as catalogdescription
-    , cast(_c3 as string) as instructions
-    , cast(_c4 as string) as rowguid
-    , cast(_c5 as timestamp) as modifieddate
-from read_files(
-    '/Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/ProductModel.csv'
     , format => 'csv'
     , sep => '\t'
     , header => false
@@ -1792,13 +1771,6 @@ with contagem as (
         , 37 as esperado
         , count(*) as carregado
     from workspace.adventure_works.productsubcategory
-    union all
-    select
-        'productmodel' as tabela
-        , 'camada bruta' as escopo
-        , 128 as esperado
-        , count(*) as carregado
-    from workspace.adventure_works.productmodel
     union all
     select
         'product' as tabela

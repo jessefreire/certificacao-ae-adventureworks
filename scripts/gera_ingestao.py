@@ -9,7 +9,7 @@ tenha `install.sql` e `data/`.
 
 ## Por que um gerador, e nao SQL escrito a mao
 
-Sao 65 tabelas e 437 colunas. A fonte da verdade e o `install.sql` do repositorio
+Sao 64 tabelas e 431 colunas. A fonte da verdade e o `install.sql` do repositorio
 oficial: dele saem nome, ORDEM e tipo de cada coluna. Escrever isso a mao seria
 convidar o desalinhamento silencioso — a carga e por POSICAO, porque os arquivos
 nao tem linha de cabecalho.
@@ -40,11 +40,11 @@ disciplina e passa a ser propriedade do codigo.
   - `quote => '"'`, ou seja aspa CSV HABILITADA. Eu havia desabilitado, com o
     raciocinio de que o XML do `person` tem aspas dentro do campo. Estava errado: o
     arquivo escapa aquelas aspas duplicando-as, que e exatamente a convencao CSV.
-    Desabilitar a aspa fazia o TAB dentro do XML partir o campo, e o FAILFAST
-    derrubava a carga do `jobcandidate` (1 linha ruim) e do `productmodel` (6, uma
-    delas com 22 campos onde ha 6 colunas). Com a aspa habilitada, as 65 tabelas
-    ficam consistentes, nenhuma contagem muda, e o XML entra limpo em vez de
-    escapado — conferido campo a campo nas 17 da analise.
+    Habilitar corrigiu o `jobcandidate` e deixou o XML do `person` e do `store`
+    entrar limpo em vez de escapado. Medido antes de mudar: nenhuma contagem de
+    linha muda, e nas 17 da analise a unica diferenca de conteudo esta em coluna
+    XML — conferido campo a campo. Nao resolveu o `productmodel`, que acabou em
+    EXCLUIDAS.
   - `escape => '"'`, e nao a barra invertida que o Spark usa por padrao. O arquivo
     escapa aspa DUPLICANDO-a, convencao CSV, e nao com barra. Sem declarar isso, o
     leitor trata cada barra invertida do conteudo como escape e o registro se desfaz: o
@@ -88,6 +88,12 @@ EXCLUIDAS = {
     "ProductPhoto": "duas colunas binarias: ThumbNailPhoto e LargePhoto",
     "ProductReview": "arquivo quebrado na origem: 7 campos onde o DDL declara 8, "
                      "e quebra de linha dentro de campo (34 linhas para 31 registros)",
+    "ProductModel": "o XML de CatalogDescription tem 48 TABs dentro de campo aspado, "
+                    "e o leitor de CSV do Spark nao honra a aspa nesse caso: 6 das 128 "
+                    "linhas se partem, uma delas em 22 campos onde ha 6 colunas. "
+                    "Tentado com quote, com escape e sem: nenhuma combinacao resolve. "
+                    "O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega "
+                    "normalmente — entao o limite e a quantidade, nao a estrutura",
 }
 
 # As 17 que as seis perguntas do briefing e os catorze aprofundamentos usam. Vem
@@ -572,8 +578,12 @@ SAIDA.write_text(fonte, encoding="utf-8")
 codigo = [l for l in fonte.split("\n") if not l.startswith("-- MAGIC")]
 n_tabelas = sum(1 for l in codigo if l.startswith("create or replace table "))
 n_casts_no_arquivo = sum(l.count("cast(_c") for l in codigo)
-assert n_tabelas == len(tabelas) == 65, f"{n_tabelas} create, {len(tabelas)} tabelas"
-assert n_casts_no_arquivo == n_cast == 437, f"{n_casts_no_arquivo} casts, esperava 437"
+# Coerencia entre o que a memoria contou e o que foi escrito no arquivo. Sem numero
+# fixo: o escopo muda quando uma tabela entra em EXCLUIDAS, e um numero cravado aqui
+# viraria mentira silenciosa. O piso de 400 casts pega perda grosseira.
+assert n_tabelas == len(tabelas), f"{n_tabelas} create no arquivo, {len(tabelas)} em memoria"
+assert n_casts_no_arquivo == n_cast, f"{n_casts_no_arquivo} casts no arquivo, {n_cast} contados"
+assert n_tabelas >= 60 and n_cast >= 400, f"perda de escopo: {n_tabelas} tabelas, {n_cast} casts"
 
 # `copy into` e `force` sao os dois sinais do desenho antigo, que duplicava linhas.
 sql = "\n".join(codigo).lower()

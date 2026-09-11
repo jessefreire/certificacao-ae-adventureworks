@@ -88,7 +88,7 @@ O clone fica em `Desafio/adventureworks-oficial/`, **fora do git**.
 ## Ingestão
 
 Um notebook, [`databricks/ingestao-adventure-works.sql`](databricks/ingestao-adventure-works.sql),
-com 81 células em três seções: as **17 tabelas que a análise usa**, as **48 restantes** da camada
+com 80 células em três seções: as **17 tabelas que a análise usa**, as **47 restantes** da camada
 bruta, e as **conferências**.
 
 ### Antes de rodar
@@ -130,24 +130,34 @@ correção do pior erro desta etapa, e ela vive no código em vez de depender de
 
 O cast explícito por posição existe porque os arquivos **não têm linha de cabeçalho**: o
 Databricks lê as colunas como `_c0`, `_c1`, e a única fonte da verdade sobre qual é qual é a
-ordem do `install.sql`. São 437 colunas nomeadas uma a uma — dinheiro em `decimal(19, 4)`, nunca
+ordem do `install.sql`. São 431 colunas nomeadas uma a uma — dinheiro em `decimal(19, 4)`, nunca
 `double`.
 
 ### Parar na seção 1 é um estado válido
 
 As 17 tabelas da análise vêm primeiro **de propósito**. A Free Edition esgota cota de compute, e
-parar ali deixa a Etapa 2 desbloqueada. As outras 48 não são usadas por nenhuma pergunta do
+parar ali deixa a Etapa 2 desbloqueada. As outras 47 não são usadas por nenhuma pergunta do
 briefing — sobem porque custam quase nada (79 MB, 759 mil linhas) e removem o atrito de ingestão
 se o trabalho crescer para compras ou produção.
 
 O escopo **modelado** é outra decisão: só as 17 serão declaradas como `source` no dbt, porque
 declarar source é assumir o teste e a documentação dela.
 
-### Três tabelas ficam de fora, por defeito de origem
+### Quatro tabelas ficam de fora, por defeito de origem
 
-`Document` e `ProductPhoto` têm coluna binária, que não atravessa arquivo de texto.
-`ProductReview` está quebrado na origem: sete campos onde o DDL declara oito, e quebra de linha
-dentro de campo — 34 linhas físicas para 31 registros.
+Das 68 do `install.sql`, **64 carregam**. As quatro que ficam fora não são escolha nossa:
+
+| Tabela | Defeito |
+|---|---|
+| `Document` | coluna binária (`varbinary`), que não atravessa arquivo de texto |
+| `ProductPhoto` | duas colunas binárias: `ThumbNailPhoto` e `LargePhoto` |
+| `ProductReview` | sete campos onde o DDL declara oito, e quebra de linha dentro de campo — 34 linhas físicas para 31 registros |
+| `ProductModel` | 48 TABs dentro de campo aspado no XML de `CatalogDescription`; o leitor do Spark não honra a aspa nesse caso e 6 das 128 linhas se partem, uma em **22** campos onde há 6 |
+
+O `ProductModel` foi o único que custou tentativa: `quote`, `escape` e as duas em conjunto, sem
+sucesso. O `JobCandidate` tem o mesmo tipo de XML mas **um** tab, e carrega normalmente — então
+o limite é a quantidade de tabs, não a estrutura. Nenhuma das quatro é usada por pergunta alguma
+do briefing, então o custo analítico é zero.
 
 ### As conferências
 
