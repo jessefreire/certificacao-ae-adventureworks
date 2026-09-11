@@ -2,30 +2,58 @@
 # MAGIC %md
 # MAGIC # Analise exploratoria — Adventure Works
 # MAGIC
-# MAGIC Etapa 2 do desafio. **A pergunta nao se descobre aqui**: ela foi definida na Etapa 1,
-# MAGIC em `docs/01-kpis-e-perguntas.md`. Este notebook responde as **seis perguntas do
-# MAGIC briefing** e os **catorze aprofundamentos** que a Etapa 1 derivou delas, cada um com
-# MAGIC consulta, evidencia e comentario.
+# MAGIC Etapa 2 do desafio, e o entregavel que o briefing pede em "notebook com codigo,
+# MAGIC graficos e comentario sobre cada insight".
+# MAGIC
+# MAGIC **A pergunta nao se descobre aqui.** Ela foi definida na Etapa 1, em
+# MAGIC `docs/01-kpis-e-perguntas.md`. Este notebook responde as **seis perguntas do
+# MAGIC briefing** e os **catorze aprofundamentos** que a Etapa 1 derivou delas — cada um com
+# MAGIC consulta, evidencia e comentario. Os codigos `a.1`, `b.2`, `f.2` remetem aquele
+# MAGIC documento; nenhum aprofundamento e tema solto.
 # MAGIC
 # MAGIC ## Como ler
 # MAGIC
-# MAGIC | Secao | O que tem |
-# MAGIC |---|---|
-# MAGIC | 1 | Perfil do dado — o que existe aqui dentro |
-# MAGIC | 2 | Reconciliacao — o numero que o CEO cobra |
-# MAGIC | 3 a 8 | Uma secao por pergunta (a) a (f), com seus aprofundamentos |
-# MAGIC | 9 | Sintese |
+# MAGIC | Secao | O que tem | Celulas |
+# MAGIC |---|---|---|
+# MAGIC | **1. Perfil do dado** | O que existe aqui dentro: tamanho, canais, nulos, unicidade das chaves. Nao responde pergunta de negocio — estabelece o que da para perguntar | 6 consultas |
+# MAGIC | **2. Reconciliacao** | O numero que o CEO cobra, antes de qualquer conclusao. Se este nao fecha, nada depois vale | 1 consulta |
+# MAGIC | **3 a 8** | Uma secao por pergunta, de (a) a (f). Cada uma abre com o enunciado do briefing, responde o minimo pedido, e depois percorre seus aprofundamentos | 24 consultas |
+# MAGIC | **Graficos** | Nove, em dois grupos — ver abaixo | 9 celulas Python |
+# MAGIC | **9. Sintese** | O que a exploracao mudou no entendimento do dataset, que e a frase que o briefing pede | — |
 # MAGIC
-# MAGIC Os codigos `a.1`, `b.2`, `f.2` remetem ao documento da Etapa 1. Cada aprofundamento
-# MAGIC nasceu de uma das seis, nenhum e tema solto.
+# MAGIC ### Por que os graficos ficam num bloco, e nao um por pergunta
+# MAGIC
+# MAGIC Porque nem toda pergunta precisa de grafico, e nem todo grafico responde pergunta.
+# MAGIC
+# MAGIC **Os cinco primeiros existem onde a tabela nao mostra o que o grafico mostra:** a
+# MAGIC quebra estrutural da serie (`e.1`), a uniformidade que desqualifica um corte (`a.1`),
+# MAGIC a cauda longa do catalogo (`a.2`), a confusao entre canal e mercado (`b.2`), e a
+# MAGIC comparacao que so vale dentro do mesmo canal (`f.2`).
+# MAGIC
+# MAGIC **Os quatro ultimos respondem visualmente (b), (c), (d) e (f)**, que sao rankings — e
+# MAGIC ranking se le melhor em barra que em tabela. Cada um carrega no titulo o aviso que
+# MAGIC impede a leitura errada: o corte de volume, o peso dos dez maiores, a barra do
+# MAGIC "todas as outras cidades", o rotulo de escopo do online.
+# MAGIC
+# MAGIC Somando, cada uma das seis perguntas tem ao menos um visual. E os quatro ultimos sao
+# MAGIC o rascunho do dashboard da Etapa 7 — mesmo corte, mesmo aviso.
 # MAGIC
 # MAGIC ## Antes de rodar
 # MAGIC
-# MAGIC A ingestao tem de estar feita e **conferida**: `databricks/00-ingestao-adventure-works.sql`
-# MAGIC ou os scripts `01` a `03`. As cinco conferencias do `03` passaram em 10/09/2026 —
-# MAGIC 17 tabelas na contagem certa, zero orfao nas sete juncoes, 27.659 pedidos sem
-# MAGIC vendedor preservados como NULL, o aceite do CEO fechando em `12646112.1607` e zero
-# MAGIC linha fora de um centavo no `linetotal`.
+# MAGIC A ingestao tem de estar feita e conferida:
+# MAGIC `databricks/ingestao-adventure-works.sql`. As seis conferencias da secao 3 dele
+# MAGIC passaram — as **64 tabelas** com a contagem identica a dos arquivos de origem, zero
+# MAGIC orfao nas sete juncoes, 27.659 pedidos sem vendedor preservados como NULL, o aceite
+# MAGIC fechando em `12.646.112,1607` e zero linha fora de um centavo no `linetotal`.
+# MAGIC
+# MAGIC Este notebook usa **17** dessas tabelas — as que as seis perguntas exigem. Ele so le:
+# MAGIC nao cria, nao carrega, nao altera nada. Rodar de novo e sempre seguro.
+# MAGIC
+# MAGIC Precisa de **compute de notebook** anexado, e nao apenas do SQL warehouse: as celulas
+# MAGIC de grafico rodam `toPandas()` e matplotlib, que e codigo Python.
+# MAGIC
+# MAGIC Sugestao para a primeira execucao: va **celula por celula ate a secao 2**. Se o numero
+# MAGIC do CEO fechar ali, o resto e analise sobre base confiavel e `Run all below` resolve.
 # MAGIC
 # MAGIC ## Duas convencoes que valem para todo o notebook
 # MAGIC
@@ -35,8 +63,10 @@
 # MAGIC medio do briefing pede. A diferenca e pequena nesta base — 0,478% — mas nomear qual
 # MAGIC das duas esta em cada numero evita a discussao de "seu total nao bate com o meu".
 # MAGIC
-# MAGIC **Canal vem de `onlineorderflag`, nao do tipo de cartao.** Testei a hipotese do
-# MAGIC cartao na Etapa 1 e ela e falsa (ver `a.1`).
+# MAGIC **Canal vem de `onlineorderflag`, nao do tipo de cartao.** Testei a hipotese do cartao
+# MAGIC na Etapa 1 e ela e falsa: dos 1.131 pedidos sem cartao, 1.124 sao online (ver `a.1`).
+# MAGIC E canal e o eixo mais importante desta base, porque revenda e online sao dois negocios
+# MAGIC com ticket de ordem de grandeza diferente convivendo na mesma tabela.
 
 # COMMAND ----------
 
