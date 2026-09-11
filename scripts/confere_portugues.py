@@ -148,6 +148,10 @@ PROTEGIDO = [
                r"01-kpis-e-perguntas|01\.01-mapa-completo|desafio-adventureworks|"
                r"adventureworks-oficial|raw_adventure_works|adventure_works|"
                r"formacao-analytics-engineering)\b"),
+    # Subscrito de string é nome de coluna vindo do alias do SQL, que fica em ASCII.
+    # Sem esta linha o corretor lê `grupo["mes"]` como prosa, escreve `mês`, e o
+    # gráfico morre com KeyError na execução — foi o que aconteceu.
+    re.compile(r"""\[\s*["'][^"'\]]+["']\s*\]"""),
 ]
 
 BLOCO_CODIGO = re.compile(r"```.*?```", re.S)
@@ -266,6 +270,15 @@ def regioes_prosa(caminho, texto):
             pendentes = None
 
         elif tok.type == tokenize.STRING:
+            # `grupo["mes"]` não é prosa: é nome de coluna, e o alias que o produz
+            # (`as mes`) fica em ASCII porque alias de SQL fica em ASCII. Tratar o
+            # literal como prosa escreveu `mês` e o gráfico morreu com KeyError —
+            # e o diff parecia certo, porque `mês` É a grafia correta da palavra.
+            fim = base + len(tok.string)
+            antes = texto[:base].rstrip()
+            depois = texto[fim:].lstrip()
+            if antes.endswith("[") and depois.startswith("]"):
+                continue
             if TEM_SQL.search(tok.string) and not markdown:
                 spans += _linhas_de_comentario_sql(tok.string, base)
             else:
@@ -275,6 +288,31 @@ def regioes_prosa(caminho, texto):
 
 LITERAL_SQL = re.compile(r"'[^'\n]*'")
 ACENTUADA = re.compile(r"\b\w*[À-ÿ]\w*\b")
+
+
+def acento_em_nome_de_coluna(caminho, texto):
+    """Subscrito de string acentuado no Python do notebook — KeyError garantido.
+
+    Irmão do caso do alias: `grupo["mes"]` virou `grupo["mês"]` numa passagem de
+    acentuação, mas o alias que produz a coluna é `as mes` e continua em ASCII, como
+    tem de ser. O gráfico quebraria na execução, não aqui — e a acentuação em si
+    parecia certa lendo o diff, porque `mês` É a grafia correta da palavra.
+
+    A regra que separa os dois: rótulo de gráfico é prosa e leva acento; subscrito de
+    string é nome de coluna vindo do SQL e fica em ASCII.
+    """
+    if caminho.suffix != ".py":
+        return []
+    erros = []
+    for n, linha in enumerate(texto.split("\n"), 1):
+        if linha.startswith("# MAGIC") or linha.lstrip().startswith("#"):
+            continue
+        for m in re.finditer(r"""\[\s*["']([^"']+)["']\s*\]""", linha):
+            nome = m.group(1)
+            if any(ord(c) > 127 for c in nome):
+                erros.append(f"linha {n}: `{nome}` é nome de coluna do SQL "
+                             f"e não pode ter acento")
+    return erros
 
 
 def acento_no_codigo_sql(caminho, texto):
@@ -335,6 +373,10 @@ def main():
         sem_citacao = re.sub(r"`[^`\n]*`", "", texto)
         if MOJIBAKE.search(sem_citacao):
             print(f"  {alvo.name}: mojibake — {MOJIBAKE.findall(sem_citacao)[:3]}")
+            falhou = True
+
+        for erro in acento_em_nome_de_coluna(alvo, texto):
+            print(f"  {alvo.name}: {erro}")
             falhou = True
 
         for erro in acento_no_codigo_sql(alvo, texto):

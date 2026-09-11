@@ -1281,7 +1281,7 @@ serie = spark.sql("""
 
 fig, ax = plt.subplots(figsize=(13, 5))
 for canal, grupo in serie.groupby("canal"):
-    ax.plot(grupo["mês"], grupo["pedidos"], marker="o", markersize=3, label=canal)
+    ax.plot(grupo["mes"], grupo["pedidos"], marker="o", markersize=3, label=canal)
 
 ax.axvline(QUEBRA, color="crimson", linestyle="--", linewidth=1)
 ax.annotate(
@@ -1349,7 +1349,7 @@ pareto = spark.sql("""
 """).toPandas()
 
 fig, ax = plt.subplots(figsize=(10, 4.5))
-ax.plot(pareto["posição"], pareto["pct_acumulado"], color="darkorange", linewidth=2)
+ax.plot(pareto["posicao"], pareto["pct_acumulado"], color="darkorange", linewidth=2)
 ax.axhline(80, color="gray", linestyle=":", linewidth=1)
 ax.set_title("Pareto: 266 produtos vendem, 238 do catálogo nunca venderam")
 ax.set_xlabel("produtos, do maior para o menor")
