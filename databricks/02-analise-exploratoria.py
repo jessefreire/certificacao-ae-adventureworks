@@ -1083,9 +1083,22 @@
 # COMMAND ----------
 
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # A serie mensal por canal, com a quebra de jul/2013 anotada. Sem a anotacao,
 # o grafico sugere crescimento continuo — e sao dois regimes diferentes.
+#
+# Duas armadilhas de eixo, e as duas dao o MESMO erro (ConversionError):
+#
+#   1. a quebra tem de ser um Timestamp, nao o texto "2013-07-01": o eixo x vem
+#      de date_trunc, que o toPandas converte para datetime64, e o matplotlib
+#      recusa texto num eixo de data
+#   2. divisao no Spark devolve `decimal`, e o toPandas traz isso como objeto
+#      Decimal do Python, que o matplotlib tambem recusa. Por isso os graficos
+#      com media e percentual convertem para `double` no proprio SQL. Precisao
+#      de centavo nao importa para desenhar — importa para o teste de aceite,
+#      que fica nas celulas de consulta e continua em decimal(19, 4).
+QUEBRA = pd.Timestamp("2013-07-01")
 serie = spark.sql("""
     select
         date_trunc('month', salesorderheader.orderdate) as mes
@@ -1102,10 +1115,10 @@ fig, ax = plt.subplots(figsize=(13, 5))
 for canal, grupo in serie.groupby("canal"):
     ax.plot(grupo["mes"], grupo["pedidos"], marker="o", markersize=3, label=canal)
 
-ax.axvline("2013-07-01", color="crimson", linestyle="--", linewidth=1)
+ax.axvline(QUEBRA, color="crimson", linestyle="--", linewidth=1)
 ax.annotate(
     "jul/2013: 533 → 1.564 pedidos online\nquebra estrutural, nao tendencia",
-    xy=("2013-07-01", 1564), xytext=(-260, -30), textcoords="offset points",
+    xy=(QUEBRA, 1564), xytext=(-260, -30), textcoords="offset points",
     color="crimson", fontsize=9,
     arrowprops=dict(arrowstyle="->", color="crimson", linewidth=1),
 )
@@ -1157,8 +1170,10 @@ pareto = spark.sql("""
 
     select
         row_number() over (order by receita desc) as posicao
-        , 100.0 * sum(receita) over (order by receita desc) / sum(receita) over ()
-            as pct_acumulado
+        , cast(
+            100.0 * sum(receita) over (order by receita desc) / sum(receita) over ()
+            as double
+        ) as pct_acumulado
     from receita
     order by posicao
 """).toPandas()
@@ -1181,8 +1196,11 @@ ticket = spark.sql("""
     select
         countryregion.name as pais
         , case when salesorderheader.onlineorderflag then 'online' else 'revenda' end as canal
-        , sum(salesorderdetail.linetotal)
-            / count(distinct salesorderheader.salesorderid) as ticket_medio
+        , cast(
+            sum(salesorderdetail.linetotal)
+            / count(distinct salesorderheader.salesorderid)
+            as double
+        ) as ticket_medio
     from workspace.adventure_works.salesorderheader
     inner join workspace.adventure_works.salesorderdetail
         on salesorderheader.salesorderid = salesorderdetail.salesorderid
@@ -1230,8 +1248,11 @@ promo = spark.sql("""
     select
         case when pedido_com_motivo.tem_promocao = 1 then 'promocao' else 'outro motivo' end
             as grupo
-        , sum(salesorderdetail.orderqty)
-            / count(distinct pedido_com_motivo.salesorderid) as itens_por_pedido
+        , cast(
+            sum(salesorderdetail.orderqty)
+            / count(distinct pedido_com_motivo.salesorderid)
+            as double
+        ) as itens_por_pedido
     from pedido_com_motivo
     inner join workspace.adventure_works.salesorderdetail
         on pedido_com_motivo.salesorderid = salesorderdetail.salesorderid
