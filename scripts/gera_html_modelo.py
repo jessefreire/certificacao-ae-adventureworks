@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Monta a página HTML do modelo conceitual, para virar o PDF da Etapa 3.
+"""Gera o PDF do modelo conceitual, o entregável da Etapa 3.
 
     python scripts/gera_html_modelo.py
 
-Escreve em `Desafio/entregaveis/`, que fica fora do git. Depois é `Ctrl+P` no navegador e
-`Salvar como PDF`.
+Escreve o `.html` e o `.pdf` em `Desafio/entregaveis/`, que fica fora do git. Não há passo
+manual: o Chrome imprime sem interface, e o script confere que o diagrama saiu.
 
 ## Por que gerar em vez de escrever o HTML à mão
 
@@ -24,6 +24,7 @@ desproporcional. As duas bibliotecas vêm de CDN e só precisam existir no momen
 página é aberta para imprimir.
 """
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -116,4 +117,46 @@ SAIDA.write_text(
 blocos = texto.count("```mermaid")
 print(f"OK -> {SAIDA}")
 print(f"markdown embutido: {len(texto):,} caracteres  |  diagramas: {blocos}")
-print("\nAbra no navegador e use Ctrl+P -> Salvar como PDF (A3 paisagem).")
+
+# ---------------------------------------------------------------- o PDF
+# O entregável do briefing é o PDF, e imprimir à mão é passo que alguém esquece — ou faz
+# com o layout errado. O Chrome imprime sem interface, e o `--virtual-time-budget` é o que
+# garante que o mermaid termine de desenhar ANTES da impressão: sem ele o PDF sai com o
+# texto e sem o diagrama, e o defeito só aparece abrindo o arquivo.
+NAVEGADORES = [
+    Path(r"C:\Program Files\Google\Chrome\Application\chrome.exe"),
+    Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"),
+    Path(r"C:\Program Files\Microsoft\Edge\Application\msedge.exe"),
+]
+navegador = next((n for n in NAVEGADORES if n.exists()), None)
+
+if navegador is None:
+    print("\nNenhum Chrome ou Edge encontrado. Abra o HTML e use Ctrl+P (A3 paisagem).")
+    raise SystemExit(0)
+
+pdf = SAIDA.with_suffix(".pdf")
+subprocess.run([str(navegador), "--headless", "--disable-gpu", "--no-pdf-header-footer",
+                "--virtual-time-budget=20000", f"--print-to-pdf={pdf}",
+                SAIDA.as_uri()], check=True, capture_output=True)
+
+# Conferência. A primeira versão procurava `fact_sales` no texto do PDF — e passava mesmo
+# sem diagrama, porque esse nome também está na tabela de fontes. Procurar a PRESENÇA do
+# que deveria existir não serve aqui.
+#
+# O que serve é a assinatura da FALHA: quando o mermaid não roda, o bloco fica como texto
+# pré-formatado, e aí o PDF contém a fonte do diagrama — `flowchart` e `classDef`. Essas
+# palavras não aparecem em PDF nenhum que tenha renderizado.
+SINAIS_DE_FALHA = ("flowchart TB", "classDef", "```")
+
+try:
+    from pypdf import PdfReader
+    lido = PdfReader(str(pdf))
+    conteudo = "\n".join(pagina.extract_text() for pagina in lido.pages)
+    crus = [s for s in SINAIS_DE_FALHA if s in conteudo]
+    assert not crus, (f"o mermaid não renderizou: o PDF tem a fonte do diagrama como texto "
+                      f"{crus}. Sem rede para o CDN?")
+    assert "fact_sales" in conteudo, "o PDF saiu sem conteúdo"
+    print(f"OK -> {pdf}")
+    print(f"páginas: {len(lido.pages)}  |  diagrama renderizado, sem código cru")
+except ImportError:
+    print(f"OK -> {pdf}  (sem pypdf: confira o diagrama abrindo o arquivo)")
