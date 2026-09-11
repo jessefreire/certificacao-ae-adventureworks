@@ -379,7 +379,23 @@ vírgula à frente.
 
 ## Slides
 
-A Etapa 1 tem dois decks, em `Desafio/entregaveis/`, **fora do controle de versão**: a seção do
-deck final (16 slides) e a versão para o vídeo (5 slides). Ficam fora do git porque saem com a
-identidade visual da Indicium e logos de clientes reais, e este repositório é público. Para
-revisar e exportar PDF, abrir no **Google Slides** — é lá que as fontes da Indicium são nativas.
+As Etapas 1 e 2 têm dois decks cada, em `Desafio/entregaveis/`, **fora do controle de versão**:
+
+| Arquivo | Slides |
+|---|---|
+| `Etapa1 - Secao do deck final.pptx` | 16 |
+| `Etapa1 - Video.pptx` | 5 |
+| `Etapa2 - Secao do deck final.pptx` | 16 |
+| `Etapa2 - Video.pptx` | 5 |
+
+As seções se concatenam no deck final; as versões de vídeo ocupam ~60 s cada, dentro dos 3 a 5
+minutos que o briefing pede.
+
+Ficam fora do git porque saem com a identidade visual da Indicium e logos de clientes reais, e
+este repositório é público. Para revisar e exportar PDF, abrir no **Google Slides** — é lá que as
+fontes da Indicium são nativas.
+
+A seção da Etapa 2 **não repete** o que a da Etapa 1 já mostra (tipo de cartão, catálogo parado,
+promoção por canal, a tabela dos nove indicadores). Ela mostra o que a exploração acrescentou: a
+base conferida, a inversão de canal, a pulverização da receita, a quebra da série e as duas
+decisões que vão para a modelagem.
