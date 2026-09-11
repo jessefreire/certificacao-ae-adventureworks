@@ -222,6 +222,17 @@ O sqlfluff não lê notebook. A ferramenta extrai cada célula para um arquivo, 
 com `--fix` devolve o SQL corrigido. Cobertura atual: **33 de 33** células do notebook de
 análise e **6 de 6** células de conferência da ingestão, zero violação.
 
+Ela também confere a **integridade das células** nos dois notebooks: markdown sem `%md` (que o
+Databricks executaria como código), `%md` em célula que tem código (que faria nada executar),
+magic duplicado, célula vazia, e **célula de código sem `DBTITLE`**.
+
+O `DBTITLE` é o título da célula. Sem ele, cada uma aparece sem nome na navegação do Databricks
+— e "Cell 37" não ajuda ninguém a voltar a uma consulta. São 70 títulos na ingestão (uma por
+tabela, mais as seis conferências) e 42 no de análise, onde o título carrega **o código da
+pergunta** a que a célula pertence: `a.1 Tipo de cartao discrimina?`, `(d) As 5 maiores cidades
+por valor`, `grafico — Pareto dos produtos que vendem`. Nenhum é texto inventado: sai do
+cabeçalho da seção e da primeira linha de comentário da própria célula.
+
 Ela também **confere se a abertura do notebook de EDA está dizendo a verdade**: se as seções
 prometidas existem, se a contagem de consultas por seção bate, se o número de gráficos e de
 tabelas lidas confere, e se não sobrou referência a arquivo apagado. Isso existe porque aquela

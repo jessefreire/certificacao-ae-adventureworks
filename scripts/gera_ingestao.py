@@ -263,6 +263,10 @@ def celula_da_tabela(schema, original, tabela, cols):
     casts = [f"cast(_c{i} as {tipo_databricks(c, t)}) as {ident(c)}"
              for i, (c, t) in enumerate(cols)]
     return (
+        # DBTITLE e o titulo da celula no Databricks. Sem ele a celula aparece sem
+        # nome na navegacao do notebook, e 64 celulas sem nome nao ajudam ninguem a
+        # achar a tabela que falhou.
+        f"-- DBTITLE 1,{schema}.{original}\n"
         f"-- {schema}.{original}: {len(cols)} colunas\n"
         f"create or replace table {ALVO}.{tabela} as\n"
         f"select\n"
@@ -439,7 +443,8 @@ Os valores esperados estao embutidos no SQL, medidos nos proprios arquivos de or
 Quem roda nao precisa saber de cor que sao 65 tabelas ou que a receita de 2011 e
 12.646.112,16."""))
 
-celulas.append("""-- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas tres.
+celulas.append("""-- DBTITLE 1,3.1 Dinheiro ficou decimal(19, 4)?
+-- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas tres.
 --     Com double, o teste de aceite sai arredondado e a causa fica escondida no tipo.
 select
     column_name
@@ -463,7 +468,8 @@ sel = "\n    union all\n".join(
     f"    from {ALVO}.{t}"
     for t, n in linhas_esperadas)
 
-celulas.append(f"""-- 3.2 A contagem bate com o arquivo de origem? As 17 da analise tem de dar `ok`.
+celulas.append(f"""-- DBTITLE 1,3.2 A contagem bate com a origem?
+-- 3.2 A contagem bate com o arquivo de origem? As 17 da analise tem de dar `ok`.
 --     `nao carregada` em camada bruta e esperado se voce parou na secao 1.
 with contagem as (
 {sel}
@@ -516,11 +522,13 @@ blocos.append(
     "where person.businessentityid is null\n    and store.businessentityid is null")
 
 celulas.append(
+    "-- DBTITLE 1,3.3 As sete juncoes tem orfao?\n"
     "-- 3.3 As sete juncoes que a analise usa: alguma tem orfao? Tem de dar ZERO em todas.\n"
     "--     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.\n"
     + "\n\nunion all\n\n".join(blocos) + ";")
 
-celulas.append(f"""-- 3.4 O NULL sobreviveu? Tem de dar 27.659 sem vendedor e ZERO com vendedor 0.
+celulas.append(f"""-- DBTITLE 1,3.4 O NULL sobreviveu a carga?
+-- 3.4 O NULL sobreviveu? Tem de dar 27.659 sem vendedor e ZERO com vendedor 0.
 --     Sem o nullValue, campo vazio em coluna int recebe 0 e inventa um vendedor.
 select
     count(*) as pedidos
@@ -529,7 +537,8 @@ select
     , count(*) - count(salespersonid) as sem_vendedor_esperado_27659
 from {ALVO}.salesorderheader;""")
 
-celulas.append(f"""-- 3.5 O teste de aceite do briefing. Tem de dar FECHA.
+celulas.append(f"""-- DBTITLE 1,3.5 O teste de aceite do briefing
+-- 3.5 O teste de aceite do briefing. Tem de dar FECHA.
 --     Soma exata = 12646112.1607; o briefing informa arredondado a centavos, porque
 --     unitprice tem 4 casas e 2.832 dos 5.642 itens de 2011 usam as quatro.
 select
@@ -546,7 +555,8 @@ inner join {ALVO}.salesorderheader
     on salesorderdetail.salesorderid = salesorderheader.salesorderid
 where year(salesorderheader.orderdate) = 2011;""")
 
-celulas.append(f"""-- 3.6 A integridade do linetotal. Tem de dar 121317 linhas e ZERO fora de um centavo.
+celulas.append(f"""-- DBTITLE 1,3.6 A integridade do linetotal
+-- 3.6 A integridade do linetotal. Tem de dar 121317 linhas e ZERO fora de um centavo.
 --     Nesta base o campo vem do arquivo, nao e calculado pelo banco.
 select
     count(*) as linhas

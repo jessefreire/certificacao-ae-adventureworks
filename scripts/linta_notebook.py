@@ -119,8 +119,10 @@ def confere_celulas(caminho, texto):
     explicitamente. O linter de SQL nao pegava, porque essas celulas nao tem SQL.
     """
     prefixo = "# MAGIC" if caminho.suffix == ".py" else "-- MAGIC"
+    titulo = "# DBTITLE" if caminho.suffix == ".py" else "-- DBTITLE"
     sep = SEPARADOR_PY if caminho.suffix == ".py" else SEPARADOR
     erros = []
+
     for i, celula in enumerate(texto.split(sep), 1):   # o Databricks numera de 1
         corpo = celula.replace("# Databricks notebook source\n", "", 1)
         corpo = corpo.replace("-- Databricks notebook source\n", "", 1)
@@ -128,14 +130,43 @@ def confere_celulas(caminho, texto):
         if not uteis:
             erros.append(f"celula {i} esta vazia")
             continue
-        if not all(l.strip().startswith(prefixo) for l in uteis):
-            continue          # celula de codigo, nada a conferir
-        if not uteis[0].strip().startswith((f"{prefixo} %md", f"{prefixo} %sql")):
+
+        tem_titulo = any(l.startswith(titulo) for l in uteis)
+        # a linha de DBTITLE nao conta para descobrir o TIPO da celula: foi esse
+        # detalhe que fez a primeira versao desta checagem passar por um bug real
+        conteudo = [l for l in uteis if not l.startswith(titulo)]
+        if not conteudo:
+            erros.append(f"celula {i} tem titulo e nada mais")
+            continue
+
+        primeira = conteudo[0].strip()
+        todas_magic = all(l.strip().startswith(prefixo) for l in conteudo)
+
+        if primeira.startswith(f"{prefixo} %md"):
+            if not todas_magic:
+                fora = next(l for l in conteudo if not l.strip().startswith(prefixo))
+                erros.append(f"celula {i} e marcada %md mas tem CODIGO — nada nela "
+                             f"executa: {fora.strip()[:50]}")
+            elif len(conteudo) > 1 and conteudo[1].strip() == f"{prefixo} %md":
+                erros.append(f"celula {i} tem %md duplicado")
+        elif primeira.startswith(f"{prefixo} %sql"):
+            if not todas_magic:
+                fora = next(l for l in conteudo if not l.strip().startswith(prefixo))
+                erros.append(f"celula {i} e marcada %sql mas tem linha fora do magic: "
+                             f"{fora.strip()[:50]}")
+            if not tem_titulo:
+                erros.append(f"celula {i} de SQL sem DBTITLE — aparece sem nome na "
+                             f"navegacao")
+        elif todas_magic:
             erros.append(f"celula {i} e markdown SEM %md — o Databricks vai executar "
-                         f"como codigo: {uteis[0][:60]}")
-        if len(uteis) > 1 and uteis[0].strip() == f"{prefixo} %md" \
-                and uteis[1].strip() == f"{prefixo} %md":
-            erros.append(f"celula {i} tem %md duplicado")
+                         f"como codigo: {primeira[:60]}")
+        else:
+            # celula de codigo na linguagem padrao do notebook
+            if any(l.strip().startswith(f"{prefixo} %md") for l in conteudo):
+                erros.append(f"celula {i} tem um %md no meio do codigo")
+            if not tem_titulo:
+                erros.append(f"celula {i} de codigo sem DBTITLE — aparece sem nome na "
+                             f"navegacao")
     return erros
 
 

@@ -105,6 +105,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil Tamanho e janela do dataset
 # MAGIC -- Tamanho e janela do dataset. Esperado: 31.465 pedidos, 121.317 itens,
 # MAGIC -- de 31/05/2011 a 30/06/2014.
 # MAGIC select
@@ -117,6 +118,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil Os dois canais, que sao o eixo mais importante desta base
 # MAGIC -- Os dois canais, que sao o eixo mais importante desta base.
 # MAGIC -- Esperado: 27.659 online e 3.806 revenda — mas a receita se inverte.
 # MAGIC select
@@ -147,6 +149,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil Colunas de valor unico nao discriminam nada
 # MAGIC -- Colunas de valor unico nao discriminam nada. Esperado: status = 5 em 100%.
 # MAGIC select
 # MAGIC     salesorderheader.status
@@ -159,6 +162,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil Nulos nas colunas que a analise usa
 # MAGIC -- Nulos nas colunas que a analise usa. Esperado: 27.659 sem vendedor (= online),
 # MAGIC -- 1.131 sem cartao, e ZERO pedido sem territorio ou sem endereco.
 # MAGIC select
@@ -172,6 +176,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil Unicidade das chaves que a Etapa 5 vai testar no dbt
 # MAGIC -- Unicidade das chaves que a Etapa 5 vai testar no dbt. Esperado: duplicadas = 0
 # MAGIC -- nas quatro. Se algo aparecer aqui, o teste de PK do dbt nasce quebrado.
 # MAGIC select
@@ -223,6 +228,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil A hierarquia produto -> subcategoria -> categoria esta...
 # MAGIC -- A hierarquia produto -> subcategoria -> categoria esta completa onde importa?
 # MAGIC -- Esperado: 209 dos 504 produtos sem subcategoria, mas ZERO entre os que vendem.
 # MAGIC select
@@ -250,6 +256,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,perfil A hierarquia fecha de ponta a ponta?
 # MAGIC -- A hierarquia fecha de ponta a ponta? Tem de dar ZERO orfao nos dois niveis,
 # MAGIC -- e 4 categorias com 37 subcategorias.
 # MAGIC select
@@ -284,6 +291,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,reconciliacao O aceite
 # MAGIC -- O aceite. Esperado: FECHA, com soma exata 12646112.1607.
 # MAGIC -- Comparacao em centavos: unitprice tem 4 casas e o briefing informa arredondado.
 # MAGIC select
@@ -335,6 +343,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(a) As 3 metricas pelos 9 cortes, no exemplo do corte por pais
 # MAGIC -- As 3 metricas pelos 9 cortes, no exemplo do corte por pais.
 # MAGIC -- A estrutura se repete trocando o group by; o dashboard faz isso com filtro.
 # MAGIC select
@@ -366,6 +375,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,a.1 Tipo de cartao discrimina?
 # MAGIC -- Tipo de cartao discrimina? Esperado: nao — quatro fatias de ~24% e 3,6% sem cartao.
 # MAGIC select
 # MAGIC     coalesce(creditcard.cardtype, 'sem cartao') as tipo_cartao
@@ -384,6 +394,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,a.1 Cartao serve de proxy de canal? Testei essa hipotese e...
 # MAGIC -- Cartao serve de proxy de canal? Testei essa hipotese e ela e FALSA.
 # MAGIC -- Esperado: dos 1.131 sem cartao, 1.124 sao online e so 7 de revenda.
 # MAGIC select
@@ -416,6 +427,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,a.2 Quanto do catalogo nunca vendeu?
 # MAGIC -- Quanto do catalogo nunca vendeu? Esperado: 238 de 504 produtos (47%).
 # MAGIC select
 # MAGIC     count(*) as produtos_no_catalogo
@@ -428,6 +440,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,a.2 Entre os que vendem, quanta receita esta no topo?
 # MAGIC -- Entre os que vendem, quanta receita esta no topo? Esperado: top 10 = 28,2%.
 # MAGIC with receita_por_produto as (
 # MAGIC     select
@@ -469,6 +482,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,a.3 Motivo de venda existe nos dois canais?
 # MAGIC -- Motivo de venda existe nos dois canais? Esperado: NAO — revenda tem zero motivo.
 # MAGIC select
 # MAGIC     case when salesorderheader.onlineorderflag then 'online' else 'revenda' end as canal
@@ -483,6 +497,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,a.3 Quantos motivos por pedido?
 # MAGIC -- Quantos motivos por pedido? Esperado: 8.453 sem motivo (26,9%) e 4.482 com mais
 # MAGIC -- de um. E por isso que somar receita por motivo estoura o total.
 # MAGIC select
@@ -534,6 +549,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(b) Ticket medio por produto, na definicao exata do briefing
 # MAGIC -- Ticket medio por produto, na definicao exata do briefing.
 # MAGIC -- Denominador = pedidos DISTINTOS, nao linhas de item.
 # MAGIC select
@@ -570,6 +586,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,b.1 O desconto e material?
 # MAGIC -- O desconto e material? Esperado: 0,478% da receita bruta. Quase nada.
 # MAGIC select
 # MAGIC     round(sum(salesorderdetail.unitprice * salesorderdetail.orderqty), 2) as receita_bruta
@@ -596,6 +613,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,b.1 Onde o desconto acontece?
 # MAGIC -- Onde o desconto acontece? Esperado: so na revenda — toda oferta e do tipo Reseller.
 # MAGIC select
 # MAGIC     case when salesorderheader.onlineorderflag then 'online' else 'revenda' end as canal
@@ -631,6 +649,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,b.2 Ticket medio por pais
 # MAGIC -- Ticket medio por pais. Esperado: varia 3,4x — AU ~1.557 ate US ~5.232.
 # MAGIC select
 # MAGIC     countryregion.name as pais
@@ -674,6 +693,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,b.3 Que tipo de oferta a empresa usa de fato?
 # MAGIC -- Que tipo de oferta a empresa usa de fato? Esperado: todas do tipo Reseller,
 # MAGIC -- e a esmagadora maioria dos itens sem oferta nenhuma.
 # MAGIC select
@@ -710,6 +730,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(c) Os 10 maiores clientes. O nome vem de person OU store,...
 # MAGIC -- Os 10 maiores clientes. O nome vem de person OU store, conforme o tipo.
 # MAGIC select
 # MAGIC     coalesce(store.name, concat_ws(' ', person.firstname, person.lastname))
@@ -742,6 +763,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,c.1 Concentracao no topo
 # MAGIC -- Concentracao no topo. Esperado: top 10 = 7,2% da receita. Baixa dependencia.
 # MAGIC with por_cliente as (
 # MAGIC     select
@@ -790,6 +812,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,c.2 Recompra por canal
 # MAGIC -- Recompra por canal. Esperado: 39,1% no geral, mas o numero e MUITO diferente
 # MAGIC -- entre online e revenda — e a media dos dois nao descreve nenhum.
 # MAGIC with pedidos_por_cliente as (
@@ -831,6 +854,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(d) As 5 maiores cidades por valor
 # MAGIC -- As 5 maiores cidades por valor.
 # MAGIC select
 # MAGIC     address.city as cidade
@@ -862,6 +886,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,d.1 Concentracao geografica
 # MAGIC -- Concentracao geografica. Esperado: top 5 cidades = 11,0% da receita,
 # MAGIC -- com 613 cidades cadastradas e 558 vendendo. Receita PULVERIZADA.
 # MAGIC with por_cidade as (
@@ -924,6 +949,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,d.1 Receita por territorio comercial, o corte que a conclusao...
 # MAGIC -- Receita por territorio comercial, o corte que a conclusao de d.1 recomenda.
 # MAGIC -- Sao 10 territorios contra 558 cidades: cada linha aqui move o ponteiro.
 # MAGIC select
@@ -957,6 +983,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,d.2 Valor x volume por cidade. Divergencia entre as duas...
 # MAGIC -- Valor x volume por cidade. Divergencia entre as duas posicoes revela
 # MAGIC -- cidade de ticket alto (poucos pedidos, muito valor) e o contrario.
 # MAGIC with por_cidade as (
@@ -993,6 +1020,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(e) A serie mensal completa, com o canal separado — porque o...
 # MAGIC -- A serie mensal completa, com o canal separado — porque o comportamento
 # MAGIC -- dos dois e diferente e a soma esconde a virada.
 # MAGIC select
@@ -1020,6 +1048,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,e.1 Quebra estrutural no online
 # MAGIC -- Quebra estrutural no online. Esperado: salto de 533 para 1.564 pedidos
 # MAGIC -- entre jun e jul/2013 — quase 3x em um mes.
 # MAGIC select
@@ -1056,6 +1085,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,e.2 A revenda concentra em meses especificos?
 # MAGIC -- A revenda concentra em meses especificos? Esperado: sim, ritmo trimestral —
 # MAGIC -- e isso faz a receita total oscilar sem o online ter mudado nada.
 # MAGIC select
@@ -1077,6 +1107,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(f) Quais motivos existem, e como "Promotion" aparece
 # MAGIC -- Quais motivos existem, e como "Promotion" aparece.
 # MAGIC -- Esperado: a categoria 'Promotion' agrupa mais de um nome de motivo.
 # MAGIC select
@@ -1094,6 +1125,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,(f) A resposta da pergunta (f): produto com mais unidades...
 # MAGIC -- A resposta da pergunta (f): produto com mais unidades quando o motivo
 # MAGIC -- e da categoria Promotion.
 # MAGIC select
@@ -1134,6 +1166,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
+# DBTITLE 1,f.2 Promocao aumenta o tamanho do pedido? Comparacao SO...
 # MAGIC -- Promocao aumenta o tamanho do pedido? Comparacao SO DENTRO DO ONLINE.
 # MAGIC -- Esperado: 2,10 itens/pedido em promocao (1.810 pedidos) contra 2,39 em
 # MAGIC -- outros motivos (824). Promocao vende MENOS por pedido.
@@ -1214,6 +1247,7 @@
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — A serie mensal por canal, com a quebra de jul/2013...
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -1263,6 +1297,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Tipo de cartao: quatro fatias iguais. O grafico existe...
 # Tipo de cartao: quatro fatias iguais. O grafico existe para JUSTIFICAR uma
 # ausencia no dashboard — e a prova visual de que o corte nao discrimina.
 cartao = spark.sql("""
@@ -1287,6 +1322,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Pareto dos produtos que vendem. Mostra a cauda longa que...
 # Pareto dos produtos que vendem. Mostra a cauda longa que a tabela de top 10
 # esconde — e os 238 que nunca venderam nem aparecem aqui.
 pareto = spark.sql("""
@@ -1322,6 +1358,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Ticket medio por pais, FACETADO POR CANAL. A versao sem...
 # Ticket medio por pais, FACETADO POR CANAL. A versao sem faceta sugere que
 # americano compra 3x mais que australiano; a diferenca e mistura de canal.
 ticket = spark.sql("""
@@ -1360,6 +1397,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Promocao vs outro motivo, SO DENTRO DO ONLINE. E o...
 # Promocao vs outro motivo, SO DENTRO DO ONLINE. E o grafico que impede a
 # leitura errada: sem o recorte de canal, a diferenca aparece como 2,10 x 9,57.
 promo = spark.sql("""
@@ -1404,7 +1442,7 @@ plt.show()
 
 # COMMAND ----------
 
-# MAGIC %md
+# DBTITLE 1,grafico — Pergunta (b): produtos com maior ticket medio. O corte de...
 # Pergunta (b): produtos com maior ticket medio. O corte de 30 pedidos esta no
 # TITULO do grafico, e nao escondido na consulta — sem ele o topo do ranking vira
 # produto que vendeu duas vezes com ticket altissimo.
@@ -1436,6 +1474,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Pergunta (c): os 10 maiores clientes. O titulo carrega o...
 # Pergunta (c): os 10 maiores clientes. O titulo carrega o peso deles no total,
 # porque o ranking sozinho sugere que aqueles dez nomes sao a empresa — e nao sao.
 top_clientes = spark.sql("""
@@ -1477,6 +1516,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Pergunta (d): as 5 maiores cidades, com o resto ao lado....
 # Pergunta (d): as 5 maiores cidades, com o resto ao lado. A barra do "outras" e
 # o ponto do grafico: sem ela, cinco barras grandes sugerem concentracao onde nao
 # ha. Foi exatamente o erro que eu cometi na Etapa 1, lendo a coluna errada.
@@ -1521,6 +1561,7 @@ plt.show()
 
 # COMMAND ----------
 
+# DBTITLE 1,grafico — Pergunta (f): unidades vendidas quando o motivo e...
 # Pergunta (f): unidades vendidas quando o motivo e Promotion. O rotulo de escopo
 # no titulo nao e enfeite — motivo de venda existe SO no online, entao este
 # grafico descreve o varejo e nao a empresa.
