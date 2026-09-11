@@ -12,17 +12,17 @@ A carga quebrou três vezes em execução, e as três poderiam ter sido prevista
   - cinco colunas `decimal(p, s)` viravam string em silêncio
   - `FAILED_READ_FILE` em arquivo cujo campo aspado tem TAB
 
-Descobrir isso na celula 39 de 80, depois de esperar cota da Free Edition, custa uma
+Descobrir isso na célula 39 de 80, depois de esperar cota da Free Edition, custa uma
 tarde. Descobrir aqui custa trinta segundos.
 
-Le a fonte da verdade certa: o **notebook gerado**, não o `install.sql`. O que
+Lê a fonte da verdade certa: o **notebook gerado**, não o `install.sql`. O que
 importa e o cast que vai rodar de fato, com o tipo que o gerador decidiu.
 
 ## O que confere, valor por valor
 
 | Tipo destino | Rejeita |
 |---|---|
-| `int` / `smallint` / `bigint` | não numerico, ou fora da faixa do tipo |
+| `int` / `smallint` / `bigint` | não numérico, ou fora da faixa do tipo |
 | `decimal(p, s)` | digitos inteiros acima de `p - s` (estouro de precisão) |
 | `timestamp` | texto que não casa com os formatos do arquivo |
 | `boolean` | valor fora do conjunto que o Spark aceita |
@@ -99,7 +99,7 @@ def invalido(valor, tipo):
     return None              # string aceita qualquer coisa
 
 
-# ---------------------------------------------------------------- le o notebook
+# ---------------------------------------------------------------- lê o notebook
 assert NOTEBOOK.exists(), f"não achei {NOTEBOOK}. Rode scripts/gera_ingestao.py antes."
 texto = NOTEBOOK.read_text(encoding="utf-8")
 
@@ -112,7 +112,7 @@ for c in texto.split("\n\n-- COMMAND ----------\n\n"):
     casts = re.findall(r"cast\(_c(\d+) as ([\w()\s,]+?)\) as (`?\w+`?)", c)
     celulas.append((tabela, arquivo, [(int(i), t.strip(), n.strip("`")) for i, t, n in casts]))
 
-print(f"celulas de carga no notebook: {len(celulas)}")
+print(f"células de carga no notebook: {len(celulas)}")
 print(f"colunas com cast: {sum(len(c[2]) for c in celulas)}\n")
 
 # ---------------------------------------------------------------- simula
@@ -149,12 +149,12 @@ for tabela, arquivo, casts in celulas:
 
 # ---------------------------------------------------------------- relatório
 if not problemas:
-    print("Nenhum cast vai falhar. As celulas de carga rodam limpas.")
+    print("Nenhum cast vai falhar. As células de carga rodam limpas.")
 else:
     print(f"{'tabela':<26} {'coluna':<22} {'destino':<16} {'linhas':>7}  problema")
     print("-" * 110)
     for tabela, nome, tipo, motivo, n in problemas:
         print(f"{tabela:<26} {nome:<22} {tipo:<16} {n:>7}  {motivo}")
     print("-" * 110)
-    print(f"{len(problemas)} problema(s) — cada um derrubaria a celula da tabela")
+    print(f"{len(problemas)} problema(s) — cada um derrubaria a célula da tabela")
     sys.exit(1)

@@ -67,10 +67,10 @@ alvos = [Path(a) for a in sys.argv[1:] if not a.startswith("--")] or PADRAO
 
 
 def celulas_de(caminho):
-    """[(indice, sql)] das celulas de SQL, nos dois formatos de notebook."""
+    """[(indice, sql)] das células de SQL, nos dois formatos de notebook."""
     texto = caminho.read_text(encoding="utf-8")
     if caminho.suffix == ".py":
-        # notebook Python: SQL vive em celula marcada com `# MAGIC %sql`
+        # notebook Python: SQL vive em célula marcada com `# MAGIC %sql`
         saida = []
         for i, celula in enumerate(texto.split(SEPARADOR_PY)):
             linhas = celula.split("\n")
@@ -83,7 +83,7 @@ def celulas_de(caminho):
                 saida.append((i, sql))
         return texto, saida
 
-    # notebook SQL: a celula JÁ e SQL; markdown vem prefixado por `-- MAGIC`
+    # notebook SQL: a célula JÁ e SQL; markdown vem prefixado por `-- MAGIC`
     saida = []
     for i, celula in enumerate(texto.split(SEPARADOR)):
         c = celula.replace("-- Databricks notebook source\n", "", 1)
@@ -102,7 +102,7 @@ def linta(pasta):
         + (["--force"] if CORRIGIR else []),
         capture_output=True, text=True, encoding="utf-8", errors="replace",
         # cwd na própria pasta: o sqlfluff 1.4.5 quebra se o alvo estiver em
-        # outro drive que o diretorio de trabalho
+        # outro drive que o diretório de trabalho
         cwd=str(pasta),
     )
     saida = (r.stdout or "") + (r.stderr or "")
@@ -113,15 +113,15 @@ def linta(pasta):
 
 
 def confere_celulas(caminho, texto):
-    """Nenhuma celula pode ser markdown sem o `%md`.
+    """Nenhuma célula pode ser markdown sem o `%md`.
 
     Existe por um bug que chegou a rodar: ao inserir consultas novas, eu emendei no
-    MEIO de celulas de markdown existentes, e o pedaco de baixo ficou sem o cabeçalho
-    `%md`. O Databricks entao executou texto como código, e a celula falhou com
-    `SyntaxError: invalid character '—'` — o travessao do comentario.
+    MEIO de células de markdown existentes, e o pedaco de baixo ficou sem o cabeçalho
+    `%md`. O Databricks então executou texto como código, e a célula falhou com
+    `SyntaxError: invalid character '—'` — o travessão do comentário.
 
-    Foram três celulas, e uma delas era a SÍNTESE, a seção que o briefing pede
-    explicitamente. O linter de SQL não pegava, porque essas celulas não tem SQL.
+    Foram três células, e uma delas era a SÍNTESE, a seção que o briefing pede
+    explicitamente. O linter de SQL não pegava, porque essas células não tem SQL.
     """
     prefixo = "# MAGIC" if caminho.suffix == ".py" else "-- MAGIC"
     titulo = "# DBTITLE" if caminho.suffix == ".py" else "-- DBTITLE"
@@ -133,15 +133,15 @@ def confere_celulas(caminho, texto):
         corpo = corpo.replace("-- Databricks notebook source\n", "", 1)
         uteis = [l for l in corpo.split("\n") if l.strip()]
         if not uteis:
-            erros.append(f"celula {i} esta vazia")
+            erros.append(f"célula {i} esta vazia")
             continue
 
         tem_titulo = any(l.startswith(titulo) for l in uteis)
-        # a linha de DBTITLE não conta para descobrir o TIPO da celula: foi esse
+        # a linha de DBTITLE não conta para descobrir o TIPO da célula: foi esse
         # detalhe que fez a primeira versão desta checagem passar por um bug real
         conteudo = [l for l in uteis if not l.startswith(titulo)]
         if not conteudo:
-            erros.append(f"celula {i} tem titulo e nada mais")
+            erros.append(f"célula {i} tem título e nada mais")
             continue
 
         primeira = conteudo[0].strip()
@@ -150,41 +150,41 @@ def confere_celulas(caminho, texto):
         if primeira.startswith(f"{prefixo} %md"):
             if not todas_magic:
                 fora = next(l for l in conteudo if not l.strip().startswith(prefixo))
-                erros.append(f"celula {i} e marcada %md mas tem CÓDIGO — nada nela "
+                erros.append(f"célula {i} e marcada %md mas tem CÓDIGO — nada nela "
                              f"executa: {fora.strip()[:50]}")
             elif len(conteudo) > 1 and conteudo[1].strip() == f"{prefixo} %md":
-                erros.append(f"celula {i} tem %md duplicado")
+                erros.append(f"célula {i} tem %md duplicado")
         elif primeira.startswith(f"{prefixo} %sql"):
             if not todas_magic:
                 fora = next(l for l in conteudo if not l.strip().startswith(prefixo))
-                erros.append(f"celula {i} e marcada %sql mas tem linha fora do magic: "
+                erros.append(f"célula {i} e marcada %sql mas tem linha fora do magic: "
                              f"{fora.strip()[:50]}")
             if not tem_titulo:
-                erros.append(f"celula {i} de SQL sem DBTITLE — aparece sem nome na "
+                erros.append(f"célula {i} de SQL sem DBTITLE — aparece sem nome na "
                              f"navegação")
         elif todas_magic:
-            erros.append(f"celula {i} e markdown SEM %md — o Databricks vai executar "
+            erros.append(f"célula {i} e markdown SEM %md — o Databricks vai executar "
                          f"como código: {primeira[:60]}")
         else:
-            # celula de código na linguagem padrão do notebook
+            # célula de código na linguagem padrão do notebook
             if any(l.strip().startswith(f"{prefixo} %md") for l in conteudo):
-                erros.append(f"celula {i} tem um %md no meio do código")
+                erros.append(f"célula {i} tem um %md no meio do código")
             if not tem_titulo:
-                erros.append(f"celula {i} de código sem DBTITLE — aparece sem nome na "
+                erros.append(f"célula {i} de código sem DBTITLE — aparece sem nome na "
                              f"navegação")
     return erros
 
 
 def confere_titulos(caminho, texto):
-    """Os titulos das celulas: únicos, numerados, contiguos e na ordem.
+    """Os títulos das células: únicos, numerados, contiguos e na ordem.
 
-    O painel do Databricks corta o titulo em torno de 22 caracteres, entao titulo
-    longo e titulo com prefixo repetido são a mesma falha: quem le não consegue
-    distinguir uma celula da outra. A primeira versão dos titulos tinha 58
+    O painel do Databricks corta o título em torno de 22 caracteres, então título
+    longo e título com prefixo repetido são a mesma falha: quem lê não consegue
+    distinguir uma célula da outra. A primeira versão dos títulos tinha 58
     caracteres de mediana e `gráfico` abrindo nove deles.
 
-    O número tem de crescer junto com a ordem das celulas, senao a navegação ordena
-    diferente do notebook — e ai o titulo atrapalha em vez de ajudar.
+    O número tem de crescer junto com a ordem das células, senão a navegação ordena
+    diferente do notebook — e ai o título atrapalha em vez de ajudar.
     """
     marca = "# DBTITLE 1," if caminho.suffix == ".py" else "-- DBTITLE 1,"
     titulos = [l[len(marca):] for l in texto.split("\n") if l.startswith(marca)]
@@ -195,14 +195,14 @@ def confere_titulos(caminho, texto):
 
     repetidos = {x for x in titulos if titulos.count(x) > 1}
     if repetidos:
-        erros.append(f"titulo repetido: {sorted(repetidos)[:3]}")
+        erros.append(f"título repetido: {sorted(repetidos)[:3]}")
 
     sem_numero = [x for x in titulos if not re.match(r"\d+\.\d+ ", x)]
     if sem_numero:
-        erros.append(f"titulo sem prefixo numerico: {sem_numero[:3]}")
+        erros.append(f"título sem prefixo numérico: {sem_numero[:3]}")
 
-    # Rotulo em prosa tem de caber; nome de tabela não tem o que encurtar sem
-    # inventar abreviacao, e o número mantem a celula localizavel mesmo cortada.
+    # Rótulo em prosa tem de caber; nome de tabela não tem o que encurtar sem
+    # inventar abreviação, e o número mantem a célula localizável mesmo cortada.
     # Duas tabelas do AdventureWorks passam de 32 caracteres só no nome:
     # SalesOrderHeaderSalesReason e ProductModelProductDescriptionCulture.
     def rotulo(x):
@@ -211,10 +211,10 @@ def confere_titulos(caminho, texto):
     longos = [x for x in titulos
               if len(x) > 32 and " " in rotulo(x)]
     if longos:
-        erros.append(f"titulo em prosa longo demais para o painel: {longos[:2]}")
+        erros.append(f"título em prosa longo demais para o painel: {longos[:2]}")
     gigantes = [x for x in titulos if len(x) > 48]
     if gigantes:
-        erros.append(f"titulo passa de 48 caracteres: {gigantes[:2]}")
+        erros.append(f"título passa de 48 caracteres: {gigantes[:2]}")
 
     # numeração contígua por seção, e seções em ordem crescente
     ordem_secoes, por_secao = [], {}
@@ -237,12 +237,12 @@ def confere_titulos(caminho, texto):
 
 
 def confere_abertura(caminho, texto):
-    """A celula de abertura promete uma estrutura. Ela tem de ser verdade.
+    """A célula de abertura promete uma estrutura. Ela tem de ser verdade.
 
     Existe porque a abertura já mentiu três vezes: citava arquivos de ingestão que
-    foram apagados na consolidacao, dizia "cinco conferências" quando eram seis, e
+    foram apagados na consolidação, dizia "cinco conferências" quando eram seis, e
     afirmava 17 tabelas quando o notebook lia 13. Documentação que desvia do
-    artefato e pior do que documentação nenhuma — entao o desvio passa a falhar
+    artefato e pior do que documentação nenhuma — então o desvio passa a falhar
     aqui, e não a ser descoberto por leitura.
     """
     if caminho.name != "02-analise-exploratoria.py":
@@ -252,7 +252,7 @@ def confere_abertura(caminho, texto):
     erros = []
 
     # 1. nada de referência a arquivo que não existe mais
-    for morto in ("00-ingestão", "01-ddl", "02-carga", "02.99", "03-verificacao",
+    for morto in ("00-ingestão", "01-ddl", "02-carga", "02.99", "03-verificação",
                   "notebooks/"):
         if morto in texto:
             erros.append(f"a abertura cita `{morto}`, que não existe mais")
@@ -285,13 +285,13 @@ def confere_abertura(caminho, texto):
 
     # 4. quantos gráficos
     n_graficos = texto.count("plt.show()")
-    if f"| {n_graficos} celulas Python |" not in texto:
+    if f"| {n_graficos} células Python |" not in texto:
         erros.append(f"são {n_graficos} gráficos, e a tabela da abertura diz outro número")
 
-    # 5. quantas tabelas o notebook LE, contra o que a abertura afirma
+    # 5. quantas tabelas o notebook LÊ, contra o que a abertura afirma
     lidas = len(set(re.findall(r"workspace\.adventure_works\.(\w+)", texto)))
-    if f"le **{lidas}** tabelas" not in texto:
-        erros.append(f"o notebook le {lidas} tabelas, e a abertura afirma outro número")
+    if f"lê **{lidas}** tabelas" not in texto:
+        erros.append(f"o notebook lê {lidas} tabelas, e a abertura afirma outro número")
 
     return erros
 
@@ -303,7 +303,7 @@ for alvo in alvos:
     linta_veis = [(i, s) for i, s in celulas if not NAO_PARSEAVEL.search(s)]
 
     print(f"\n=== {alvo.name}")
-    print(f"celulas de SQL: {len(celulas)}"
+    print(f"células de SQL: {len(celulas)}"
           f"  |  linteadas: {len(linta_veis)}"
           f"  |  ingestão, sintaxe não suportada pela 1.4.5: {len(ingestao)}")
 
@@ -311,19 +311,19 @@ for alvo in alvos:
     if erros_celula:
         falhou = True
         for erro in erros_celula:
-            print(f"  CELULA QUEBRADA: {erro}")
+            print(f"  CÉLULA QUEBRADA: {erro}")
     else:
-        print("celulas: todas com o magic correto")
+        print("células: todas com o magic correto")
 
     erros_titulo = confere_titulos(alvo, texto)
     if erros_titulo:
         falhou = True
         for erro in erros_titulo:
-            print(f"  TITULO: {erro}")
+            print(f"  TÍTULO: {erro}")
     else:
         marca = "# DBTITLE 1," if alvo.suffix == ".py" else "-- DBTITLE 1,"
         n = sum(1 for l in texto.split("\n") if l.startswith(marca))
-        print(f"titulos: {n}, únicos, numerados e em ordem")
+        print(f"títulos: {n}, únicos, numerados e em ordem")
 
     erros_abertura = confere_abertura(alvo, texto)
     if erros_abertura:
@@ -340,7 +340,7 @@ for alvo in alvos:
         pasta = Path(tmp)
         for i, sql in linta_veis:
             # `;` colado no fim: em linha própria o L052 reclama
-            (pasta / f"celula-{i:03d}.sql").write_text(sql.rstrip().rstrip(";") + ";\n",
+            (pasta / f"célula-{i:03d}.sql").write_text(sql.rstrip().rstrip(";") + ";\n",
                                                        encoding="utf-8")
         saida = linta(pasta)
         violacoes = [l for l in saida.split("\n") if l.startswith("L:")]
@@ -349,13 +349,13 @@ for alvo in alvos:
             print("  " + l)
         for l in sorted({l.split("[")[-1].split("]")[0]
                          for l in saida.split("\n") if "FAIL" in l}):
-            print("  celula com problema: " + l)
+            print("  célula com problema: " + l)
 
         if CORRIGIR and not violacoes:
             corrigidas = 0
             partes = texto.split(SEPARADOR_PY if alvo.suffix == ".py" else SEPARADOR)
             for i, _ in linta_veis:
-                novo = (pasta / f"celula-{i:03d}.sql").read_text(
+                novo = (pasta / f"célula-{i:03d}.sql").read_text(
                     encoding="utf-8").rstrip().removesuffix(";").rstrip()
                 if alvo.suffix == ".py":
                     partes[i] = "\n".join(
@@ -367,10 +367,10 @@ for alvo in alvos:
             alvo.write_text(
                 (SEPARADOR_PY if alvo.suffix == ".py" else SEPARADOR).join(partes),
                 encoding="utf-8")
-            print(f"devolvidas ao notebook: {corrigidas} celulas")
+            print(f"devolvidas ao notebook: {corrigidas} células")
         elif violacoes:
             falhou = True
 
 if falhou:
-    sys.exit("ha violação de code style — rode com --fix, ou corrija a mao")
+    sys.exit("há violação de code style — rode com --fix, ou corrija a mão")
 print("\nok")

@@ -89,16 +89,16 @@ VOLUME = f"/Volumes/{CATALOGO}/{SCHEMA}/raw_adventure_works/AdventureWorks/data"
 
 # Não carregam, e o motivo e do arquivo de origem, não escolha nossa:
 EXCLUIDAS = {
-    "Document": "coluna binaria (varbinary) não atravessa TSV",
-    "ProductPhoto": "duas colunas binarias: ThumbNailPhoto e LargePhoto",
+    "Document": "coluna binária (varbinary) não atravessa TSV",
+    "ProductPhoto": "duas colunas binárias: ThumbNailPhoto e LargePhoto",
     "ProductReview": "arquivo quebrado na origem: 7 campos onde o DDL declara 8, "
                      "e quebra de linha dentro de campo (34 linhas para 31 registros)",
     "ProductModel": "o XML de CatalogDescription tem 48 TABs dentro de campo aspado, "
                     "e o leitor de CSV do Spark não honra a aspa nesse caso: 6 das 128 "
-                    "linhas se partem, uma delas em 22 campos onde ha 6 colunas. "
-                    "Tentado com quote, com escape e sem: nenhuma combinacao resolve. "
+                    "linhas se partem, uma delas em 22 campos onde há 6 colunas. "
+                    "Tentado com quote, com escape e sem: nenhuma combinação resolve. "
                     "O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega "
-                    "normalmente — entao o limite e a quantidade, não a estrutura",
+                    "normalmente — então o limite e a quantidade, não a estrutura",
 }
 
 # As 17 que as seis perguntas do briefing e os catorze aprofundamentos usam. Vem
@@ -136,7 +136,7 @@ unknown update user using values when where window with""".split())
 NOME_SCHEMA = {
     "Person": "Person — pessoas, endereco e geografia",
     "HumanResources": "HumanResources — funcionarios e departamentos",
-    "Production": "Production — produto, categoria e producao",
+    "Production": "Production — produto, categoria e produção",
     "Purchasing": "Purchasing — fornecedor e compras",
     "Sales": "Sales — pedido, item, cliente e território",
 }
@@ -162,14 +162,14 @@ def tipo_databricks(nome_col, tipo_pg):
     Duas regras que a primeira versão errou, e as duas custaram carga interrompida:
 
     1. `decimal(p, s)` caia no fallback de texto, porque o mapeamento só reconhecia
-       `numeric` sem precisão. Cinco colunas numericas viravam string em silêncio —
+       `numeric` sem precisão. Cinco colunas numéricas viravam string em silêncio —
        `perassemblyqty`, `availability`, `actualresourcehrs`, `receivedqty` e
        `rejectedqty`.
     2. a lista DINHEIRO era aplicada pelo NOME da coluna, sem olhar o tipo de
        origem. `unitmeasurecode` e `char(3)` — código de unidade, tipo 'EA' — e
        virava `decimal(19, 4)`. O cast estourava com CAST_INVALID_INPUT.
 
-    Por isso a lista de dinheiro agora só vale quando a origem JÁ e numerica, e a
+    Por isso a lista de dinheiro agora só vale quando a origem JÁ e numérica, e a
     precisão declarada na origem e preservada quando não e coluna de valor.
     """
     t = tipo_pg.strip().lower()
@@ -180,7 +180,7 @@ def tipo_databricks(nome_col, tipo_pg):
         return "decimal(19, 4)" if c in DINHEIRO else f"decimal({m.group(1)}, {m.group(2)})"
     if t.startswith(("numeric", "decimal", "money")):
         return "decimal(19, 4)"
-    # DINHEIRO só pode promover coluna que já e numerica na origem
+    # DINHEIRO só pode promover coluna que já e numérica na origem
     if c in DINHEIRO and e_numerico(t):
         return "decimal(19, 4)"
     if t in ("serial", "int", "integer"):
@@ -197,7 +197,7 @@ def tipo_databricks(nome_col, tipo_pg):
         return "boolean"
     if t.startswith(("varchar", "char", "text", "nvarchar", "name")):
         return "string"
-    return "string"   # fallback consciente: nunca inventa tipo numerico
+    return "string"   # fallback consciente: nunca inventa tipo numérico
 
 
 def tabelas_do_install(texto):
@@ -244,10 +244,10 @@ def campos_no_tsv(arquivo):
     A primeira versão disto olhava só a primeira linha, e essa falha custou uma
     carga interrompida: o `jobcandidate` tem 12 linhas com 4 campos e UMA com 5,
     e o `productmodel` tem seis linhas fora do padrão, uma delas com 22 campos
-    onde ha 6 colunas. Com `mode = FAILFAST` — que e o certo — isso derruba a
+    onde há 6 colunas. Com `mode = FAILFAST` — que e o certo — isso derruba a
     carga na linha ruim, e não no comeco.
 
-    Le com a aspa CSV habilitada, que e como o Databricks vai ler. Assim a
+    Lê com a aspa CSV habilitada, que e como o Databricks vai ler. Assim a
     conferência aqui e a carga la enxergam o mesmo arquivo.
     """
     with open(ORIGEM / "data" / f"{arquivo}.csv", encoding="utf-8",
@@ -265,12 +265,12 @@ def md(texto):
 
 
 def celula_da_tabela(schema, original, tabela, cols, titulo):
-    """`titulo` e o DBTITLE, o nome da celula na navegação do Databricks.
+    """`título` e o DBTITLE, o nome da célula na navegação do Databricks.
 
-    Formato `<seção>.<NN> NomeDaTabela`, sem o schema. O painel corta o titulo em
-    torno de 22 caracteres, entao o prefixo de schema (`Production.`) gastaria 11
-    deles antes de chegar ao que distingue a celula. O schema continua visível no
-    cabeçalho de markdown do bloco e no comentario da própria celula.
+    Formato `<seção>.<NN> NomeDaTabela`, sem o schema. O painel corta o título em
+    torno de 22 caracteres, então o prefixo de schema (`Production.`) gastaria 11
+    deles antes de chegar ao que distingue a célula. O schema continua visível no
+    cabeçalho de markdown do bloco e no comentário da própria célula.
     """
     casts = [f"cast(_c{i} as {tipo_databricks(c, t)}) as {ident(c)}"
              for i, (c, t) in enumerate(cols)]
@@ -312,19 +312,19 @@ for schema, original in tabelas_do_install(texto):
     if n_tsv != len(cols):
         problemas.append(f"{original}: DDL {len(cols)} colunas, TSV {n_tsv} campos")
 
-    # Um tipo numerico na origem nunca deve virar string, e um tipo textual nunca
-    # deve virar decimal. As duas coisas aconteceram e derrubaram a carga, entao
+    # Um tipo numérico na origem nunca deve virar string, e um tipo textual nunca
+    # deve virar decimal. As duas coisas aconteceram e derrubaram a carga, então
     # ficam barradas aqui em vez de aparecerem como erro no Databricks.
     for col, tp in cols:
         destino = tipo_databricks(col, tp)
         if e_numerico(tp) and destino == "string":
-            problemas.append(f"{original}.{col}: origem {tp} numerica virou string")
+            problemas.append(f"{original}.{col}: origem {tp} numérica virou string")
         if not e_numerico(tp) and destino.startswith("decimal"):
             problemas.append(f"{original}.{col}: origem {tp} textual virou {destino}")
 
     tabelas[original.lower()] = (schema, original, cols)
 
-assert not problemas, "divergencia entre DDL e arquivo:\n  " + "\n  ".join(problemas)
+assert not problemas, "divergência entre DDL e arquivo:\n  " + "\n  ".join(problemas)
 
 faltando = [t for t in ESCOPO_ANALISE if t not in tabelas]
 assert not faltando, f"tabela do escopo da análise que não existe no DDL: {faltando}"
@@ -332,8 +332,8 @@ assert not faltando, f"tabela do escopo da análise que não existe no DDL: {fal
 # ---------------------------------------------------------------- abertura
 celulas = [md(f"""# Ingestão do AdventureWorks
 
-Cria e carrega a camada bruta no Unity Catalog. **Não e entregavel do desafio** — o
-briefing não pede artefato de ingestão —, e sim o pre-requisito para a Etapa 2. Roda
+Cria e carrega a camada bruta no Unity Catalog. **Não e entregável do desafio** — o
+briefing não pede artefato de ingestão —, e sim o pré-requisito para a Etapa 2. Roda
 uma vez.
 
 ## Antes de rodar
@@ -343,32 +343,32 @@ A pasta `AdventureWorks` inteira precisa estar num Volume, subida com `Select fo
 
     {VOLUME}/
 
-Os nomes de tabela são absolutos (`{ALVO}.<tabela>`), entao não depende de qual
+Os nomes de tabela são absolutos (`{ALVO}.<tabela>`), então não depende de qual
 catálogo esta selecionado no editor. O nome do schema não e escolha nossa: o briefing
 determina `USE SOMENTE O SCHEMA adventure_works`.
 
-## Repetir e seguro, e isso e por construcao
+## Repetir e seguro, e isso e por construção
 
 Cada tabela e criada e carregada em **uma** instrução,
-`create or replace table ... as select`. Repetir uma celula **substitui** os dados em
-vez de somar, entao não existe como duplicar.
+`create or replace table ... as select`. Repetir uma célula **substitui** os dados em
+vez de somar, então não existe como duplicar.
 
 O desenho anterior separava DDL e `COPY INTO`, e ai repetir a carga somava linhas —
-`COPY INTO` sempre acrescenta, e `force = true` desliga a idempotencia dele. Isso
-chegou a deixar `address` com 3x e `employeepayhistory` com 5x as linhas. A protecao
+`COPY INTO` sempre acrescenta, e `force = true` desliga a idempotência dele. Isso
+chegou a deixar `address` com 3x e `employeepayhistory` com 5x as linhas. A proteção
 agora e propriedade do código, não disciplina de quem roda.
 
 ## Onde rodar
 
 **SQL Editor ou notebook**, mas a Free Edition esgota cota de compute e devolve
-`RESOURCE_EXHAUSTED` — que chega disfarcado de `ValueError` do cliente gRPC. O
+`RESOURCE_EXHAUSTED` — que chega disfarçado de `ValueError` do cliente gRPC. O
 warehouse do SQL Editor e um pool separado do compute de notebook, com cota própria,
 e foi por ele que a carga passou. Se estourar, espere e continue de onde parou: as
-celulas são independentes.
+células são independentes.
 
 ## Ordem das seções
 
-| Seção | Conteudo |
+| Seção | Conteúdo |
 |---|---|
 | 1 | As **17 tabelas** que a análise usa. Parar aqui e um estado valido |
 | 2 | As outras 48 da camada bruta, por schema de origem |
@@ -382,13 +382,13 @@ eles: **nada.** Nenhum deles deve ser executado.
 
 | Artefato antigo | Por que não rodar |
 |---|---|
-| notebook `Ingestão Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas seções 1 e 3 daqui |
+| notebook `Ingestão Adventure Works` (células `01`, `01.01`, `02.01`) | superado pelas seções 1 e 3 daqui |
 | query `02.00-carga-escopo-minimo.sql` | **DUPLICA** — usa `COPY INTO` com `force = true` |
 | query `02.99-recarga-limpa.sql` | resolvia a duplicação que hoje não acontece mais |
 | query `03-verificacao-da-carga.sql` | virou a seção 3 deste notebook |
 
 O risco concreto: o `COPY INTO` daqueles arquivos **acrescenta** linhas, e o
-`force = true` desliga a protecao que ignoraria arquivo já carregado. Rodar um deles
+`force = true` desliga a proteção que ignoraria arquivo já carregado. Rodar um deles
 por engano soma a carga de novo — foi assim que `address` chegou a 3x e
 `employeepayhistory` a 5x. Aqui isso não existe: `create or replace` substitui.
 
@@ -397,8 +397,8 @@ esperado (2x, 3x…) e duplicação, não dado corrompido.
 
 ## Este arquivo e gerado
 
-Fonte: `scripts/gera_ingestao.py`, que le o `install.sql` do repositorio oficial —
-de onde saem nome, ordem e tipo de cada coluna. Editar celula a mao cria duas versões
+Fonte: `scripts/gera_ingestao.py`, que lê o `install.sql` do repositório oficial —
+de onde saem nome, ordem e tipo de cada coluna. Editar célula a mão cria duas versões
 do mesmo SQL; para mudar algo, mude o gerador e regere.""")]
 
 # ---------------------------------------------------------------- seção 1: escopo
@@ -427,15 +427,15 @@ celulas.append(md(f"""# 2. O resto da camada bruta
 
 As outras {len(resto)} tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 não
 depende delas — mas subir tudo que carrega custa quase nada (79 MB, 759 mil linhas) e
-remove o atrito de ingestão se o trabalho crescer para compras ou producao.
+remove o atrito de ingestão se o trabalho crescer para compras ou produção.
 
 Três tabelas ficam de fora das 68 do `install.sql`, por defeito de origem e não por
 escolha:
 
 """ + "\n".join(f"- **`{t}`** — {motivo}" for t, motivo in EXCLUIDAS.items())))
 
-# a sequência da seção 2 corre pelas cinco subsecoes de schema sem reiniciar:
-# o número tem de crescer junto com a ordem das celulas no notebook
+# a sequência da seção 2 corre pelas cinco subseções de schema sem reiniciar:
+# o número tem de crescer junto com a ordem das células no notebook
 n_resto = 0
 for schema in ["Person", "HumanResources", "Production", "Purchasing", "Sales"]:
     if schema not in por_schema:
@@ -537,8 +537,8 @@ blocos.append(
     "where person.businessentityid is null\n    and store.businessentityid is null")
 
 celulas.append(
-    "-- DBTITLE 1,3.3 As sete juncoes\n"
-    "-- 3.3 As sete juncoes que a análise usa: alguma tem órfão? Tem de dar ZERO em todas.\n"
+    "-- DBTITLE 1,3.3 As sete junções\n"
+    "-- 3.3 As sete junções que a análise usa: alguma tem órfão? Tem de dar ZERO em todas.\n"
     "--     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.\n"
     + "\n\nunion all\n\n".join(blocos) + ";")
 
@@ -590,7 +590,7 @@ from {ALVO}.salesorderdetail;""")
 
 celulas.append(md("""# Fim da ingestão
 
-Com as conferências passando, a base esta confiável e a análise exploratoria pode
+Com as conferências passando, a base esta confiável e a análise exploratória pode
 começar em `databricks/02-analise-exploratoria.py`."""))
 
 # ---------------------------------------------------------------- escrita e asseguração
@@ -599,11 +599,11 @@ SAIDA.parent.mkdir(parents=True, exist_ok=True)
 SAIDA.write_text(fonte, encoding="utf-8")
 
 # Só instrução de verdade: linha que COMEÇA com o comando. Contar no texto inteiro
-# pegaria também a mencao em prosa dentro das celulas de markdown.
+# pegaria também a menção em prosa dentro das células de markdown.
 codigo = [l for l in fonte.split("\n") if not l.startswith("-- MAGIC")]
 n_tabelas = sum(1 for l in codigo if l.startswith("create or replace table "))
 n_casts_no_arquivo = sum(l.count("cast(_c") for l in codigo)
-# Coerencia entre o que a memória contou e o que foi escrito no arquivo. Sem número
+# Coerência entre o que a memória contou e o que foi escrito no arquivo. Sem número
 # fixo: o escopo muda quando uma tabela entra em EXCLUIDAS, e um número cravado aqui
 # viraria mentira silenciosa. O piso de 400 casts pega perda grosseira.
 assert n_tabelas == len(tabelas), f"{n_tabelas} create no arquivo, {len(tabelas)} em memória"
@@ -615,15 +615,15 @@ sql = "\n".join(codigo).lower()
 assert "copy into" not in sql, "sobrou COPY INTO — o desenho antigo voltou"
 assert "force" not in sql, "sobrou `force` — o desenho antigo voltou"
 
-# uma instrução por celula: e o que o `%sql` executa com segurança
+# uma instrução por célula: e o que o `%sql` executa com segurança
 for i, celula in enumerate(fonte.split("\n\n-- COMMAND ----------\n\n")):
     if celula.lstrip().startswith(("-- MAGIC", "-- Databricks notebook source\n-- MAGIC")):
         continue
     sem_comentario = "\n".join(
         l.split("--")[0] for l in celula.split("\n") if not l.strip().startswith("--"))
     n = sem_comentario.count(";")
-    assert n == 1, f"celula {i} tem {n} instruções, esperava 1:\n{celula[:200]}"
+    assert n == 1, f"célula {i} tem {n} instruções, esperava 1:\n{celula[:200]}"
 
 print(f"OK -> {SAIDA.relative_to(REPO)}")
-print(f"tabelas: {n_tabelas}  |  casts: {n_casts_no_arquivo}  |  celulas: {len(celulas)}")
+print(f"tabelas: {n_tabelas}  |  casts: {n_casts_no_arquivo}  |  células: {len(celulas)}")
 print(f"  seção 1 (análise): {len(ESCOPO_ANALISE)}  |  seção 2 (resto): {len(resto)}")

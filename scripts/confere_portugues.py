@@ -49,6 +49,7 @@ import io
 import re
 import sys
 import tokenize
+import unicodedata
 from collections import Counter
 from pathlib import Path
 
@@ -135,6 +136,75 @@ FALTA = {
     "familia": "família", "familias": "famílias", "intuitiva": "intuitiva",
 }
 FALTA = {k: v for k, v in FALTA.items() if k != v}
+
+# Palavras em que a forma SEM acento também é palavra válida do português. Nunca entram
+# no dicionário, nem escritas à mão nem derivadas do corpus — acusá-las produziria falso
+# positivo, e um verificador com falso positivo deixa de ser lido.
+AMBIGUAS = {
+    # artigo, contração e pronome contra a forma acentuada
+    "a", "as", "no", "nos", "e", "esta", "estas", "este", "ate", "para", "da", "de",
+    "do", "por", "pode", "la", "lo", "pais",
+    # singular contra plural do verbo
+    "tem", "vem",
+    # verbo contra substantivo ou contra infinitivo com pronome (`ligá-la`)
+    "liga", "acompanha", "caia", "continuo", "valido", "conta", "torna", "sabia",
+    "critica", "medida", "secretaria", "duvida", "publica", "pratica",
+}
+
+# O dicionário escrito à mão erra por omissão: ele cobre o que alguém lembrou de listar.
+# Foi assim que `promocao`, `associacao` e `submissao` passaram por três revisões. A
+# correção não é escrever mais palavras — é parar de depender de memória.
+#
+# Toda palavra acentuada que JÁ existe na prosa do repositório é prova de como ela se
+# escreve. Basta tirar o acento dela para obter a forma errada correspondente, e então
+# procurar por essa forma. O dicionário passa a crescer sozinho com o texto.
+def _sem_acento(palavra):
+    return unicodedata.normalize("NFKD", palavra).encode("ascii", "ignore").decode()
+
+
+# A derivação tem um ponto cego: ela só aprende palavra que o corpus escreve certo em
+# algum lugar. `submissao` aparecia duas vezes, errado nas duas, e por isso era invisível
+# — ninguém tinha escrito `submissão` para servir de exemplo.
+#
+# Estes sufixos cobrem esse vão. São terminações em que o acento é obrigatório em
+# português, sem exceção que valha a pena tratar. Não entram `-vel` solto (quebraria
+# `level`) nem `-ao` solto (quebraria `grao` já coberto e nomes próprios).
+SUFIXOS = [
+    ("coes", "ções"), ("soes", "sões"), ("cao", "ção"), ("sao", "são"),
+    ("encia", "ência"), ("ancia", "ância"), ("avel", "ável"), ("ivel", "ível"),
+    ("orio", "ório"), ("ario", "ário"),
+]
+# `-aria` ficou de fora deliberadamente: colide com o futuro do pretérito — `gastaria`,
+# `ignoraria`, `derrubaria` — e com `varia`. Foi o teste que mostrou, não o raciocínio.
+
+# Palavras que casam um sufixo mas não são português.
+ESTRANGEIRAS = {"scenario", "primario", "ratio", "level", "novel", "travel", "ario"}
+
+
+def suspeita_por_sufixo(palavra):
+    """Forma acentuada provável, ou None. Usada só quando a derivação não conhece a palavra."""
+    p = palavra.lower()
+    if p in ESTRANGEIRAS or p in AMBIGUAS or len(p) < 5:
+        return None
+    for errado, certo in SUFIXOS:
+        if p.endswith(errado):
+            return p[: -len(errado)] + certo
+    return None
+
+
+def deriva_do_corpus(textos):
+    """Mapa `forma errada -> forma certa` extraído das palavras acentuadas do próprio texto."""
+    derivado = {}
+    for texto in textos:
+        for palavra in re.findall(r"\b\w+\b", texto, re.UNICODE):
+            if not any(ord(c) > 127 for c in palavra):
+                continue
+            correta = palavra.lower()
+            errada = _sem_acento(correta)
+            if errada == correta or not errada.isalpha() or errada in AMBIGUAS:
+                continue
+            derivado[errada] = correta
+    return derivado
 
 MOJIBAKE = re.compile(r"Ã[\x80-\xbf]|Â[\x80-\xbf]|â€|�")
 
@@ -343,8 +413,15 @@ def palavras_sem_acento(caminho, texto):
         trecho = texto[ini:fim]
         for padrao in PROTEGIDO:
             trecho = padrao.sub(lambda m: " " * len(m.group(0)), trecho)
-        achados += Counter(p.lower() for p in re.findall(r"\b[A-Za-z]+\b", trecho)
-                           if p.lower() in FALTA)
+        for bruto in re.findall(r"\b[A-Za-z]+\b", trecho):
+            p = bruto.lower()
+            if p in FALTA:
+                achados[p] += 1
+                continue
+            provavel = suspeita_por_sufixo(p)
+            if provavel and provavel != p:
+                FALTA[p] = provavel      # passa a valer para o corretor também
+                achados[p] += 1
     return achados
 
 
@@ -354,6 +431,16 @@ def main():
         for padrao in PADROES:
             alvos += sorted(REPO.glob(padrao))
     alvos = [a for a in alvos if a.name not in IGNORA]
+
+    # O dicionario cresce com o proprio texto: cada palavra acentuada que ja esta la
+    # ensina como a sua forma sem acento deveria ser escrita.
+    corpus = []
+    for a in alvos:
+        try:
+            corpus.append(a.read_bytes().decode("utf-8"))
+        except (OSError, UnicodeDecodeError):
+            pass
+    FALTA.update({k: v for k, v in deriva_do_corpus(corpus).items() if k not in FALTA})
 
     total, falhou = Counter(), False
     print(f"{'arquivo':<44} {'sem acento':>11}   as mais frequentes")

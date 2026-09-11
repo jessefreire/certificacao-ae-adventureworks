@@ -1,35 +1,35 @@
 # -*- coding: utf-8 -*-
-"""Da titulo as celulas de código do notebook de análise exploratoria.
+"""Da título as células de código do notebook de análise exploratória.
 
     python scripts/titula_celulas.py
 
-Rodar de novo e seguro: os titulos existentes são removidos antes de reaplicar.
+Rodar de novo e seguro: os títulos existentes são removidos antes de reaplicar.
 
-## Por que uma lista explícita, e não titulo derivado do comentario
+## Por que uma lista explícita, e não título derivado do comentário
 
-A primeira versão disto DERIVAVA o titulo da primeira linha de comentario de cada
-celula. O resultado foi ruim de um jeito que só aparece no painel do Databricks:
+A primeira versão disto DERIVAVA o título da primeira linha de comentário de cada
+célula. O resultado foi ruim de um jeito que só aparece no painel do Databricks:
 
-  - titulo com 58 caracteres na mediana, contra ~22 visiveis — 40 de 42 cortados
-  - `gráfico` abrindo nove titulos e `perfil` abrindo sete, gastando o espaco
-    visível ANTES de chegar ao que distingue a celula
+  - título com 58 caracteres na mediana, contra ~22 visiveis — 40 de 42 cortados
+  - `gráfico` abrindo nove títulos e `perfil` abrindo sete, gastando o espaço
+    visível ANTES de chegar ao que distingue a célula
   - nenhuma numeração, num notebook cujas seções já são numeradas no markdown
 
-Derivação não tem como saber disso. Lista explícita tem duas vantagens: e revisavel
-antes de aplicar, e e estável — o titulo não muda porque alguém reescreveu um
-comentario.
+Derivação não tem como saber disso. Lista explícita tem duas vantagens: e revisável
+antes de aplicar, e e estável — o título não muda porque alguém reescreveu um
+comentário.
 
-O preço e ter de manter a lista em sincronia com as celulas, e por isso o script
+O preço e ter de manter a lista em sincronia com as células, e por isso o script
 falha alto se a contagem não casar, em vez de titular na ordem errada.
 
 ## O formato
 
-`<seção>.<sequência> <rotulo curto>`, com o número da seção igual ao do cabeçalho de
+`<seção>.<sequência> <rótulo curto>`, com o número da seção igual ao do cabeçalho de
 markdown. O número vem primeiro porque sobrevive ao corte: `3.4 Catálogo sem venda`
-truncado ainda e localizavel.
+truncado ainda e localizável.
 
-O código do aprofundamento (`a.1`, `b.2`) NÃO entra no titulo. Ele não distingue
-celulas — havia dois `a.1`, dois `a.2`, dois `b.1` — e já esta no cabeçalho de
+O código do aprofundamento (`a.1`, `b.2`) NÃO entra no título. Ele não distingue
+células — havia dois `a.1`, dois `a.2`, dois `b.1` — e já esta no cabeçalho de
 markdown imediatamente acima. Os quatro últimos gráficos são a exceção: neles a letra
 da pergunta e a informação útil, porque e o que o dashboard da Etapa 7 reaproveita.
 """
@@ -46,7 +46,7 @@ AQUI = Path(__file__).resolve().parent
 NB = AQUI.parent / "databricks" / "02-analise-exploratoria.py"
 SEP = "\n\n# COMMAND ----------\n\n"
 
-# Os titulos, na ordem das celulas de código. Agrupados por seção só para leitura.
+# Os títulos, na ordem das células de código. Agrupados por seção só para leitura.
 TITULOS = [
     # 1. Perfil do dado
     "1.1 Tamanho e janela",
@@ -69,7 +69,7 @@ TITULOS = [
     # 4. Pergunta (b)
     "4.1 Ticket por produto",
     "4.2 Desconto e material?",
-    "4.3 Onde ha desconto",
+    "4.3 Onde há desconto",
     "4.4 Ticket por país",
     "4.5 Tipo de oferta",
     # 5. Pergunta (c)
@@ -103,13 +103,13 @@ TITULOS = [
 
 # A seção de gráficos não tinha número no markdown, e fica entre a 8 e a 9. Sem
 # numerar ela, os nove gráficos ficariam sem prefixo — o que e justamente o que se
-# quer corrigir. Entao ela vira a 9 e a síntese vira a 10.
+# quer corrigir. Então ela vira a 9 e a síntese vira a 10.
 RENUMERA = [
     ("# MAGIC # Gráficos", "# MAGIC # 9. Gráficos"),
     ("# MAGIC # 9. Síntese — o que a exploração mudou no entendimento",
      "# MAGIC # 10. Síntese — o que a exploração mudou no entendimento"),
-    ("| **Gráficos** | Nove, em dois grupos — ver abaixo | 9 celulas Python |",
-     "| **9. Gráficos** | Nove, em dois grupos — ver abaixo | 9 celulas Python |"),
+    ("| **Gráficos** | Nove, em dois grupos — ver abaixo | 9 células Python |",
+     "| **9. Gráficos** | Nove, em dois grupos — ver abaixo | 9 células Python |"),
     ("| **9. Síntese** | O que a exploração mudou no entendimento do dataset, "
      "que e a frase que o briefing pede | — |",
      "| **10. Síntese** | O que a exploração mudou no entendimento do dataset, "
@@ -118,7 +118,7 @@ RENUMERA = [
 
 
 def e_codigo(celula):
-    """A celula executa algo? Markdown não conta, e o DBTITLE não define o tipo."""
+    """A célula executa algo? Markdown não conta, e o DBTITLE não define o tipo."""
     uteis = [l for l in celula.split("\n") if l.strip()]
     uteis = [l for l in uteis if not l.startswith("# DBTITLE")]
     uteis = [l for l in uteis if l != "# Databricks notebook source"]
@@ -135,14 +135,14 @@ for velho, novo in RENUMERA:
     assert t.count(velho) == 1, f"não achei para renumerar: {velho[:50]}"
     t = t.replace(velho, novo)
 
-# limpa titulos anteriores antes de reaplicar
+# limpa títulos anteriores antes de reaplicar
 t = "\n".join(l for l in t.split("\n") if not l.startswith("# DBTITLE"))
 celulas = t.split(SEP)
 
 indices = [i for i, c in enumerate(celulas) if e_codigo(c)]
 assert len(indices) == len(TITULOS), (
-    f"o notebook tem {len(indices)} celulas de código e a lista tem {len(TITULOS)} "
-    f"titulos. Alguém adicionou ou removeu celula: atualize TITULOS.")
+    f"o notebook tem {len(indices)} células de código e a lista tem {len(TITULOS)} "
+    f"títulos. Alguém adicionou ou removeu célula: atualize TÍTULOS.")
 
 for i, titulo in zip(indices, TITULOS):
     c = celulas[i]
@@ -164,10 +164,10 @@ titulos = [l[len("# DBTITLE 1,"):] for l in final.split("\n")
            if l.startswith("# DBTITLE 1,")]
 
 assert len(titulos) == len(TITULOS), f"{len(titulos)} aplicados, {len(TITULOS)} na lista"
-assert len(set(titulos)) == len(titulos), "titulo repetido"
+assert len(set(titulos)) == len(titulos), "título repetido"
 assert titulos == TITULOS, "a ordem aplicada não e a da lista"
 
-# numeração contígua por seção, e crescente na ordem das celulas
+# numeração contígua por seção, e crescente na ordem das células
 por_secao = {}
 for x in titulos:
     s, n = re.match(r"(\d+)\.(\d+)", x).groups()
@@ -177,6 +177,6 @@ for s, seq in por_secao.items():
 assert sorted(por_secao) == list(por_secao), "as seções não estão em ordem crescente"
 
 longos = [x for x in titulos if len(x) > 24]
-print(f"titulos aplicados: {len(titulos)}  |  todos únicos  |  numeração contígua")
+print(f"títulos aplicados: {len(titulos)}  |  todos únicos  |  numeração contígua")
 print(f"seções: {sorted(por_secao)}")
 print(f"acima de 24 caracteres: {longos if longos else 'nenhum'}")

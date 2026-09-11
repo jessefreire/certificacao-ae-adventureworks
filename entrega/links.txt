@@ -2,11 +2,11 @@ Desafio Final — Adventure Works
 Links da entrega
 
 O briefing exige que os links venham em arquivo de texto dentro da pasta da
-submissao, e que TODO link esteja com acesso PÚBLICO — sem isso a correcao
+submissão, e que TODO link esteja com acesso PÚBLICO — sem isso a correção
 trava.
 
 
-GitHub (projeto de transformacao, com os modelos dbt)
+GitHub (projeto de transformação, com os modelos dbt)
   https://github.com/jessefreire/formacao-analytics-engineering
   Pasta do desafio: Desafio/desafio-adventureworks/
   PENDENTE: o projeto dbt da Etapa 5 ainda não existe.
@@ -15,21 +15,21 @@ GitHub (projeto de transformacao, com os modelos dbt)
 Dashboard
   PENDENTE — Etapa 7.
   Se for feito no AI/BI do Databricks, entra o link aqui.
-  Se for Power BI, o entregavel e o próprio .pbix, com as medidas DAX
+  Se for Power BI, o entregável e o próprio .pbix, com as medidas DAX
   documentadas dentro do arquivo.
-  ATENCAO: a conta do Databricks e Free Edition e pessoal. Testar o
+  ATENÇÃO: a conta do Databricks e Free Edition e pessoal. Testar o
   compartilhamento público ANTES de depender dele.
 
 
-Video (YouTube, Drive ou Dropbox)
+Vídeo (YouTube, Drive ou Dropbox)
   PENDENTE — Etapa 10.
 
 
-Também vao na pasta da submissao, como arquivo e não como link:
+Também vão na pasta da submissão, como arquivo e não como link:
   - modelo conceitual em PDF (Etapa 3)
   - mockup do dashboard em JPEG, feito no Figma (Etapa 6)
-  - documentação das regras de negocio (Etapa 8)
-  - apresentacao exportada em JPEG ou PDF (Etapa 9)
+  - documentação das regras de negócio (Etapa 8)
+  - apresentação exportada em JPEG ou PDF (Etapa 9)
 
 Limite do Moodle: 40 MB. Acima disso, subir o zip para o Drive e entregar o
 link — público.

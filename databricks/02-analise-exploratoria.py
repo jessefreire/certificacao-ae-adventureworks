@@ -1,10 +1,10 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Análise exploratoria de dados (EDA) — Adventure Works
+# MAGIC # Análise exploratória de dados (EDA) — Adventure Works
 # MAGIC
-# MAGIC Etapa 2 do desafio, e o entregavel que o briefing pede em "notebook com código,
-# MAGIC gráficos e comentario sobre cada insight". O briefing chama de **análise
-# MAGIC exploratoria**, e usa a sigla **EDA** uma vez, no critério de aprovacao — as duas
+# MAGIC Etapa 2 do desafio, e o entregável que o briefing pede em "notebook com código,
+# MAGIC gráficos e comentário sobre cada insight". O briefing chama de **análise
+# MAGIC exploratória**, e usa a sigla **EDA** uma vez, no critério de aprovação — as duas
 # MAGIC formas se referem a este notebook.
 # MAGIC
 # MAGIC **A pergunta não se descobre aqui.** Ela foi definida na Etapa 1 do desafio, e este
@@ -17,30 +17,30 @@
 # MAGIC | **(c)** | Os 10 principais clientes por valor total |
 # MAGIC | **(d)** | As 5 principais cidades por valor total |
 # MAGIC | **(e)** | Pedidos, quantidade e valor por mês e ano |
-# MAGIC | **(f)** | Qual produto vendeu mais unidades quando o motivo da venda foi promocao |
+# MAGIC | **(f)** | Qual produto vendeu mais unidades quando o motivo da venda foi promoção |
 # MAGIC
 # MAGIC Cada uma tem sua própria seção, que abre com o enunciado do briefing e responde o que
 # MAGIC ele pede.
 # MAGIC
 # MAGIC Ao apurar os dados na Etapa 1, cada pergunta abriu desdobramentos — coisas que a
 # MAGIC pergunta original não cobre mas que mudam a leitura da resposta. Por exemplo: a (a)
-# MAGIC pede nove cortes, e dois deles não separam nada; a (f) pergunta sobre promocao, e
-# MAGIC promocao existe apenas no varejo online. Esses desdobramentos aparecem como
-# MAGIC subsecoes ao longo do notebook, identificados por código (`a.1`, `b.2`, `f.2`), e
+# MAGIC pede nove cortes, e dois deles não separam nada; a (f) pergunta sobre promoção, e
+# MAGIC promoção existe apenas no varejo online. Esses desdobramentos aparecem como
+# MAGIC subseções ao longo do notebook, identificados por código (`a.1`, `b.2`, `f.2`), e
 # MAGIC **nenhum deles e tema solto** — cada um nasceu de uma das seis.
 # MAGIC
 # MAGIC O documento completo da Etapa 1, com o catálogo de indicadores e a justificativa de
-# MAGIC cada pergunta, esta no repositorio do projeto:
+# MAGIC cada pergunta, esta no repositório do projeto:
 # MAGIC <https://github.com/jessefreire/formacao-analytics-engineering/tree/master/Desafio/desafio-adventureworks/docs>
 # MAGIC
 # MAGIC ## Como ler
 # MAGIC
-# MAGIC | Seção | O que tem | Celulas |
+# MAGIC | Seção | O que tem | Células |
 # MAGIC |---|---|---|
-# MAGIC | **1. Perfil do dado** | O que existe aqui dentro: tamanho, canais, nulos, unicidade das chaves. Não responde pergunta de negocio — estabelece o que da para perguntar | 7 consultas |
+# MAGIC | **1. Perfil do dado** | O que existe aqui dentro: tamanho, canais, nulos, unicidade das chaves. Não responde pergunta de negócio — estabelece o que da para perguntar | 7 consultas |
 # MAGIC | **2. Reconciliação** | O número que o CEO cobra, antes de qualquer conclusão. Se este não fecha, nada depois vale | 1 consulta |
 # MAGIC | **3 a 8** | Uma seção por pergunta, de (a) a (f). Cada uma abre com o enunciado do briefing, responde o mínimo pedido, e depois percorre seus aprofundamentos | 25 consultas |
-# MAGIC | **9. Gráficos** | Nove, em dois grupos — ver abaixo | 9 celulas Python |
+# MAGIC | **9. Gráficos** | Nove, em dois grupos — ver abaixo | 9 células Python |
 # MAGIC | **10. Síntese** | O que a exploração mudou no entendimento do dataset, que e a frase que o briefing pede | — |
 # MAGIC
 # MAGIC ### Por que os gráficos ficam num bloco, e não um por pergunta
@@ -49,13 +49,13 @@
 # MAGIC
 # MAGIC **Os cinco primeiros existem onde a tabela não mostra o que o gráfico mostra:** a
 # MAGIC quebra estrutural da série (`e.1`), a uniformidade que desqualifica um corte (`a.1`),
-# MAGIC a cauda longa do catálogo (`a.2`), a confusao entre canal e mercado (`b.2`), e a
-# MAGIC comparacao que só vale dentro do mesmo canal (`f.2`).
+# MAGIC a cauda longa do catálogo (`a.2`), a confusão entre canal e mercado (`b.2`), e a
+# MAGIC comparação que só vale dentro do mesmo canal (`f.2`).
 # MAGIC
 # MAGIC **Os quatro últimos respondem visualmente (b), (c), (d) e (f)**, que são rankings — e
-# MAGIC ranking se le melhor em barra que em tabela. Cada um carrega no titulo o aviso que
+# MAGIC ranking se lê melhor em barra que em tabela. Cada um carrega no título o aviso que
 # MAGIC impede a leitura errada: o corte de volume, o peso dos dez maiores, a barra do
-# MAGIC "todas as outras cidades", o rotulo de escopo do online.
+# MAGIC "todas as outras cidades", o rótulo de escopo do online.
 # MAGIC
 # MAGIC Somando, cada uma das seis perguntas tem ao menos um visual. E os quatro últimos são
 # MAGIC o rascunho do dashboard da Etapa 7 — mesmo corte, mesmo aviso.
@@ -65,33 +65,33 @@
 # MAGIC A ingestão tem de estar feita e conferida:
 # MAGIC `databricks/01-ingestao-adventure-works.sql`. As seis conferências da seção 3 dele
 # MAGIC passaram — as **64 tabelas** com a contagem idêntica a dos arquivos de origem, zero
-# MAGIC órfão nas sete juncoes, 27.659 pedidos sem vendedor preservados como NULL, o aceite
+# MAGIC órfão nas sete junções, 27.659 pedidos sem vendedor preservados como NULL, o aceite
 # MAGIC fechando em `12.646.112,1607` e zero linha fora de um centavo no `linetotal`.
 # MAGIC
-# MAGIC Este notebook le **16** tabelas. O escopo declarado da análise tem 17, e a que
-# MAGIC sobra e `salesperson`: canal vem de `onlineorderflag`, não do vendedor, entao ela
+# MAGIC Este notebook lê **16** tabelas. O escopo declarado da análise tem 17, e a que
+# MAGIC sobra e `salesperson`: canal vem de `onlineorderflag`, não do vendedor, então ela
 # MAGIC não e usada aqui e entra na Etapa 3 como dimensão. Vale dizer isso em vez de
 # MAGIC arredondar para 17 — a diferença entre o que se declara e o que se usa e
 # MAGIC exatamente o que o dbt vai cobrar na Etapa 5, quando cada `source` declarado
 # MAGIC passa a exigir teste e documentação.
 # MAGIC
-# MAGIC Ele só **le**: não cria, não carrega, não altera nada. Rodar de novo e sempre seguro.
+# MAGIC Ele só **lê**: não cria, não carrega, não altera nada. Rodar de novo e sempre seguro.
 # MAGIC
-# MAGIC Precisa de **compute de notebook** anexado, e não apenas do SQL warehouse: as celulas
+# MAGIC Precisa de **compute de notebook** anexado, e não apenas do SQL warehouse: as células
 # MAGIC de gráfico rodam `toPandas()` e matplotlib, que e código Python.
 # MAGIC
-# MAGIC Sugestao para a primeira execução: va **celula por celula ate a seção 2**. Se o número
+# MAGIC Sugestao para a primeira execução: va **célula por célula ate a seção 2**. Se o número
 # MAGIC do CEO fechar ali, o resto e análise sobre base confiável e `Run all below` resolve.
 # MAGIC
-# MAGIC ## Duas convencoes que valem para todo o notebook
+# MAGIC ## Duas convenções que valem para todo o notebook
 # MAGIC
 # MAGIC **Receita tem duas definições, e elas não são intercambiaveis.**
 # MAGIC `receita_bruta = unitprice * orderqty` (antes do desconto) e o que o teste de aceite
-# MAGIC usa. `receita_liquida = linetotal` (depois do desconto) e o que a formula de ticket
+# MAGIC usa. `receita_liquida = linetotal` (depois do desconto) e o que a fórmula de ticket
 # MAGIC médio do briefing pede. A diferença e pequena nesta base — 0,478% — mas nomear qual
-# MAGIC das duas esta em cada número evita a discussao de "seu total não bate com o meu".
+# MAGIC das duas esta em cada número evita a discussão de "seu total não bate com o meu".
 # MAGIC
-# MAGIC **Canal vem de `onlineorderflag`, não do tipo de cartão.** Testei a hipotese do cartão
+# MAGIC **Canal vem de `onlineorderflag`, não do tipo de cartão.** Testei a hipótese do cartão
 # MAGIC na Etapa 1 e ela e falsa: dos 1.131 pedidos sem cartão, 1.124 são online (ver `a.1`).
 # MAGIC E canal e o eixo mais importante desta base, porque revenda e online são dois negocios
 # MAGIC com ticket de ordem de grandeza diferente convivendo na mesma tabela.
@@ -102,7 +102,7 @@
 # MAGIC # 1. Perfil do dado
 # MAGIC
 # MAGIC Antes de qualquer conclusão: o que existe aqui dentro? Esta seção não responde
-# MAGIC pergunta de negocio — ela estabelece o que da e o que não da para perguntar.
+# MAGIC pergunta de negócio — ela estabelece o que da e o que não da para perguntar.
 
 # COMMAND ----------
 
@@ -145,7 +145,7 @@
 # MAGIC maior parte da receita; o online e 87,9% dos pedidos e a menor parte. São dois
 # MAGIC negocios com ticket de ordem de grandeza diferente convivendo na mesma tabela.
 # MAGIC
-# MAGIC Consequência prática: **qualquer média que misture os dois descreve um negocio que
+# MAGIC Consequência prática: **qualquer média que misture os dois descreve um negócio que
 # MAGIC não existe.** E a origem de metade dos avisos que aparecem adiante.
 
 # COMMAND ----------
@@ -295,7 +295,7 @@
 # MAGIC %sql
 # DBTITLE 1,2.1 Aceite do CEO
 # MAGIC -- O aceite. Esperado: FECHA, com soma exata 12646112.1607.
-# MAGIC -- Comparacao em centavos: unitprice tem 4 casas e o briefing informa arredondado.
+# MAGIC -- Comparação em centavos: unitprice tem 4 casas e o briefing informa arredondado.
 # MAGIC select
 # MAGIC     12646112.16 as esperado_em_centavos
 # MAGIC     , sum(salesorderdetail.unitprice * salesorderdetail.orderqty) as receita_bruta_2011
@@ -317,7 +317,7 @@
 # MAGIC
 # MAGIC São `unitprice * orderqty` — receita **bruta**, antes do desconto — e não o
 # MAGIC `subtotal` do pedido. Testei `sum(subtotal)` primeiro e da `12.641.672,21`, errado
-# MAGIC por exatamente o valor dos descontos de 2011. Também não ha filtro de status: os
+# MAGIC por exatamente o valor dos descontos de 2011. Também não há filtro de status: os
 # MAGIC 1.607 pedidos de 2011 entram todos.
 # MAGIC
 # MAGIC Duas consequências que atravessam o resto do projeto:
@@ -325,9 +325,9 @@
 # MAGIC 1. `receita_bruta` deixa de ser métrica de apoio e passa a ser **métrica auditada**.
 # MAGIC    Vai para o modelo com esse nome e essa definição, e ganha teste no dbt.
 # MAGIC 2. A quarta casa decimal e o que justifica `decimal(19, 4)` no lugar de `double`:
-# MAGIC    2.832 dos 5.642 itens de 2011 tem 4 casas no preço unitario.
+# MAGIC    2.832 dos 5.642 itens de 2011 tem 4 casas no preço unitário.
 # MAGIC
-# MAGIC ⚠️ **Não use 2011 como retrato do negocio.** São 1.607 pedidos dos 31.465, num ano
+# MAGIC ⚠️ **Não use 2011 como retrato do negócio.** São 1.607 pedidos dos 31.465, num ano
 # MAGIC dominado por revenda. 2011 e o ano do **teste**, não da análise.
 
 # COMMAND ----------
@@ -372,7 +372,7 @@
 # MAGIC
 # MAGIC O briefing manda entregar os nove. Entregar sem dizer que alguns não informam nada
 # MAGIC repete o erro do CRM que decepcionou a Silvana: tela cheia de cortes, nenhum
-# MAGIC acionavel.
+# MAGIC acionável.
 
 # COMMAND ----------
 
@@ -397,7 +397,7 @@
 
 # MAGIC %sql
 # DBTITLE 1,3.3 Cartão e proxy?
-# MAGIC -- Cartão serve de proxy de canal? Testei essa hipotese e ela e FALSA.
+# MAGIC -- Cartão serve de proxy de canal? Testei essa hipótese e ela e FALSA.
 # MAGIC -- Esperado: dos 1.131 sem cartão, 1.124 são online e só 7 de revenda.
 # MAGIC select
 # MAGIC     case when salesorderheader.onlineorderflag then 'online' else 'revenda' end as canal
@@ -415,8 +415,8 @@
 # MAGIC quatro bandeiras). Ambos entram no dashboard como **filtro documentado**, não como
 # MAGIC visual de destaque — dizer qual corte não informa e barato e evita telas inuteis.
 # MAGIC
-# MAGIC E a hipotese que eu tinha de que "pedido sem cartão = revenda" **e falsa**: dos
-# MAGIC 1.131 sem cartão, 1.124 são online. Canal se le em `onlineorderflag`, e ponto.
+# MAGIC E a hipótese que eu tinha de que "pedido sem cartão = revenda" **e falsa**: dos
+# MAGIC 1.131 sem cartão, 1.124 são online. Canal se lê em `onlineorderflag`, e ponto.
 
 # COMMAND ----------
 
@@ -468,10 +468,10 @@
 
 # MAGIC %md
 # MAGIC **238 dos 504 produtos (47%) nunca venderam.** Quase metade do catálogo custa
-# MAGIC cadastro, estoque e atencao comercial sem devolver receita.
+# MAGIC cadastro, estoque e atenção comercial sem devolver receita.
 # MAGIC
 # MAGIC Isso e a única economia desta análise que **não depende de vender mais nada** — e
-# MAGIC por isso e o achado mais acionavel para a Silvana, que precisa de resultado
+# MAGIC por isso e o achado mais acionável para a Silvana, que precisa de resultado
 # MAGIC comercial imediato.
 
 # COMMAND ----------
@@ -479,7 +479,7 @@
 # MAGIC %md
 # MAGIC ## a.3 — O corte por motivo da venda cobre a empresa inteira?
 # MAGIC
-# MAGIC Que fracao do negocio o corte por motivo realmente descreve.
+# MAGIC Que fração do negócio o corte por motivo realmente descreve.
 
 # COMMAND ----------
 
@@ -527,7 +527,7 @@
 # MAGIC
 # MAGIC Duas decisões saem daqui, e as duas são para não mentir no dashboard:
 # MAGIC
-# MAGIC 1. O visual de motivo leva **rotulo explícito de escopo** ("apenas vendas online").
+# MAGIC 1. O visual de motivo leva **rótulo explícito de escopo** ("apenas vendas online").
 # MAGIC    Sem isso, o gráfico parece descrever a Adventure Works e descreve um quarto dela.
 # MAGIC 2. Existe o balde **"sem motivo informado"**, em vez de um `inner join` que apagaria
 # MAGIC    26,9% da base em silêncio.
@@ -543,10 +543,10 @@
 # MAGIC
 # MAGIC > *Quais produtos tem o maior valor médio por pedido, por mês, ano, cidade, estado e
 # MAGIC > pais? (valor médio por pedido = receita bruta − descontos de produto / número de
-# MAGIC > pedidos no periodo analisado)*
+# MAGIC > pedidos no período analisado)*
 # MAGIC
-# MAGIC A formula do briefing subtrai desconto, entao o numerador e `linetotal` — receita
-# MAGIC **liquida**. Não e `unitprice * orderqty`.
+# MAGIC A fórmula do briefing subtrai desconto, então o numerador e `linetotal` — receita
+# MAGIC **líquida**. Não e `unitprice * orderqty`.
 
 # COMMAND ----------
 
@@ -575,15 +575,15 @@
 # MAGIC %md
 # MAGIC O `having pedidos >= 30` não esta no briefing e e uma escolha minha: sem corte de
 # MAGIC volume, o topo do ranking vira produto que vendeu duas vezes com ticket altissimo.
-# MAGIC Isso responde a letra da pergunta e engana quem le. O corte fica **declarado no
+# MAGIC Isso responde a letra da pergunta e engana quem lê. O corte fica **declarado no
 # MAGIC dashboard**, como filtro visível, não escondido na consulta.
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## b.1 — O desconto que a formula subtrai existe de fato, e onde?
+# MAGIC ## b.1 — O desconto que a fórmula subtrai existe de fato, e onde?
 # MAGIC
-# MAGIC A formula do briefing subtrai desconto. Vale conferir se ha desconto para subtrair.
+# MAGIC A fórmula do briefing subtrai desconto. Vale conferir se há desconto para subtrair.
 
 # COMMAND ----------
 
@@ -615,7 +615,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# DBTITLE 1,4.3 Onde ha desconto
+# DBTITLE 1,4.3 Onde há desconto
 # MAGIC -- Onde o desconto acontece? Esperado: só na revenda — toda oferta e do tipo Reseller.
 # MAGIC select
 # MAGIC     case when salesorderheader.onlineorderflag then 'online' else 'revenda' end as canal
@@ -634,19 +634,19 @@
 # MAGIC **O desconto e 0,478% da receita bruta** — e existe **só na revenda**. No online,
 # MAGIC nenhum item tem desconto.
 # MAGIC
-# MAGIC Por que isso importa apesar de ser pequeno: a formula do briefing manda subtrair, e
-# MAGIC nos subtraimos. Mas a diferença entre "receita bruta" e "receita liquida" e menor
+# MAGIC Por que isso importa apesar de ser pequeno: a fórmula do briefing manda subtrair, e
+# MAGIC nos subtraimos. Mas a diferença entre "receita bruta" e "receita líquida" e menor
 # MAGIC que o arredondamento de qualquer decisão comercial — **exceto** no número do CEO,
 # MAGIC onde a definição errada da 12.641.672,21 em vez de 12.646.112,16.
 # MAGIC
-# MAGIC Ou seja: desconto e irrelevante para o negocio e decisivo para a auditoria.
+# MAGIC Ou seja: desconto e irrelevante para o negócio e decisivo para a auditoria.
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## b.2 — O ticket médio varia por praca?
+# MAGIC ## b.2 — O ticket médio varia por praça?
 # MAGIC
-# MAGIC A pergunta (b) pede o corte geografico. Ele informa algo, ou os paises se parecem?
+# MAGIC A pergunta (b) pede o corte geografico. Ele informa algo, ou os países se parecem?
 
 # COMMAND ----------
 
@@ -676,12 +676,12 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC **O ticket médio varia 3,4x entre paises**, de ~1.557 na Australia a ~5.232 nos
+# MAGIC **O ticket médio varia 3,4x entre países**, de ~1.557 na Austrália a ~5.232 nos
 # MAGIC Estados Unidos. O corte geografico **informa**, diferente de `status` e tipo de
 # MAGIC cartão.
 # MAGIC
-# MAGIC ⚠️ **Mas cuidado com a leitura.** Boa parte dessa variacao e **mistura de canal**,
-# MAGIC não diferença de mercado: paises com mais revenda tem ticket maior por construcao.
+# MAGIC ⚠️ **Mas cuidado com a leitura.** Boa parte dessa variação e **mistura de canal**,
+# MAGIC não diferença de mercado: países com mais revenda tem ticket maior por construção.
 # MAGIC O gráfico honesto desse corte e **facetado por canal** — a versão simples sugere
 # MAGIC que americano compra 3x mais que australiano, o que não e o que o dado diz.
 
@@ -690,7 +690,7 @@
 # MAGIC %md
 # MAGIC ## b.3 — Que natureza de desconto a empresa usa?
 # MAGIC
-# MAGIC Volume, liquidacao ou promocao de produto? A resposta muda a alavanca comercial.
+# MAGIC Volume, liquidação ou promoção de produto? A resposta muda a alavanca comercial.
 
 # COMMAND ----------
 
@@ -715,11 +715,11 @@
 
 # MAGIC %md
 # MAGIC **Toda oferta desta base e da categoria `Reseller`** — desconto de canal, negociado
-# MAGIC com revendedor, tipicamente por volume. Não existe liquidacao nem promocao de
+# MAGIC com revendedor, tipicamente por volume. Não existe liquidação nem promoção de
 # MAGIC produto ao consumidor final.
 # MAGIC
 # MAGIC Isso responde de forma inesperada a expectativa da Silvana: a empresa **não** usa
-# MAGIC promocao ao consumidor como alavanca. O que ela chama de "verba em promocao" não
+# MAGIC promoção ao consumidor como alavanca. O que ela chama de "verba em promoção" não
 # MAGIC existe no dado — a alavanca de desconto e comercial B2B.
 
 # COMMAND ----------
@@ -766,7 +766,7 @@
 
 # MAGIC %sql
 # DBTITLE 1,5.2 Concentração no topo
-# MAGIC -- Concentração no topo. Esperado: top 10 = 7,2% da receita. Baixa dependencia.
+# MAGIC -- Concentração no topo. Esperado: top 10 = 7,2% da receita. Baixa dependência.
 # MAGIC with por_cliente as (
 # MAGIC     select
 # MAGIC         salesorderheader.customerid
@@ -796,12 +796,12 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC **Os 10 maiores respondem por 7,2% da receita.** Não ha dependencia perigosa de
+# MAGIC **Os 10 maiores respondem por 7,2% da receita.** Não há dependência perigosa de
 # MAGIC cliente — perder o maior deles não ameaca a empresa.
 # MAGIC
 # MAGIC Isso e uma **não-noticia valiosa**: o briefing pede o ranking, e o ranking sozinho
 # MAGIC sugere que aqueles dez nomes são a empresa. Não são. Dizer o peso junto do ranking e
-# MAGIC o que impede uma decisão errada de atendimento prioritario.
+# MAGIC o que impede uma decisão errada de atendimento prioritário.
 
 # COMMAND ----------
 
@@ -843,7 +843,7 @@
 # MAGIC canal. Revendedor recompra quase sempre (e uma relação continua); consumidor online,
 # MAGIC muito menos.
 # MAGIC
-# MAGIC A métrica de retencao, portanto, **só faz sentido separada por canal**. Um número
+# MAGIC A métrica de retenção, portanto, **só faz sentido separada por canal**. Um número
 # MAGIC único de "39% de recompra" descreve um cliente médio que não existe.
 
 # COMMAND ----------
@@ -883,13 +883,13 @@
 # MAGIC %md
 # MAGIC ## d.1 — Quanto as cinco primeiras concentram?
 # MAGIC
-# MAGIC Mesma logica de `c.1`: o ranking sem o peso pode sugerir o contrario da verdade.
+# MAGIC Mesma logica de `c.1`: o ranking sem o peso pode sugerir o contrário da verdade.
 
 # COMMAND ----------
 
 # MAGIC %sql
 # DBTITLE 1,6.2 Concentração geog.
-# MAGIC -- Concentração geografica. Esperado: top 5 cidades = 11,0% da receita,
+# MAGIC -- Concentração geográfica. Esperado: top 5 cidades = 11,0% da receita,
 # MAGIC -- com 613 cidades cadastradas e 558 vendendo. Receita PULVERIZADA.
 # MAGIC with por_cidade as (
 # MAGIC     select
@@ -927,11 +927,11 @@
 # MAGIC
 # MAGIC Registro de um erro meu na Etapa 1, porque ele ilustra o risco desta pergunta: eu
 # MAGIC calculei 39,7% ao ler a coluna errada do endereco (`addressline2` em vez de `city`).
-# MAGIC Com 39,7% a conclusão seria "concentre esforco em cinco pracas". Com 11,0% e o
-# MAGIC oposto: **não existe praca que mova o ponteiro** — estratégia por cidade e
+# MAGIC Com 39,7% a conclusão seria "concentre esforço em cinco praças". Com 11,0% e o
+# MAGIC oposto: **não existe praça que mova o ponteiro** — estratégia por cidade e
 # MAGIC desperdicio, e o corte relevante e pais ou território.
 # MAGIC
-# MAGIC Uma coluna errada inverteu a recomendacao, e ninguém teria notado pelo formato do
+# MAGIC Uma coluna errada inverteu a recomendação, e ninguém teria notado pelo formato do
 # MAGIC resultado. E por isso que as conferências da ingestão existem, e por isso que
 # MAGIC este notebook abre com perfil e reconciliação antes de qualquer conclusão.
 
@@ -942,7 +942,7 @@
 # MAGIC
 # MAGIC Se as cinco maiores cidades são 11% e a receita esta espalhada por 558 delas, o
 # MAGIC corte geografico útil não e cidade. O `salesterritory` e a alternativa que a base
-# MAGIC oferece, e ele agrupa por regiao comercial em vez de por municipio.
+# MAGIC oferece, e ele agrupa por região comercial em vez de por municipio.
 # MAGIC
 # MAGIC Isto não esta nas seis perguntas — entra porque a conclusão de `d.1` recomenda o
 # MAGIC corte por território, e recomendar sem mostrar seria pedir confiança no lugar de
@@ -979,15 +979,15 @@
 # MAGIC %md
 # MAGIC ## d.2 — A top 5 de valor e a mesma de volume?
 # MAGIC
-# MAGIC Se as duas listas divergem, ha cidade de ticket alto e cidade de giro alto — e
+# MAGIC Se as duas listas divergem, há cidade de ticket alto e cidade de giro alto — e
 # MAGIC isso muda o tipo de ação.
 
 # COMMAND ----------
 
 # MAGIC %sql
 # DBTITLE 1,6.4 Valor x volume
-# MAGIC -- Valor x volume por cidade. Divergencia entre as duas posições revela
-# MAGIC -- cidade de ticket alto (poucos pedidos, muito valor) e o contrario.
+# MAGIC -- Valor x volume por cidade. Divergência entre as duas posições revela
+# MAGIC -- cidade de ticket alto (poucos pedidos, muito valor) e o contrário.
 # MAGIC with por_cidade as (
 # MAGIC     select
 # MAGIC         address.city
@@ -1045,7 +1045,7 @@
 # MAGIC ## e.1 — A série tem quebra estrutural?
 # MAGIC
 # MAGIC Uma série com quebra não pode ser lida como tendência. Se houver, todo gráfico de
-# MAGIC crescimento precisa de anotacao.
+# MAGIC crescimento precisa de anotação.
 
 # COMMAND ----------
 
@@ -1066,21 +1066,21 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC **Ha quebra, e ela e grande: 533 pedidos online em jun/2013 para 1.564 em jul/2013**
+# MAGIC **Há quebra, e ela e grande: 533 pedidos online em jun/2013 para 1.564 em jul/2013**
 # MAGIC — quase 3x em um mês, e o patamar não volta.
 # MAGIC
 # MAGIC Isso não e crescimento orgânico; e mudança de regime — entrada em novos mercados,
 # MAGIC campanha ou mudança de canal. O dado não diz qual, e **essa e uma pergunta para o
-# MAGIC negocio**, não para a análise.
+# MAGIC negócio**, não para a análise.
 # MAGIC
-# MAGIC Consequência para o dashboard: qualquer visual de tendência precisa de **anotacao em
+# MAGIC Consequência para o dashboard: qualquer visual de tendência precisa de **anotação em
 # MAGIC jul/2013**. Sem ela, uma média de "crescimento mensal" mistura dois regimes e não
 # MAGIC descreve nenhum dos dois.
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## e.2 — A oscilacao mensal e de volume ou de valor?
+# MAGIC ## e.2 — A oscilação mensal e de volume ou de valor?
 # MAGIC
 # MAGIC E a revenda tem ritmo mensal próprio?
 
@@ -1104,7 +1104,7 @@
 # MAGIC # 8. Pergunta (f) — produto com mais unidades no motivo "Promotion"
 # MAGIC
 # MAGIC > *Qual produto teve o maior número de unidades vendidas quando o motivo da venda
-# MAGIC > foi "Promocao"?*
+# MAGIC > foi "Promoção"?*
 
 # COMMAND ----------
 
@@ -1154,24 +1154,24 @@
 # MAGIC A pergunta (f) e a mais estreita das seis, e a resposta vem com um porém: como o
 # MAGIC motivo existe **só no online** (`a.3`), ela descreve o varejo, não a empresa.
 # MAGIC
-# MAGIC O rotulo "Promotion" e **categoria** (`reasontype`), não nome de motivo — por isso o
+# MAGIC O rótulo "Promotion" e **categoria** (`reasontype`), não nome de motivo — por isso o
 # MAGIC filtro e `reasontype = 'Promotion'`. Usar `name` daria resposta diferente e errada.
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## f.2 — Promocao aumenta o pedido? — controlando por canal
+# MAGIC ## f.2 — Promoção aumenta o pedido? — controlando por canal
 # MAGIC
-# MAGIC A pergunta natural depois da (f). E onde eu errei primeiro, entao a consulta abaixo
+# MAGIC A pergunta natural depois da (f). E onde eu errei primeiro, então a consulta abaixo
 # MAGIC já nasce com o controle.
 
 # COMMAND ----------
 
 # MAGIC %sql
 # DBTITLE 1,8.3 Promo x pedido
-# MAGIC -- Promocao aumenta o tamanho do pedido? Comparacao SÓ DENTRO DO ONLINE.
-# MAGIC -- Esperado: 2,10 itens/pedido em promocao (1.810 pedidos) contra 2,39 em
-# MAGIC -- outros motivos (824). Promocao vende MENOS por pedido.
+# MAGIC -- Promoção aumenta o tamanho do pedido? Comparação SÓ DENTRO DO ONLINE.
+# MAGIC -- Esperado: 2,10 itens/pedido em promoção (1.810 pedidos) contra 2,39 em
+# MAGIC -- outros motivos (824). Promoção vende MENOS por pedido.
 # MAGIC with pedido_com_motivo as (
 # MAGIC     select
 # MAGIC         salesorderheader.salesorderid
@@ -1209,20 +1209,20 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC **Dentro do online, pedido com promocao tem 2,10 itens contra 2,39 dos outros
-# MAGIC motivos.** Promocao esta associada a pedido **menor**, não maior.
+# MAGIC **Dentro do online, pedido com promoção tem 2,10 itens contra 2,39 dos outros
+# MAGIC motivos.** Promoção esta associada a pedido **menor**, não maior.
 # MAGIC
 # MAGIC ⚠️ E aqui esta o erro que eu cometi antes e que este bloco existe para não repetir:
-# MAGIC na primeira tentativa eu comparei "com promocao" contra "todo o resto" e achei 2,10
-# MAGIC contra 9,57. Parecia que promocao destruia o pedido. **Era confusao de canal**: o
+# MAGIC na primeira tentativa eu comparei "com promoção" contra "todo o resto" e achei 2,10
+# MAGIC contra 9,57. Parecia que promoção destruia o pedido. **Era confusão de canal**: o
 # MAGIC "resto" incluia a revenda, que compra por atacado e não tem motivo nenhum. Eu estava
-# MAGIC comparando varejo com atacado e chamando de efeito de promocao.
+# MAGIC comparando varejo com atacado e chamando de efeito de promoção.
 # MAGIC
-# MAGIC A comparacao honesta e dentro do mesmo canal, e ai o efeito e pequeno.
+# MAGIC A comparação honesta e dentro do mesmo canal, e ai o efeito e pequeno.
 # MAGIC
-# MAGIC **E associacao, não causa.** O dado não diz se a promocao encolheu o pedido ou se
-# MAGIC pedido pequeno atrai promocao. Para a Silvana, a leitura útil e negativa: **não ha
-# MAGIC evidência de que promocao aumente o pedido nesta base** — e não existe promocao ao
+# MAGIC **E associação, não causa.** O dado não diz se a promoção encolheu o pedido ou se
+# MAGIC pedido pequeno atrai promoção. Para a Silvana, a leitura útil e negativa: **não há
+# MAGIC evidência de que promoção aumente o pedido nesta base** — e não existe promoção ao
 # MAGIC consumidor no dado de desconto (`b.3`).
 
 # COMMAND ----------
@@ -1234,11 +1234,11 @@
 # MAGIC
 # MAGIC **Os cinco primeiros existem porque a tabela não mostra o que o gráfico mostra:** a
 # MAGIC quebra estrutural da série, a uniformidade que desqualifica um corte, a cauda longa
-# MAGIC do catálogo, a confusao entre canal e mercado, e a comparacao que só vale dentro do
+# MAGIC do catálogo, a confusão entre canal e mercado, e a comparação que só vale dentro do
 # MAGIC mesmo canal. Servem aos aprofundamentos `e.1`, `a.1`, `a.2`, `b.2` e `f.2`.
 # MAGIC
 # MAGIC **Os quatro últimos respondem visualmente as perguntas (b), (c), (d) e (f)**, que são
-# MAGIC rankings — e ranking se le melhor em barra que em tabela.
+# MAGIC rankings — e ranking se lê melhor em barra que em tabela.
 # MAGIC
 # MAGIC Com os nove, cada uma das seis perguntas do briefing tem ao menos um visual: a (a)
 # MAGIC pelo tipo de cartão e pelo Pareto, a (e) pela série mensal, e as outras quatro no
@@ -1253,7 +1253,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# A série mensal por canal, com a quebra de jul/2013 anotada. Sem a anotacao,
+# A série mensal por canal, com a quebra de jul/2013 anotada. Sem a anotação,
 # o gráfico sugere crescimento continuo — e são dois regimes diferentes.
 #
 # Duas armadilhas de eixo, e as duas dao o MESMO erro (ConversionError):
@@ -1261,11 +1261,11 @@ import pandas as pd
 #   1. a quebra tem de ser um Timestamp, não o texto "2013-07-01": o eixo x vem
 #      de date_trunc, que o toPandas converte para datetime64, e o matplotlib
 #      recusa texto num eixo de data
-#   2. divisao no Spark devolve `decimal`, e o toPandas traz isso como objeto
+#   2. divisão no Spark devolve `decimal`, e o toPandas traz isso como objeto
 #      Decimal do Python, que o matplotlib também recusa. Por isso os gráficos
 #      com média e percentual convertem para `double` no próprio SQL. Precisão
 #      de centavo não importa para desenhar — importa para o teste de aceite,
-#      que fica nas celulas de consulta e continua em decimal(19, 4).
+#      que fica nas células de consulta e continua em decimal(19, 4).
 QUEBRA = pd.Timestamp("2013-07-01")
 serie = spark.sql("""
     select
@@ -1389,7 +1389,7 @@ ticket = spark.sql("""
 tabela = ticket.pivot(index="pais", columns="canal", values="ticket_medio")
 fig, ax = plt.subplots(figsize=(10, 4.5))
 tabela.plot(kind="bar", ax=ax, color=["steelblue", "indianred"])
-ax.set_title("Ticket médio por pais e canal — a variacao e de canal, não de mercado")
+ax.set_title("Ticket médio por pais e canal — a variação e de canal, não de mercado")
 ax.set_ylabel("ticket médio")
 ax.set_xlabel("")
 plt.xticks(rotation=30, ha="right")
@@ -1400,7 +1400,7 @@ plt.show()
 # COMMAND ----------
 
 # DBTITLE 1,9.5 Promo no online
-# Promocao vs outro motivo, SÓ DENTRO DO ONLINE. E o gráfico que impede a
+# Promoção vs outro motivo, SÓ DENTRO DO ONLINE. E o gráfico que impede a
 # leitura errada: sem o recorte de canal, a diferença aparece como 2,10 x 9,57.
 promo = spark.sql("""
     with pedido_com_motivo as (
@@ -1434,7 +1434,7 @@ promo = spark.sql("""
 
 fig, ax = plt.subplots(figsize=(7, 4))
 ax.bar(promo["grupo"], promo["itens_por_pedido"], color=["indianred", "steelblue"])
-ax.set_title("Itens por pedido, apenas ONLINE — promocao não aumenta o pedido")
+ax.set_title("Itens por pedido, apenas ONLINE — promoção não aumenta o pedido")
 ax.set_ylabel("itens por pedido")
 ax.grid(axis="y", alpha=0.3)
 for i, v in enumerate(promo["itens_por_pedido"]):
@@ -1446,7 +1446,7 @@ plt.show()
 
 # DBTITLE 1,9.6 (b) Ticket produto
 # Pergunta (b): produtos com maior ticket médio. O corte de 30 pedidos esta no
-# TITULO do gráfico, e não escondido na consulta — sem ele o topo do ranking vira
+# TÍTULO do gráfico, e não escondido na consulta — sem ele o topo do ranking vira
 # produto que vendeu duas vezes com ticket altissimo.
 ticket_produto = spark.sql("""
     select
@@ -1469,7 +1469,7 @@ fig, ax = plt.subplots(figsize=(10, 6))
 ax.barh(ticket_produto["produto"], ticket_produto["ticket_medio"], color="steelblue")
 ax.invert_yaxis()
 ax.set_title("(b) Maior ticket médio por produto — só produtos com 30+ pedidos")
-ax.set_xlabel("ticket médio (receita liquida / pedidos)")
+ax.set_xlabel("ticket médio (receita líquida / pedidos)")
 ax.grid(axis="x", alpha=0.3)
 plt.tight_layout()
 plt.show()
@@ -1477,7 +1477,7 @@ plt.show()
 # COMMAND ----------
 
 # DBTITLE 1,9.7 (c) Top 10 clientes
-# Pergunta (c): os 10 maiores clientes. O titulo carrega o peso deles no total,
+# Pergunta (c): os 10 maiores clientes. O título carrega o peso deles no total,
 # porque o ranking sozinho sugere que aqueles dez nomes são a empresa — e não são.
 top_clientes = spark.sql("""
     with por_cliente as (
@@ -1511,7 +1511,7 @@ fig, ax = plt.subplots(figsize=(10, 5))
 ax.barh(top_clientes["cliente"], top_clientes["receita"], color="steelblue")
 ax.invert_yaxis()
 ax.set_title(f"(c) Os 10 maiores clientes — juntos, {peso:.1f}% da receita")
-ax.set_xlabel("receita liquida")
+ax.set_xlabel("receita líquida")
 ax.grid(axis="x", alpha=0.3)
 plt.tight_layout()
 plt.show()
@@ -1521,7 +1521,7 @@ plt.show()
 # DBTITLE 1,9.8 (d) Cidades x resto
 # Pergunta (d): as 5 maiores cidades, com o resto ao lado. A barra do "outras" e
 # o ponto do gráfico: sem ela, cinco barras grandes sugerem concentração onde não
-# ha. Foi exatamente o erro que eu cometi na Etapa 1, lendo a coluna errada.
+# há. Foi exatamente o erro que eu cometi na Etapa 1, lendo a coluna errada.
 cidades = spark.sql("""
     with por_cidade as (
         select
@@ -1556,7 +1556,7 @@ fig, ax = plt.subplots(figsize=(10, 4.5))
 ax.barh(cidades["grupo"], cidades["receita"], color=cores)
 ax.invert_yaxis()
 ax.set_title("(d) As 5 maiores cidades contra o resto — a receita e pulverizada")
-ax.set_xlabel("receita liquida")
+ax.set_xlabel("receita líquida")
 ax.grid(axis="x", alpha=0.3)
 plt.tight_layout()
 plt.show()
@@ -1564,8 +1564,8 @@ plt.show()
 # COMMAND ----------
 
 # DBTITLE 1,9.9 (f) Promo unidades
-# Pergunta (f): unidades vendidas quando o motivo e Promotion. O rotulo de escopo
-# no titulo não e enfeite — motivo de venda existe SÓ no online, entao este
+# Pergunta (f): unidades vendidas quando o motivo e Promotion. O rótulo de escopo
+# no título não e enfeite — motivo de venda existe SÓ no online, então este
 # gráfico descreve o varejo e não a empresa.
 promo_produto = spark.sql("""
     select
@@ -1603,9 +1603,9 @@ plt.show()
 # MAGIC O briefing pede explicitamente esta seção: como os insights ajudaram a entender o
 # MAGIC dataset.
 # MAGIC
-# MAGIC **1. Não e um negocio, são dois.** Revenda e 12,1% dos pedidos e a maior parte da
+# MAGIC **1. Não e um negócio, são dois.** Revenda e 12,1% dos pedidos e a maior parte da
 # MAGIC receita; online e 87,9% dos pedidos e a menor parte. Isso não estava no briefing e
-# MAGIC reorganizou tudo: toda métrica agregada que mistura os dois descreve um negocio
+# MAGIC reorganizou tudo: toda métrica agregada que mistura os dois descreve um negócio
 # MAGIC inexistente. Foi o achado com mais consequência.
 # MAGIC
 # MAGIC **2. Dois dos nove cortes da pergunta (a) não informam nada.** `status` e constante,
@@ -1614,14 +1614,14 @@ plt.show()
 # MAGIC
 # MAGIC **3. A receita e pulverizada, não concentrada.** Top 10 clientes = 7,2%; top 5
 # MAGIC cidades = 11,0%. Duas perguntas do briefing pedem ranking, e o ranking sozinho
-# MAGIC sugere o contrario. Aqui um erro meu de leitura de coluna chegou a inverter a
-# MAGIC recomendacao — 39,7% viraria "concentre em cinco pracas".
+# MAGIC sugere o contrário. Aqui um erro meu de leitura de coluna chegou a inverter a
+# MAGIC recomendação — 39,7% viraria "concentre em cinco praças".
 # MAGIC
 # MAGIC **4. A série tem quebra estrutural em jul/2013**, com o online triplicando em um mês.
-# MAGIC Nenhuma leitura de tendência funciona sem essa anotacao.
+# MAGIC Nenhuma leitura de tendência funciona sem essa anotação.
 # MAGIC
-# MAGIC **5. Promocao não aumenta o pedido, e desconto ao consumidor não existe.** Toda
-# MAGIC oferta e `Reseller`. A expectativa da Silvana sobre verba de promocao não encontra
+# MAGIC **5. Promoção não aumenta o pedido, e desconto ao consumidor não existe.** Toda
+# MAGIC oferta e `Reseller`. A expectativa da Silvana sobre verba de promoção não encontra
 # MAGIC apoio no dado.
 # MAGIC
 # MAGIC **6. Metade do catálogo não vende.** 238 de 504 produtos. E a única economia que
@@ -1634,7 +1634,7 @@ plt.show()
 # MAGIC - **`SalesReason` e muitos-para-muitos** — 4.482 pedidos com mais de um motivo.
 # MAGIC   Bridge table ou um motivo por pedido? A escolha muda a definição de um indicador
 # MAGIC   já entregue ("receita por motivo de venda — não soma ao total").
-# MAGIC - **O grao da tabela fato** — item de pedido, dado que a pergunta (f) precisa de
+# MAGIC - **O grão da tabela fato** — item de pedido, dado que a pergunta (f) precisa de
 # MAGIC   unidade por produto.
 # MAGIC
 # MAGIC As duas estão registradas no documento da Etapa 1, marcadas como decisão conjunta,

@@ -2,8 +2,8 @@
 -- MAGIC %md
 -- MAGIC # Ingestão do AdventureWorks
 -- MAGIC
--- MAGIC Cria e carrega a camada bruta no Unity Catalog. **Não e entregavel do desafio** — o
--- MAGIC briefing não pede artefato de ingestão —, e sim o pre-requisito para a Etapa 2. Roda
+-- MAGIC Cria e carrega a camada bruta no Unity Catalog. **Não e entregável do desafio** — o
+-- MAGIC briefing não pede artefato de ingestão —, e sim o pré-requisito para a Etapa 2. Roda
 -- MAGIC uma vez.
 -- MAGIC
 -- MAGIC ## Antes de rodar
@@ -13,32 +13,32 @@
 -- MAGIC
 -- MAGIC     /Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/
 -- MAGIC
--- MAGIC Os nomes de tabela são absolutos (`workspace.adventure_works.<tabela>`), entao não depende de qual
+-- MAGIC Os nomes de tabela são absolutos (`workspace.adventure_works.<tabela>`), então não depende de qual
 -- MAGIC catálogo esta selecionado no editor. O nome do schema não e escolha nossa: o briefing
 -- MAGIC determina `USE SOMENTE O SCHEMA adventure_works`.
 -- MAGIC
--- MAGIC ## Repetir e seguro, e isso e por construcao
+-- MAGIC ## Repetir e seguro, e isso e por construção
 -- MAGIC
 -- MAGIC Cada tabela e criada e carregada em **uma** instrução,
--- MAGIC `create or replace table ... as select`. Repetir uma celula **substitui** os dados em
--- MAGIC vez de somar, entao não existe como duplicar.
+-- MAGIC `create or replace table ... as select`. Repetir uma célula **substitui** os dados em
+-- MAGIC vez de somar, então não existe como duplicar.
 -- MAGIC
 -- MAGIC O desenho anterior separava DDL e `COPY INTO`, e ai repetir a carga somava linhas —
--- MAGIC `COPY INTO` sempre acrescenta, e `force = true` desliga a idempotencia dele. Isso
--- MAGIC chegou a deixar `address` com 3x e `employeepayhistory` com 5x as linhas. A protecao
+-- MAGIC `COPY INTO` sempre acrescenta, e `force = true` desliga a idempotência dele. Isso
+-- MAGIC chegou a deixar `address` com 3x e `employeepayhistory` com 5x as linhas. A proteção
 -- MAGIC agora e propriedade do código, não disciplina de quem roda.
 -- MAGIC
 -- MAGIC ## Onde rodar
 -- MAGIC
 -- MAGIC **SQL Editor ou notebook**, mas a Free Edition esgota cota de compute e devolve
--- MAGIC `RESOURCE_EXHAUSTED` — que chega disfarcado de `ValueError` do cliente gRPC. O
+-- MAGIC `RESOURCE_EXHAUSTED` — que chega disfarçado de `ValueError` do cliente gRPC. O
 -- MAGIC warehouse do SQL Editor e um pool separado do compute de notebook, com cota própria,
 -- MAGIC e foi por ele que a carga passou. Se estourar, espere e continue de onde parou: as
--- MAGIC celulas são independentes.
+-- MAGIC células são independentes.
 -- MAGIC
 -- MAGIC ## Ordem das seções
 -- MAGIC
--- MAGIC | Seção | Conteudo |
+-- MAGIC | Seção | Conteúdo |
 -- MAGIC |---|---|
 -- MAGIC | 1 | As **17 tabelas** que a análise usa. Parar aqui e um estado valido |
 -- MAGIC | 2 | As outras 48 da camada bruta, por schema de origem |
@@ -52,13 +52,13 @@
 -- MAGIC
 -- MAGIC | Artefato antigo | Por que não rodar |
 -- MAGIC |---|---|
--- MAGIC | notebook `Ingestão Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas seções 1 e 3 daqui |
+-- MAGIC | notebook `Ingestão Adventure Works` (células `01`, `01.01`, `02.01`) | superado pelas seções 1 e 3 daqui |
 -- MAGIC | query `02.00-carga-escopo-minimo.sql` | **DUPLICA** — usa `COPY INTO` com `force = true` |
 -- MAGIC | query `02.99-recarga-limpa.sql` | resolvia a duplicação que hoje não acontece mais |
 -- MAGIC | query `03-verificacao-da-carga.sql` | virou a seção 3 deste notebook |
 -- MAGIC
 -- MAGIC O risco concreto: o `COPY INTO` daqueles arquivos **acrescenta** linhas, e o
--- MAGIC `force = true` desliga a protecao que ignoraria arquivo já carregado. Rodar um deles
+-- MAGIC `force = true` desliga a proteção que ignoraria arquivo já carregado. Rodar um deles
 -- MAGIC por engano soma a carga de novo — foi assim que `address` chegou a 3x e
 -- MAGIC `employeepayhistory` a 5x. Aqui isso não existe: `create or replace` substitui.
 -- MAGIC
@@ -67,8 +67,8 @@
 -- MAGIC
 -- MAGIC ## Este arquivo e gerado
 -- MAGIC
--- MAGIC Fonte: `scripts/gera_ingestao.py`, que le o `install.sql` do repositorio oficial —
--- MAGIC de onde saem nome, ordem e tipo de cada coluna. Editar celula a mao cria duas versões
+-- MAGIC Fonte: `scripts/gera_ingestao.py`, que lê o `install.sql` do repositório oficial —
+-- MAGIC de onde saem nome, ordem e tipo de cada coluna. Editar célula a mão cria duas versões
 -- MAGIC do mesmo SQL; para mudar algo, mude o gerador e regere.
 
 -- COMMAND ----------
@@ -538,15 +538,15 @@ from read_files(
 -- MAGIC
 -- MAGIC As outras 47 tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 não
 -- MAGIC depende delas — mas subir tudo que carrega custa quase nada (79 MB, 759 mil linhas) e
--- MAGIC remove o atrito de ingestão se o trabalho crescer para compras ou producao.
+-- MAGIC remove o atrito de ingestão se o trabalho crescer para compras ou produção.
 -- MAGIC
 -- MAGIC Três tabelas ficam de fora das 68 do `install.sql`, por defeito de origem e não por
 -- MAGIC escolha:
 -- MAGIC
--- MAGIC - **`Document`** — coluna binaria (varbinary) não atravessa TSV
--- MAGIC - **`ProductPhoto`** — duas colunas binarias: ThumbNailPhoto e LargePhoto
+-- MAGIC - **`Document`** — coluna binária (varbinary) não atravessa TSV
+-- MAGIC - **`ProductPhoto`** — duas colunas binárias: ThumbNailPhoto e LargePhoto
 -- MAGIC - **`ProductReview`** — arquivo quebrado na origem: 7 campos onde o DDL declara 8, e quebra de linha dentro de campo (34 linhas para 31 registros)
--- MAGIC - **`ProductModel`** — o XML de CatalogDescription tem 48 TABs dentro de campo aspado, e o leitor de CSV do Spark não honra a aspa nesse caso: 6 das 128 linhas se partem, uma delas em 22 campos onde ha 6 colunas. Tentado com quote, com escape e sem: nenhuma combinacao resolve. O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega normalmente — entao o limite e a quantidade, não a estrutura
+-- MAGIC - **`ProductModel`** — o XML de CatalogDescription tem 48 TABs dentro de campo aspado, e o leitor de CSV do Spark não honra a aspa nesse caso: 6 das 128 linhas se partem, uma delas em 22 campos onde há 6 colunas. Tentado com quote, com escape e sem: nenhuma combinação resolve. O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega normalmente — então o limite e a quantidade, não a estrutura
 
 -- COMMAND ----------
 
@@ -893,7 +893,7 @@ from read_files(
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## 2.3 Production — produto, categoria e producao
+-- MAGIC ## 2.3 Production — produto, categoria e produção
 
 -- COMMAND ----------
 
@@ -2144,8 +2144,8 @@ order by
 
 -- COMMAND ----------
 
--- DBTITLE 1,3.3 As sete juncoes
--- 3.3 As sete juncoes que a análise usa: alguma tem órfão? Tem de dar ZERO em todas.
+-- DBTITLE 1,3.3 As sete junções
+-- 3.3 As sete junções que a análise usa: alguma tem órfão? Tem de dar ZERO em todas.
 --     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.
 select
     'pedido -> address' as juncao
@@ -2276,5 +2276,5 @@ from workspace.adventure_works.salesorderdetail;
 -- MAGIC %md
 -- MAGIC # Fim da ingestão
 -- MAGIC
--- MAGIC Com as conferências passando, a base esta confiável e a análise exploratoria pode
+-- MAGIC Com as conferências passando, a base esta confiável e a análise exploratória pode
 -- MAGIC começar em `databricks/02-analise-exploratoria.py`.
