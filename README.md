@@ -38,7 +38,7 @@ entrega/       links.txt, que o briefing exige em arquivo de texto
 | # | Etapa | Entregável | Status |
 |---|---|---|---|
 | 1 | KPIs e perguntas de negócio | [`docs/01-kpis-e-perguntas.md`](docs/01-kpis-e-perguntas.md) · [mapa](docs/01.01-mapa-completo.md) | **completa** |
-| 2 | Análise exploratória | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | escrita, pronta para executar |
+| 2 | Análise exploratória | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | **completa** — executada e conferida |
 | 3 | Modelo conceitual | PDF | — |
 | 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | **ingestão completa e conferida** |
 | 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
