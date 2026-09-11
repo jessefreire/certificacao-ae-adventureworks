@@ -12,6 +12,10 @@
 
 [sqlfluff]
 dialect = databricks
+# Sem declarar, o sqlfluff tenta adivinhar a codificação e erra: no Windows ele
+# lê o arquivo como cp1252, os bytes UTF-8 de `órfãos` viram lixo e o lexer falha
+# com `LXR | Unable to lex characters`. Não é erro do SQL, é do leitor.
+encoding = utf-8
 max_line_length = 100
 exclude_rules = L044
 # O padrao de 20.000 bytes faz o linter PULAR o arquivo em silencio, com um

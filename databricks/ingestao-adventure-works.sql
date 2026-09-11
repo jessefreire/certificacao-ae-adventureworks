@@ -1,9 +1,9 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC # Ingestao do AdventureWorks
+-- MAGIC # Ingestão do AdventureWorks
 -- MAGIC
--- MAGIC Cria e carrega a camada bruta no Unity Catalog. **Nao e entregavel do desafio** — o
--- MAGIC briefing nao pede artefato de ingestao —, e sim o pre-requisito para a Etapa 2. Roda
+-- MAGIC Cria e carrega a camada bruta no Unity Catalog. **Não e entregavel do desafio** — o
+-- MAGIC briefing não pede artefato de ingestão —, e sim o pre-requisito para a Etapa 2. Roda
 -- MAGIC uma vez.
 -- MAGIC
 -- MAGIC ## Antes de rodar
@@ -13,72 +13,72 @@
 -- MAGIC
 -- MAGIC     /Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/
 -- MAGIC
--- MAGIC Os nomes de tabela sao absolutos (`workspace.adventure_works.<tabela>`), entao nao depende de qual
--- MAGIC catalogo esta selecionado no editor. O nome do schema nao e escolha nossa: o briefing
+-- MAGIC Os nomes de tabela são absolutos (`workspace.adventure_works.<tabela>`), entao não depende de qual
+-- MAGIC catálogo esta selecionado no editor. O nome do schema não e escolha nossa: o briefing
 -- MAGIC determina `USE SOMENTE O SCHEMA adventure_works`.
 -- MAGIC
 -- MAGIC ## Repetir e seguro, e isso e por construcao
 -- MAGIC
--- MAGIC Cada tabela e criada e carregada em **uma** instrucao,
+-- MAGIC Cada tabela e criada e carregada em **uma** instrução,
 -- MAGIC `create or replace table ... as select`. Repetir uma celula **substitui** os dados em
--- MAGIC vez de somar, entao nao existe como duplicar.
+-- MAGIC vez de somar, entao não existe como duplicar.
 -- MAGIC
 -- MAGIC O desenho anterior separava DDL e `COPY INTO`, e ai repetir a carga somava linhas —
 -- MAGIC `COPY INTO` sempre acrescenta, e `force = true` desliga a idempotencia dele. Isso
 -- MAGIC chegou a deixar `address` com 3x e `employeepayhistory` com 5x as linhas. A protecao
--- MAGIC agora e propriedade do codigo, nao disciplina de quem roda.
+-- MAGIC agora e propriedade do código, não disciplina de quem roda.
 -- MAGIC
 -- MAGIC ## Onde rodar
 -- MAGIC
 -- MAGIC **SQL Editor ou notebook**, mas a Free Edition esgota cota de compute e devolve
 -- MAGIC `RESOURCE_EXHAUSTED` — que chega disfarcado de `ValueError` do cliente gRPC. O
--- MAGIC warehouse do SQL Editor e um pool separado do compute de notebook, com cota propria,
+-- MAGIC warehouse do SQL Editor e um pool separado do compute de notebook, com cota própria,
 -- MAGIC e foi por ele que a carga passou. Se estourar, espere e continue de onde parou: as
--- MAGIC celulas sao independentes.
+-- MAGIC celulas são independentes.
 -- MAGIC
--- MAGIC ## Ordem das secoes
+-- MAGIC ## Ordem das seções
 -- MAGIC
--- MAGIC | Secao | Conteudo |
+-- MAGIC | Seção | Conteudo |
 -- MAGIC |---|---|
--- MAGIC | 1 | As **17 tabelas** que a analise usa. Parar aqui e um estado valido |
+-- MAGIC | 1 | As **17 tabelas** que a análise usa. Parar aqui e um estado valido |
 -- MAGIC | 2 | As outras 48 da camada bruta, por schema de origem |
--- MAGIC | 3 | As conferencias. **Rodar antes de qualquer analise** |
+-- MAGIC | 3 | As conferências. **Rodar antes de qualquer análise** |
 -- MAGIC
--- MAGIC ## ⚠️ O que este notebook substitui, e o que NAO rodar
+-- MAGIC ## ⚠️ O que este notebook substitui, e o que NÃO rodar
 -- MAGIC
--- MAGIC Este arquivo consolida seis artefatos anteriores. Eles foram **mantidos de proposito**
+-- MAGIC Este arquivo consolida seis artefatos anteriores. Eles foram **mantidos de propósito**
 -- MAGIC no workspace, como registro do caminho — e por isso vale dizer alto o que fazer com
 -- MAGIC eles: **nada.** Nenhum deles deve ser executado.
 -- MAGIC
--- MAGIC | Artefato antigo | Por que nao rodar |
+-- MAGIC | Artefato antigo | Por que não rodar |
 -- MAGIC |---|---|
--- MAGIC | notebook `Ingestao Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas secoes 1 e 3 daqui |
+-- MAGIC | notebook `Ingestão Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas seções 1 e 3 daqui |
 -- MAGIC | query `02.00-carga-escopo-minimo.sql` | **DUPLICA** — usa `COPY INTO` com `force = true` |
--- MAGIC | query `02.99-recarga-limpa.sql` | resolvia a duplicacao que hoje nao acontece mais |
--- MAGIC | query `03-verificacao-da-carga.sql` | virou a secao 3 deste notebook |
+-- MAGIC | query `02.99-recarga-limpa.sql` | resolvia a duplicação que hoje não acontece mais |
+-- MAGIC | query `03-verificacao-da-carga.sql` | virou a seção 3 deste notebook |
 -- MAGIC
 -- MAGIC O risco concreto: o `COPY INTO` daqueles arquivos **acrescenta** linhas, e o
--- MAGIC `force = true` desliga a protecao que ignoraria arquivo ja carregado. Rodar um deles
+-- MAGIC `force = true` desliga a protecao que ignoraria arquivo já carregado. Rodar um deles
 -- MAGIC por engano soma a carga de novo — foi assim que `address` chegou a 3x e
--- MAGIC `employeepayhistory` a 5x. Aqui isso nao existe: `create or replace` substitui.
+-- MAGIC `employeepayhistory` a 5x. Aqui isso não existe: `create or replace` substitui.
 -- MAGIC
--- MAGIC Se um dia a duvida voltar, o sinal e este: contagem sendo **multiplo exato** do
--- MAGIC esperado (2x, 3x…) e duplicacao, nao dado corrompido.
+-- MAGIC Se um dia a dúvida voltar, o sinal e este: contagem sendo **múltiplo exato** do
+-- MAGIC esperado (2x, 3x…) e duplicação, não dado corrompido.
 -- MAGIC
 -- MAGIC ## Este arquivo e gerado
 -- MAGIC
 -- MAGIC Fonte: `scripts/gera_ingestao.py`, que le o `install.sql` do repositorio oficial —
--- MAGIC de onde saem nome, ordem e tipo de cada coluna. Editar celula a mao cria duas versoes
+-- MAGIC de onde saem nome, ordem e tipo de cada coluna. Editar celula a mao cria duas versões
 -- MAGIC do mesmo SQL; para mudar algo, mude o gerador e regere.
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC # 1. As 17 tabelas da analise
+-- MAGIC # 1. As 17 tabelas da análise
 -- MAGIC
--- MAGIC Vem primeiro de proposito. Sao as que as seis perguntas do briefing e os catorze
--- MAGIC aprofundamentos da Etapa 1 exigem, e as unicas que serao declaradas como `source` no
--- MAGIC dbt — declarar source e assumir o teste e a documentacao dela.
+-- MAGIC Vem primeiro de propósito. São as que as seis perguntas do briefing e os catorze
+-- MAGIC aprofundamentos da Etapa 1 exigem, e as únicas que serão declaradas como `source` no
+-- MAGIC dbt — declarar source e assumir o teste e a documentação dela.
 -- MAGIC
 -- MAGIC Se a cota interromper a carga aqui, a Etapa 2 esta desbloqueada mesmo assim.
 
@@ -536,17 +536,17 @@ from read_files(
 -- MAGIC %md
 -- MAGIC # 2. O resto da camada bruta
 -- MAGIC
--- MAGIC As outras 47 tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 nao
+-- MAGIC As outras 47 tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 não
 -- MAGIC depende delas — mas subir tudo que carrega custa quase nada (79 MB, 759 mil linhas) e
--- MAGIC remove o atrito de ingestao se o trabalho crescer para compras ou producao.
+-- MAGIC remove o atrito de ingestão se o trabalho crescer para compras ou producao.
 -- MAGIC
--- MAGIC Tres tabelas ficam de fora das 68 do `install.sql`, por defeito de origem e nao por
+-- MAGIC Três tabelas ficam de fora das 68 do `install.sql`, por defeito de origem e não por
 -- MAGIC escolha:
 -- MAGIC
--- MAGIC - **`Document`** — coluna binaria (varbinary) nao atravessa TSV
+-- MAGIC - **`Document`** — coluna binaria (varbinary) não atravessa TSV
 -- MAGIC - **`ProductPhoto`** — duas colunas binarias: ThumbNailPhoto e LargePhoto
 -- MAGIC - **`ProductReview`** — arquivo quebrado na origem: 7 campos onde o DDL declara 8, e quebra de linha dentro de campo (34 linhas para 31 registros)
--- MAGIC - **`ProductModel`** — o XML de CatalogDescription tem 48 TABs dentro de campo aspado, e o leitor de CSV do Spark nao honra a aspa nesse caso: 6 das 128 linhas se partem, uma delas em 22 campos onde ha 6 colunas. Tentado com quote, com escape e sem: nenhuma combinacao resolve. O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega normalmente — entao o limite e a quantidade, nao a estrutura
+-- MAGIC - **`ProductModel`** — o XML de CatalogDescription tem 48 TABs dentro de campo aspado, e o leitor de CSV do Spark não honra a aspa nesse caso: 6 das 128 linhas se partem, uma delas em 22 campos onde ha 6 colunas. Tentado com quote, com escape e sem: nenhuma combinacao resolve. O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega normalmente — entao o limite e a quantidade, não a estrutura
 
 -- COMMAND ----------
 
@@ -1444,7 +1444,7 @@ from read_files(
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## 2.5 Sales — pedido, item, cliente e territorio
+-- MAGIC ## 2.5 Sales — pedido, item, cliente e território
 
 -- COMMAND ----------
 
@@ -1648,17 +1648,17 @@ from read_files(
 -- MAGIC %md
 -- MAGIC # 3. Posso confiar no que chegou?
 -- MAGIC
--- MAGIC Cinco conferencias. **Se alguma falhar, nao siga para a analise** — todo numero da
--- MAGIC exploracao ficaria suspeito.
+-- MAGIC Cinco conferências. **Se alguma falhar, não siga para a análise** — todo número da
+-- MAGIC exploração ficaria suspeito.
 -- MAGIC
--- MAGIC Os valores esperados estao embutidos no SQL, medidos nos proprios arquivos de origem.
--- MAGIC Quem roda nao precisa saber de cor que sao 65 tabelas ou que a receita de 2011 e
+-- MAGIC Os valores esperados estão embutidos no SQL, medidos nos próprios arquivos de origem.
+-- MAGIC Quem roda não precisa saber de cor que são 65 tabelas ou que a receita de 2011 e
 -- MAGIC 12.646.112,16.
 
 -- COMMAND ----------
 
 -- DBTITLE 1,3.1 Tipo do dinheiro
--- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas tres.
+-- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas três.
 --     Com double, o teste de aceite sai arredondado e a causa fica escondida no tipo.
 select
     column_name
@@ -1674,8 +1674,8 @@ order by column_name asc;
 -- COMMAND ----------
 
 -- DBTITLE 1,3.2 Contagem por tabela
--- 3.2 A contagem bate com o arquivo de origem? As 17 da analise tem de dar `ok`.
---     `nao carregada` em camada bruta e esperado se voce parou na secao 1.
+-- 3.2 A contagem bate com o arquivo de origem? As 17 da análise tem de dar `ok`.
+--     `não carregada` em camada bruta e esperado se você parou na seção 1.
 with contagem as (
     select
         'businessentity' as tabela
@@ -1686,21 +1686,21 @@ with contagem as (
     union all
     select
         'person' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 19972 as esperado
         , count(*) as carregado
     from workspace.adventure_works.person
     union all
     select
         'stateprovince' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 181 as esperado
         , count(*) as carregado
     from workspace.adventure_works.stateprovince
     union all
     select
         'address' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 19614 as esperado
         , count(*) as carregado
     from workspace.adventure_works.address
@@ -1763,7 +1763,7 @@ with contagem as (
     union all
     select
         'countryregion' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 238 as esperado
         , count(*) as carregado
     from workspace.adventure_works.countryregion
@@ -1826,21 +1826,21 @@ with contagem as (
     union all
     select
         'productcategory' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 4 as esperado
         , count(*) as carregado
     from workspace.adventure_works.productcategory
     union all
     select
         'productsubcategory' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 37 as esperado
         , count(*) as carregado
     from workspace.adventure_works.productsubcategory
     union all
     select
         'product' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 504 as esperado
         , count(*) as carregado
     from workspace.adventure_works.product
@@ -2001,7 +2001,7 @@ with contagem as (
     union all
     select
         'creditcard' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 19118 as esperado
         , count(*) as carregado
     from workspace.adventure_works.creditcard
@@ -2022,7 +2022,7 @@ with contagem as (
     union all
     select
         'customer' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 19820 as esperado
         , count(*) as carregado
     from workspace.adventure_works.customer
@@ -2036,28 +2036,28 @@ with contagem as (
     union all
     select
         'salesorderdetail' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 121317 as esperado
         , count(*) as carregado
     from workspace.adventure_works.salesorderdetail
     union all
     select
         'salesorderheader' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 31465 as esperado
         , count(*) as carregado
     from workspace.adventure_works.salesorderheader
     union all
     select
         'salesorderheadersalesreason' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 27647 as esperado
         , count(*) as carregado
     from workspace.adventure_works.salesorderheadersalesreason
     union all
     select
         'salesperson' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 17 as esperado
         , count(*) as carregado
     from workspace.adventure_works.salesperson
@@ -2071,7 +2071,7 @@ with contagem as (
     union all
     select
         'salesreason' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 10 as esperado
         , count(*) as carregado
     from workspace.adventure_works.salesreason
@@ -2085,7 +2085,7 @@ with contagem as (
     union all
     select
         'salesterritory' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 10 as esperado
         , count(*) as carregado
     from workspace.adventure_works.salesterritory
@@ -2106,7 +2106,7 @@ with contagem as (
     union all
     select
         'specialoffer' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 16 as esperado
         , count(*) as carregado
     from workspace.adventure_works.specialoffer
@@ -2120,7 +2120,7 @@ with contagem as (
     union all
     select
         'store' as tabela
-        , 'analise' as escopo
+        , 'análise' as escopo
         , 701 as esperado
         , count(*) as carregado
     from workspace.adventure_works.store
@@ -2145,7 +2145,7 @@ order by
 -- COMMAND ----------
 
 -- DBTITLE 1,3.3 As sete juncoes
--- 3.3 As sete juncoes que a analise usa: alguma tem orfao? Tem de dar ZERO em todas.
+-- 3.3 As sete juncoes que a análise usa: alguma tem órfão? Tem de dar ZERO em todas.
 --     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.
 select
     'pedido -> address' as juncao
@@ -2178,7 +2178,7 @@ where salesterritory.territoryid is null
 union all
 
 select
-    'pedido -> creditcard (so quem tem cartao)' as juncao
+    'pedido -> creditcard (só quem tem cartão)' as juncao
     , count(*) as orfaos
 from workspace.adventure_works.salesorderheader
 left join workspace.adventure_works.creditcard
@@ -2255,7 +2255,7 @@ where year(salesorderheader.orderdate) = 2011;
 
 -- DBTITLE 1,3.6 Integridade linetotal
 -- 3.6 A integridade do linetotal. Tem de dar 121317 linhas e ZERO fora de um centavo.
---     Nesta base o campo vem do arquivo, nao e calculado pelo banco.
+--     Nesta base o campo vem do arquivo, não e calculado pelo banco.
 select
     count(*) as linhas
     , sum(
@@ -2274,7 +2274,7 @@ from workspace.adventure_works.salesorderdetail;
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC # Fim da ingestao
+-- MAGIC # Fim da ingestão
 -- MAGIC
--- MAGIC Com as conferencias passando, a base esta confiavel e a analise exploratoria pode
--- MAGIC comecar em `databricks/02-analise-exploratoria.py`.
+-- MAGIC Com as conferências passando, a base esta confiável e a análise exploratoria pode
+-- MAGIC começar em `databricks/02-analise-exploratoria.py`.

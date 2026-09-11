@@ -69,6 +69,11 @@ import re
 import sys
 from pathlib import Path
 
+# O console do Windows usa cp1252 e QUEBRA ao imprimir acento. Sem esta linha o
+# script morre no meio do relatório com UnicodeEncodeError — e o erro parece ser
+# do que ele estava conferindo, não da impressão.
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 AQUI = Path(__file__).resolve().parent
 REPO = AQUI.parent
 
@@ -82,24 +87,24 @@ SCHEMA = "adventure_works"
 ALVO = f"{CATALOGO}.{SCHEMA}"
 VOLUME = f"/Volumes/{CATALOGO}/{SCHEMA}/raw_adventure_works/AdventureWorks/data"
 
-# Nao carregam, e o motivo e do arquivo de origem, nao escolha nossa:
+# Não carregam, e o motivo e do arquivo de origem, não escolha nossa:
 EXCLUIDAS = {
-    "Document": "coluna binaria (varbinary) nao atravessa TSV",
+    "Document": "coluna binaria (varbinary) não atravessa TSV",
     "ProductPhoto": "duas colunas binarias: ThumbNailPhoto e LargePhoto",
     "ProductReview": "arquivo quebrado na origem: 7 campos onde o DDL declara 8, "
                      "e quebra de linha dentro de campo (34 linhas para 31 registros)",
     "ProductModel": "o XML de CatalogDescription tem 48 TABs dentro de campo aspado, "
-                    "e o leitor de CSV do Spark nao honra a aspa nesse caso: 6 das 128 "
+                    "e o leitor de CSV do Spark não honra a aspa nesse caso: 6 das 128 "
                     "linhas se partem, uma delas em 22 campos onde ha 6 colunas. "
                     "Tentado com quote, com escape e sem: nenhuma combinacao resolve. "
                     "O JobCandidate, que tem o mesmo tipo de XML mas UM tab, carrega "
-                    "normalmente — entao o limite e a quantidade, nao a estrutura",
+                    "normalmente — entao o limite e a quantidade, não a estrutura",
 }
 
 # As 17 que as seis perguntas do briefing e os catorze aprofundamentos usam. Vem
 # primeiro no notebook: se a cota da Free Edition interromper a carga, para-se aqui
-# com a Etapa 2 desbloqueada. Sao tambem as unicas que serao declaradas como source
-# no dbt, porque declarar source e assumir teste e documentacao.
+# com a Etapa 2 desbloqueada. São também as únicas que serão declaradas como source
+# no dbt, porque declarar source e assumir teste e documentação.
 ESCOPO_ANALISE = [
     "countryregion", "stateprovince", "address", "person", "store", "customer",
     "creditcard", "productcategory", "productsubcategory", "product", "specialoffer",
@@ -116,7 +121,7 @@ DINHEIRO = {
 }
 
 # Palavras reservadas do Spark SQL / ANSI. Lista real, em vez de chute: das 203
-# colunas distintas das 65 tabelas, so `group` e `primary` colidem — mas a lista
+# colunas distintas das 65 tabelas, só `group` e `primary` colidem — mas a lista
 # inteira deixa o gerador seguro se o escopo crescer.
 RESERVADAS = set("""all and any as asc at authorization between by case cast check
 collate column commit constraint create cross cube current current_date current_time
@@ -133,13 +138,13 @@ NOME_SCHEMA = {
     "HumanResources": "HumanResources — funcionarios e departamentos",
     "Production": "Production — produto, categoria e producao",
     "Purchasing": "Purchasing — fornecedor e compras",
-    "Sales": "Sales — pedido, item, cliente e territorio",
+    "Sales": "Sales — pedido, item, cliente e território",
 }
 
 
 def ident(col):
-    """Backtick so quando o nome e reservado. A camada bruta espelha a origem,
-    inclusive nomes que sao palavra reservada; o rename acontece no modelo de
+    """Backtick só quando o nome e reservado. A camada bruta espelha a origem,
+    inclusive nomes que são palavra reservada; o rename acontece no modelo de
     source do dbt, como o code style da casa manda."""
     c = col.lower()
     return f"`{c}`" if c in RESERVADAS else c
@@ -154,18 +159,18 @@ def e_numerico(tipo_pg):
 def tipo_databricks(nome_col, tipo_pg):
     """Traduz o tipo do install.sql (Postgres) para o do Databricks.
 
-    Duas regras que a primeira versao errou, e as duas custaram carga interrompida:
+    Duas regras que a primeira versão errou, e as duas custaram carga interrompida:
 
-    1. `decimal(p, s)` caia no fallback de texto, porque o mapeamento so reconhecia
-       `numeric` sem precisao. Cinco colunas numericas viravam string em silencio —
+    1. `decimal(p, s)` caia no fallback de texto, porque o mapeamento só reconhecia
+       `numeric` sem precisão. Cinco colunas numericas viravam string em silêncio —
        `perassemblyqty`, `availability`, `actualresourcehrs`, `receivedqty` e
        `rejectedqty`.
     2. a lista DINHEIRO era aplicada pelo NOME da coluna, sem olhar o tipo de
-       origem. `unitmeasurecode` e `char(3)` — codigo de unidade, tipo 'EA' — e
+       origem. `unitmeasurecode` e `char(3)` — código de unidade, tipo 'EA' — e
        virava `decimal(19, 4)`. O cast estourava com CAST_INVALID_INPUT.
 
-    Por isso a lista de dinheiro agora so vale quando a origem JA e numerica, e a
-    precisao declarada na origem e preservada quando nao e coluna de valor.
+    Por isso a lista de dinheiro agora só vale quando a origem JÁ e numerica, e a
+    precisão declarada na origem e preservada quando não e coluna de valor.
     """
     t = tipo_pg.strip().lower()
     c = nome_col.lower()
@@ -175,7 +180,7 @@ def tipo_databricks(nome_col, tipo_pg):
         return "decimal(19, 4)" if c in DINHEIRO else f"decimal({m.group(1)}, {m.group(2)})"
     if t.startswith(("numeric", "decimal", "money")):
         return "decimal(19, 4)"
-    # DINHEIRO so pode promover coluna que ja e numerica na origem
+    # DINHEIRO só pode promover coluna que já e numerica na origem
     if c in DINHEIRO and e_numerico(t):
         return "decimal(19, 4)"
     if t in ("serial", "int", "integer"):
@@ -236,14 +241,14 @@ def conta_linhas(arquivo):
 def campos_no_tsv(arquivo):
     """Quantos campos por linha o arquivo tem — conferindo TODAS as linhas.
 
-    A primeira versao disto olhava so a primeira linha, e essa falha custou uma
+    A primeira versão disto olhava só a primeira linha, e essa falha custou uma
     carga interrompida: o `jobcandidate` tem 12 linhas com 4 campos e UMA com 5,
-    e o `productmodel` tem seis linhas fora do padrao, uma delas com 22 campos
+    e o `productmodel` tem seis linhas fora do padrão, uma delas com 22 campos
     onde ha 6 colunas. Com `mode = FAILFAST` — que e o certo — isso derruba a
-    carga na linha ruim, e nao no comeco.
+    carga na linha ruim, e não no comeco.
 
     Le com a aspa CSV habilitada, que e como o Databricks vai ler. Assim a
-    conferencia aqui e a carga la enxergam o mesmo arquivo.
+    conferência aqui e a carga la enxergam o mesmo arquivo.
     """
     with open(ORIGEM / "data" / f"{arquivo}.csv", encoding="utf-8",
               errors="replace", newline="") as f:
@@ -260,12 +265,12 @@ def md(texto):
 
 
 def celula_da_tabela(schema, original, tabela, cols, titulo):
-    """`titulo` e o DBTITLE, o nome da celula na navegacao do Databricks.
+    """`titulo` e o DBTITLE, o nome da celula na navegação do Databricks.
 
-    Formato `<secao>.<NN> NomeDaTabela`, sem o schema. O painel corta o titulo em
+    Formato `<seção>.<NN> NomeDaTabela`, sem o schema. O painel corta o titulo em
     torno de 22 caracteres, entao o prefixo de schema (`Production.`) gastaria 11
-    deles antes de chegar ao que distingue a celula. O schema continua visivel no
-    cabecalho de markdown do bloco e no comentario da propria celula.
+    deles antes de chegar ao que distingue a celula. O schema continua visível no
+    cabeçalho de markdown do bloco e no comentario da própria celula.
     """
     casts = [f"cast(_c{i} as {tipo_databricks(c, t)}) as {ident(c)}"
              for i, (c, t) in enumerate(cols)]
@@ -290,7 +295,7 @@ def celula_da_tabela(schema, original, tabela, cols, titulo):
 
 # ---------------------------------------------------------------- leitura da origem
 assert (ORIGEM / "install.sql").exists(), (
-    f"nao achei install.sql em {ORIGEM}. Passe o caminho da pasta AdventureWorks "
+    f"não achei install.sql em {ORIGEM}. Passe o caminho da pasta AdventureWorks "
     f"como argumento, ou defina AW_HOME.")
 
 texto = (ORIGEM / "install.sql").read_text(encoding="utf-8", errors="replace")
@@ -301,7 +306,7 @@ for schema, original in tabelas_do_install(texto):
         continue
     cols = colunas(original, texto)
     if not cols:
-        problemas.append(f"{original}: nao achei CREATE TABLE")
+        problemas.append(f"{original}: não achei CREATE TABLE")
         continue
     n_tsv = campos_no_tsv(original)
     if n_tsv != len(cols):
@@ -322,13 +327,13 @@ for schema, original in tabelas_do_install(texto):
 assert not problemas, "divergencia entre DDL e arquivo:\n  " + "\n  ".join(problemas)
 
 faltando = [t for t in ESCOPO_ANALISE if t not in tabelas]
-assert not faltando, f"tabela do escopo da analise que nao existe no DDL: {faltando}"
+assert not faltando, f"tabela do escopo da análise que não existe no DDL: {faltando}"
 
 # ---------------------------------------------------------------- abertura
-celulas = [md(f"""# Ingestao do AdventureWorks
+celulas = [md(f"""# Ingestão do AdventureWorks
 
-Cria e carrega a camada bruta no Unity Catalog. **Nao e entregavel do desafio** — o
-briefing nao pede artefato de ingestao —, e sim o pre-requisito para a Etapa 2. Roda
+Cria e carrega a camada bruta no Unity Catalog. **Não e entregavel do desafio** — o
+briefing não pede artefato de ingestão —, e sim o pre-requisito para a Etapa 2. Roda
 uma vez.
 
 ## Antes de rodar
@@ -338,70 +343,70 @@ A pasta `AdventureWorks` inteira precisa estar num Volume, subida com `Select fo
 
     {VOLUME}/
 
-Os nomes de tabela sao absolutos (`{ALVO}.<tabela>`), entao nao depende de qual
-catalogo esta selecionado no editor. O nome do schema nao e escolha nossa: o briefing
+Os nomes de tabela são absolutos (`{ALVO}.<tabela>`), entao não depende de qual
+catálogo esta selecionado no editor. O nome do schema não e escolha nossa: o briefing
 determina `USE SOMENTE O SCHEMA adventure_works`.
 
 ## Repetir e seguro, e isso e por construcao
 
-Cada tabela e criada e carregada em **uma** instrucao,
+Cada tabela e criada e carregada em **uma** instrução,
 `create or replace table ... as select`. Repetir uma celula **substitui** os dados em
-vez de somar, entao nao existe como duplicar.
+vez de somar, entao não existe como duplicar.
 
 O desenho anterior separava DDL e `COPY INTO`, e ai repetir a carga somava linhas —
 `COPY INTO` sempre acrescenta, e `force = true` desliga a idempotencia dele. Isso
 chegou a deixar `address` com 3x e `employeepayhistory` com 5x as linhas. A protecao
-agora e propriedade do codigo, nao disciplina de quem roda.
+agora e propriedade do código, não disciplina de quem roda.
 
 ## Onde rodar
 
 **SQL Editor ou notebook**, mas a Free Edition esgota cota de compute e devolve
 `RESOURCE_EXHAUSTED` — que chega disfarcado de `ValueError` do cliente gRPC. O
-warehouse do SQL Editor e um pool separado do compute de notebook, com cota propria,
+warehouse do SQL Editor e um pool separado do compute de notebook, com cota própria,
 e foi por ele que a carga passou. Se estourar, espere e continue de onde parou: as
-celulas sao independentes.
+celulas são independentes.
 
-## Ordem das secoes
+## Ordem das seções
 
-| Secao | Conteudo |
+| Seção | Conteudo |
 |---|---|
-| 1 | As **17 tabelas** que a analise usa. Parar aqui e um estado valido |
+| 1 | As **17 tabelas** que a análise usa. Parar aqui e um estado valido |
 | 2 | As outras 48 da camada bruta, por schema de origem |
-| 3 | As conferencias. **Rodar antes de qualquer analise** |
+| 3 | As conferências. **Rodar antes de qualquer análise** |
 
-## ⚠️ O que este notebook substitui, e o que NAO rodar
+## ⚠️ O que este notebook substitui, e o que NÃO rodar
 
-Este arquivo consolida seis artefatos anteriores. Eles foram **mantidos de proposito**
+Este arquivo consolida seis artefatos anteriores. Eles foram **mantidos de propósito**
 no workspace, como registro do caminho — e por isso vale dizer alto o que fazer com
 eles: **nada.** Nenhum deles deve ser executado.
 
-| Artefato antigo | Por que nao rodar |
+| Artefato antigo | Por que não rodar |
 |---|---|
-| notebook `Ingestao Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas secoes 1 e 3 daqui |
+| notebook `Ingestão Adventure Works` (celulas `01`, `01.01`, `02.01`) | superado pelas seções 1 e 3 daqui |
 | query `02.00-carga-escopo-minimo.sql` | **DUPLICA** — usa `COPY INTO` com `force = true` |
-| query `02.99-recarga-limpa.sql` | resolvia a duplicacao que hoje nao acontece mais |
-| query `03-verificacao-da-carga.sql` | virou a secao 3 deste notebook |
+| query `02.99-recarga-limpa.sql` | resolvia a duplicação que hoje não acontece mais |
+| query `03-verificacao-da-carga.sql` | virou a seção 3 deste notebook |
 
 O risco concreto: o `COPY INTO` daqueles arquivos **acrescenta** linhas, e o
-`force = true` desliga a protecao que ignoraria arquivo ja carregado. Rodar um deles
+`force = true` desliga a protecao que ignoraria arquivo já carregado. Rodar um deles
 por engano soma a carga de novo — foi assim que `address` chegou a 3x e
-`employeepayhistory` a 5x. Aqui isso nao existe: `create or replace` substitui.
+`employeepayhistory` a 5x. Aqui isso não existe: `create or replace` substitui.
 
-Se um dia a duvida voltar, o sinal e este: contagem sendo **multiplo exato** do
-esperado (2x, 3x…) e duplicacao, nao dado corrompido.
+Se um dia a dúvida voltar, o sinal e este: contagem sendo **múltiplo exato** do
+esperado (2x, 3x…) e duplicação, não dado corrompido.
 
 ## Este arquivo e gerado
 
 Fonte: `scripts/gera_ingestao.py`, que le o `install.sql` do repositorio oficial —
-de onde saem nome, ordem e tipo de cada coluna. Editar celula a mao cria duas versoes
+de onde saem nome, ordem e tipo de cada coluna. Editar celula a mao cria duas versões
 do mesmo SQL; para mudar algo, mude o gerador e regere.""")]
 
-# ---------------------------------------------------------------- secao 1: escopo
-celulas.append(md("""# 1. As 17 tabelas da analise
+# ---------------------------------------------------------------- seção 1: escopo
+celulas.append(md("""# 1. As 17 tabelas da análise
 
-Vem primeiro de proposito. Sao as que as seis perguntas do briefing e os catorze
-aprofundamentos da Etapa 1 exigem, e as unicas que serao declaradas como `source` no
-dbt — declarar source e assumir o teste e a documentacao dela.
+Vem primeiro de propósito. São as que as seis perguntas do briefing e os catorze
+aprofundamentos da Etapa 1 exigem, e as únicas que serão declaradas como `source` no
+dbt — declarar source e assumir o teste e a documentação dela.
 
 Se a cota interromper a carga aqui, a Etapa 2 esta desbloqueada mesmo assim."""))
 
@@ -412,7 +417,7 @@ for n, tabela in enumerate(ESCOPO_ANALISE, 1):
                                     f"1.{n:02d} {original}"))
     n_cast += len(cols)
 
-# ---------------------------------------------------------------- secao 2: o resto
+# ---------------------------------------------------------------- seção 2: o resto
 resto = [t for t in tabelas if t not in ESCOPO_ANALISE]
 por_schema = {}
 for tabela in resto:
@@ -420,17 +425,17 @@ for tabela in resto:
 
 celulas.append(md(f"""# 2. O resto da camada bruta
 
-As outras {len(resto)} tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 nao
+As outras {len(resto)} tabelas. Nenhuma pergunta do briefing usa, e a Etapa 2 não
 depende delas — mas subir tudo que carrega custa quase nada (79 MB, 759 mil linhas) e
-remove o atrito de ingestao se o trabalho crescer para compras ou producao.
+remove o atrito de ingestão se o trabalho crescer para compras ou producao.
 
-Tres tabelas ficam de fora das 68 do `install.sql`, por defeito de origem e nao por
+Três tabelas ficam de fora das 68 do `install.sql`, por defeito de origem e não por
 escolha:
 
 """ + "\n".join(f"- **`{t}`** — {motivo}" for t, motivo in EXCLUIDAS.items())))
 
-# a sequencia da secao 2 corre pelas cinco subsecoes de schema sem reiniciar:
-# o numero tem de crescer junto com a ordem das celulas no notebook
+# a sequência da seção 2 corre pelas cinco subsecoes de schema sem reiniciar:
+# o número tem de crescer junto com a ordem das celulas no notebook
 n_resto = 0
 for schema in ["Person", "HumanResources", "Production", "Purchasing", "Sales"]:
     if schema not in por_schema:
@@ -443,18 +448,18 @@ for schema in ["Person", "HumanResources", "Production", "Purchasing", "Sales"]:
                                         f"2.{n_resto:02d} {original}"))
         n_cast += len(cols)
 
-# ---------------------------------------------------------------- secao 3: conferencias
+# ---------------------------------------------------------------- seção 3: conferências
 celulas.append(md("""# 3. Posso confiar no que chegou?
 
-Cinco conferencias. **Se alguma falhar, nao siga para a analise** — todo numero da
-exploracao ficaria suspeito.
+Cinco conferências. **Se alguma falhar, não siga para a análise** — todo número da
+exploração ficaria suspeito.
 
-Os valores esperados estao embutidos no SQL, medidos nos proprios arquivos de origem.
-Quem roda nao precisa saber de cor que sao 65 tabelas ou que a receita de 2011 e
+Os valores esperados estão embutidos no SQL, medidos nos próprios arquivos de origem.
+Quem roda não precisa saber de cor que são 65 tabelas ou que a receita de 2011 e
 12.646.112,16."""))
 
 celulas.append("""-- DBTITLE 1,3.1 Tipo do dinheiro
--- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas tres.
+-- 3.1 Dinheiro ficou exato? Tem de vir DECIMAL com 19 e 4 nas três.
 --     Com double, o teste de aceite sai arredondado e a causa fica escondida no tipo.
 select
     column_name
@@ -472,15 +477,15 @@ escopo = set(ESCOPO_ANALISE)
 sel = "\n    union all\n".join(
     "    select\n"
     f"        '{t}' as tabela\n"
-    f"        , '{'analise' if t in escopo else 'camada bruta'}' as escopo\n"
+    f"        , '{'análise' if t in escopo else 'camada bruta'}' as escopo\n"
     f"        , {n} as esperado\n"
     "        , count(*) as carregado\n"
     f"    from {ALVO}.{t}"
     for t, n in linhas_esperadas)
 
 celulas.append(f"""-- DBTITLE 1,3.2 Contagem por tabela
--- 3.2 A contagem bate com o arquivo de origem? As 17 da analise tem de dar `ok`.
---     `nao carregada` em camada bruta e esperado se voce parou na secao 1.
+-- 3.2 A contagem bate com o arquivo de origem? As 17 da análise tem de dar `ok`.
+--     `não carregada` em camada bruta e esperado se você parou na seção 1.
 with contagem as (
 {sel}
 )
@@ -509,7 +514,7 @@ JUNCOES = [
     ("pedido -> salesterritory", "salesorderheader", "salesterritory",
      "salesorderheader.territoryid = salesterritory.territoryid",
      "salesterritory.territoryid is null"),
-    ("pedido -> creditcard (so quem tem cartao)", "salesorderheader", "creditcard",
+    ("pedido -> creditcard (só quem tem cartão)", "salesorderheader", "creditcard",
      "salesorderheader.creditcardid = creditcard.creditcardid",
      "salesorderheader.creditcardid is not null\n    and creditcard.creditcardid is null"),
     ("item -> product", "salesorderdetail", "product",
@@ -533,7 +538,7 @@ blocos.append(
 
 celulas.append(
     "-- DBTITLE 1,3.3 As sete juncoes\n"
-    "-- 3.3 As sete juncoes que a analise usa: alguma tem orfao? Tem de dar ZERO em todas.\n"
+    "-- 3.3 As sete juncoes que a análise usa: alguma tem órfão? Tem de dar ZERO em todas.\n"
     "--     Todas deram zero nos arquivos antes da carga; diferente aqui significa carga errada.\n"
     + "\n\nunion all\n\n".join(blocos) + ";")
 
@@ -567,7 +572,7 @@ where year(salesorderheader.orderdate) = 2011;""")
 
 celulas.append(f"""-- DBTITLE 1,3.6 Integridade linetotal
 -- 3.6 A integridade do linetotal. Tem de dar 121317 linhas e ZERO fora de um centavo.
---     Nesta base o campo vem do arquivo, nao e calculado pelo banco.
+--     Nesta base o campo vem do arquivo, não e calculado pelo banco.
 select
     count(*) as linhas
     , sum(
@@ -583,42 +588,42 @@ select
     ) as fora_de_um_centavo
 from {ALVO}.salesorderdetail;""")
 
-celulas.append(md("""# Fim da ingestao
+celulas.append(md("""# Fim da ingestão
 
-Com as conferencias passando, a base esta confiavel e a analise exploratoria pode
-comecar em `databricks/02-analise-exploratoria.py`."""))
+Com as conferências passando, a base esta confiável e a análise exploratoria pode
+começar em `databricks/02-analise-exploratoria.py`."""))
 
-# ---------------------------------------------------------------- escrita e asseguracao
+# ---------------------------------------------------------------- escrita e asseguração
 fonte = "-- Databricks notebook source\n" + "\n\n-- COMMAND ----------\n\n".join(celulas) + "\n"
 SAIDA.parent.mkdir(parents=True, exist_ok=True)
 SAIDA.write_text(fonte, encoding="utf-8")
 
-# So instrucao de verdade: linha que COMECA com o comando. Contar no texto inteiro
-# pegaria tambem a mencao em prosa dentro das celulas de markdown.
+# Só instrução de verdade: linha que COMEÇA com o comando. Contar no texto inteiro
+# pegaria também a mencao em prosa dentro das celulas de markdown.
 codigo = [l for l in fonte.split("\n") if not l.startswith("-- MAGIC")]
 n_tabelas = sum(1 for l in codigo if l.startswith("create or replace table "))
 n_casts_no_arquivo = sum(l.count("cast(_c") for l in codigo)
-# Coerencia entre o que a memoria contou e o que foi escrito no arquivo. Sem numero
-# fixo: o escopo muda quando uma tabela entra em EXCLUIDAS, e um numero cravado aqui
+# Coerencia entre o que a memória contou e o que foi escrito no arquivo. Sem número
+# fixo: o escopo muda quando uma tabela entra em EXCLUIDAS, e um número cravado aqui
 # viraria mentira silenciosa. O piso de 400 casts pega perda grosseira.
-assert n_tabelas == len(tabelas), f"{n_tabelas} create no arquivo, {len(tabelas)} em memoria"
+assert n_tabelas == len(tabelas), f"{n_tabelas} create no arquivo, {len(tabelas)} em memória"
 assert n_casts_no_arquivo == n_cast, f"{n_casts_no_arquivo} casts no arquivo, {n_cast} contados"
 assert n_tabelas >= 60 and n_cast >= 400, f"perda de escopo: {n_tabelas} tabelas, {n_cast} casts"
 
-# `copy into` e `force` sao os dois sinais do desenho antigo, que duplicava linhas.
+# `copy into` e `force` são os dois sinais do desenho antigo, que duplicava linhas.
 sql = "\n".join(codigo).lower()
 assert "copy into" not in sql, "sobrou COPY INTO — o desenho antigo voltou"
 assert "force" not in sql, "sobrou `force` — o desenho antigo voltou"
 
-# uma instrucao por celula: e o que o `%sql` executa com seguranca
+# uma instrução por celula: e o que o `%sql` executa com segurança
 for i, celula in enumerate(fonte.split("\n\n-- COMMAND ----------\n\n")):
     if celula.lstrip().startswith(("-- MAGIC", "-- Databricks notebook source\n-- MAGIC")):
         continue
     sem_comentario = "\n".join(
         l.split("--")[0] for l in celula.split("\n") if not l.strip().startswith("--"))
     n = sem_comentario.count(";")
-    assert n == 1, f"celula {i} tem {n} instrucoes, esperava 1:\n{celula[:200]}"
+    assert n == 1, f"celula {i} tem {n} instruções, esperava 1:\n{celula[:200]}"
 
 print(f"OK -> {SAIDA.relative_to(REPO)}")
 print(f"tabelas: {n_tabelas}  |  casts: {n_casts_no_arquivo}  |  celulas: {len(celulas)}")
-print(f"  secao 1 (analise): {len(ESCOPO_ANALISE)}  |  secao 2 (resto): {len(resto)}")
+print(f"  seção 1 (análise): {len(ESCOPO_ANALISE)}  |  seção 2 (resto): {len(resto)}")

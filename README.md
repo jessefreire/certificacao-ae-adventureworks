@@ -212,6 +212,28 @@ frente, `inner join` explícito, `group by` com a coluna escrita — nem ordinal
 Toda consulta vem comentada, em uma ou duas linhas, dizendo **o que se confere** e **qual o
 valor esperado**. Comentário curto: o objetivo é entender a consulta de relance.
 
+Prosa em português leva acento — comentário, docstring, markdown de célula e título de célula
+inclusive. Identificador não: nome de variável, alias de SQL, nome de tabela, de coluna e de
+arquivo ficam em ASCII. Alias acentuado quebra o lexer do sqlfluff (`LXR | Unable to lex
+characters`), e nome de arquivo acentuado quebra os links deste README, do docx e dos decks.
+
+### O verificador de português
+
+```bash
+python scripts/confere_portugues.py
+```
+
+Confere três coisas em 10 arquivos: **palavra sem acento** (um dicionário só de palavras que
+não existem em português sem acento, de modo que não há falso positivo — `e`/`é`, `esta`/`está`
+e `ate`/`até` ficam de fora porque a forma sem acento também é palavra), **mojibake** (`Ã§`,
+`Â`, `â€`) e o **erro inverso**: acento dentro de identificador de SQL, que foi como um
+`as orfaos` virou `as órfãos` e derrubou o linter.
+
+Ele sabe o que é prosa em cada tipo de arquivo — markdown fora dos blocos de código, comentário
+e docstring no Python, comentário no SQL — e protege URL, caminho, nome de arquivo e nome de
+artefato. Roda na mesma rotina do `linta_notebook.py`, para o desvio falhar em vez de ser
+descoberto lendo.
+
 ### O linter alcança o SQL de dentro dos notebooks
 
 ```bash
@@ -238,9 +260,9 @@ no de análise, todos no formato `<seção>.<sequência> <rótulo curto>`:
 ```
 ingestão                      análise
 1.01 CountryRegion            1.1 Tamanho e janela      6.1 Top 5 cidades
-1.02 StateProvince            1.2 Canais e receita      6.3 Por territorio
+1.02 StateProvince            1.2 Canais e receita      6.3 Por território
 2.01 BusinessEntity           2.1 Aceite do CEO         9.3 Pareto de produtos
-3.5 Aceite do briefing        3.2 Cartao discrimina?    9.8 (d) Cidades x resto
+3.5 Aceite do briefing        3.2 Cartão discrimina?    9.8 (d) Cidades x resto
 ```
 
 Três decisões, e todas vêm de uma medição: **o painel corta o título em torno de 22

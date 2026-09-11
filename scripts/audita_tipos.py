@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
-"""Simula, no dado real, cada cast que o notebook de ingestao vai executar.
+"""Simula, no dado real, cada cast que o notebook de ingestão vai executar.
 
     python scripts/audita_tipos.py [caminho-da-pasta-AdventureWorks]
 
 ## Por que existe
 
-A carga quebrou tres vezes em execucao, e as tres poderiam ter sido previstas aqui:
+A carga quebrou três vezes em execução, e as três poderiam ter sido previstas aqui:
 
   - `CAST_INVALID_INPUT` no `'EA '` indo para decimal, porque a lista de colunas
-    monetarias era aplicada pelo nome sem olhar o tipo de origem
-  - cinco colunas `decimal(p, s)` viravam string em silencio
+    monetárias era aplicada pelo nome sem olhar o tipo de origem
+  - cinco colunas `decimal(p, s)` viravam string em silêncio
   - `FAILED_READ_FILE` em arquivo cujo campo aspado tem TAB
 
 Descobrir isso na celula 39 de 80, depois de esperar cota da Free Edition, custa uma
 tarde. Descobrir aqui custa trinta segundos.
 
-Le a fonte da verdade certa: o **notebook gerado**, nao o `install.sql`. O que
+Le a fonte da verdade certa: o **notebook gerado**, não o `install.sql`. O que
 importa e o cast que vai rodar de fato, com o tipo que o gerador decidiu.
 
 ## O que confere, valor por valor
 
 | Tipo destino | Rejeita |
 |---|---|
-| `int` / `smallint` / `bigint` | nao numerico, ou fora da faixa do tipo |
-| `decimal(p, s)` | digitos inteiros acima de `p - s` (estouro de precisao) |
-| `timestamp` | texto que nao casa com os formatos do arquivo |
+| `int` / `smallint` / `bigint` | não numerico, ou fora da faixa do tipo |
+| `decimal(p, s)` | digitos inteiros acima de `p - s` (estouro de precisão) |
+| `timestamp` | texto que não casa com os formatos do arquivo |
 | `boolean` | valor fora do conjunto que o Spark aceita |
 | `string` | nada |
 
@@ -37,6 +37,11 @@ import re
 import sys
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+
+# O console do Windows usa cp1252 e QUEBRA ao imprimir acento. Sem esta linha o
+# script morre no meio do relatório com UnicodeEncodeError — e o erro parece ser
+# do que ele estava conferindo, não da impressão.
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 AQUI = Path(__file__).resolve().parent
 REPO = AQUI.parent
@@ -61,7 +66,7 @@ FORMATOS_TS = [
 
 
 def invalido(valor, tipo):
-    """Devolve o motivo da rejeicao, ou None se o cast passa."""
+    """Devolve o motivo da rejeição, ou None se o cast passa."""
     if valor == "":
         return None          # nullValue => '' transforma em NULL antes do cast
 
@@ -69,7 +74,7 @@ def invalido(valor, tipo):
         try:
             n = int(valor)
         except ValueError:
-            return "nao e inteiro"
+            return "não e inteiro"
         lo, hi = FAIXA[tipo]
         return None if lo <= n <= hi else f"fora da faixa de {tipo}"
 
@@ -79,23 +84,23 @@ def invalido(valor, tipo):
         try:
             d = Decimal(valor)
         except InvalidOperation:
-            return "nao e numero"
+            return "não e número"
         inteiros = len(d.quantize(Decimal(1)).as_tuple().digits)
         if d.quantize(Decimal(1)) == 0:
             inteiros = 0
         return None if inteiros <= p - s else f"estoura decimal({p}, {s})"
 
     if tipo == "timestamp":
-        return None if any(f.match(valor) for f in FORMATOS_TS) else "nao parece data"
+        return None if any(f.match(valor) for f in FORMATOS_TS) else "não parece data"
 
     if tipo == "boolean":
-        return None if valor.strip().lower() in BOOLEANOS else "nao e booleano"
+        return None if valor.strip().lower() in BOOLEANOS else "não e booleano"
 
     return None              # string aceita qualquer coisa
 
 
 # ---------------------------------------------------------------- le o notebook
-assert NOTEBOOK.exists(), f"nao achei {NOTEBOOK}. Rode scripts/gera_ingestao.py antes."
+assert NOTEBOOK.exists(), f"não achei {NOTEBOOK}. Rode scripts/gera_ingestao.py antes."
 texto = NOTEBOOK.read_text(encoding="utf-8")
 
 celulas = []
@@ -114,7 +119,7 @@ print(f"colunas com cast: {sum(len(c[2]) for c in celulas)}\n")
 problemas = []
 for tabela, arquivo, casts in celulas:
     p = ORIGEM / "data" / f"{arquivo}.csv"
-    assert p.exists(), f"{tabela}: nao achei {p.name}"
+    assert p.exists(), f"{tabela}: não achei {p.name}"
     with open(p, encoding="utf-8", errors="replace", newline="") as f:
         linhas = [r for r in csv.reader(f, delimiter="\t", quotechar='"') if r]
 
@@ -142,7 +147,7 @@ for tabela, arquivo, casts in celulas:
             problemas.append((tabela, nome, tipo,
                               f"{exemplo[1]} — ex.: {exemplo[0]!r}", ruins))
 
-# ---------------------------------------------------------------- relatorio
+# ---------------------------------------------------------------- relatório
 if not problemas:
     print("Nenhum cast vai falhar. As celulas de carga rodam limpas.")
 else:
