@@ -1,9 +1,11 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Analise exploratoria — Adventure Works
+# MAGIC # Analise exploratoria de dados (EDA) — Adventure Works
 # MAGIC
 # MAGIC Etapa 2 do desafio, e o entregavel que o briefing pede em "notebook com codigo,
-# MAGIC graficos e comentario sobre cada insight".
+# MAGIC graficos e comentario sobre cada insight". O briefing chama de **analise
+# MAGIC exploratoria**, e usa a sigla **EDA** uma vez, no criterio de aprovacao — as duas
+# MAGIC formas se referem a este notebook.
 # MAGIC
 # MAGIC **A pergunta nao se descobre aqui.** Ela foi definida na Etapa 1 do desafio, e este
 # MAGIC notebook responde. Sao as **seis perguntas do briefing**:
