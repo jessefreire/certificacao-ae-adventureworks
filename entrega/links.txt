@@ -7,8 +7,8 @@ trava.
 
 
 GitHub (projeto de transformação, com os modelos dbt)
-  https://github.com/jessefreire/formacao-analytics-engineering
-  Pasta do desafio: Desafio/desafio-adventureworks/
+  https://github.com/jessefreire/certificacao-ae-adventureworks
+  O projeto vive na raiz deste repositório — nada de subpasta.
   PENDENTE: o projeto dbt da Etapa 5 ainda não existe.
 
 
