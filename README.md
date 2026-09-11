@@ -213,6 +213,30 @@ As 65 células de ingestão **não** são linteadas, e isso é declarado em vez 
 versão 1.4.5 não parseia `read_files(format => 'csv')` nem `COPY INTO`. A ferramenta separa as
 duas famílias e conta cada uma, em vez de excluir o arquivo inteiro do lint.
 
+### A auditoria que prevê a falha antes de rodar
+
+```bash
+python scripts/audita_tipos.py
+```
+
+Simula, **no dado real**, cada um dos 431 casts que o notebook vai executar: inteiro fora de
+faixa, `decimal(p, s)` estourando precisão, texto indo para coluna numérica, data que não casa
+com os formatos do arquivo, booleano fora do conjunto aceito. Também confere se alguma linha tem
+contagem de campos diferente das outras.
+
+Existe porque a carga quebrou três vezes **em execução**, na célula 36, na 39 e na 41 — e duas
+delas eram previsíveis aqui. Descobrir na célula 39 de 80, depois de esperar cota, custa uma
+tarde; descobrir aqui custa trinta segundos.
+
+Validado contra o histórico: rodando o auditor na versão do notebook de dois commits atrás, ele
+acusa os três `unitmeasurecode` indo para `decimal`, com o valor `'EA '` que de fato derrubou a
+célula 39.
+
+**O que ele não prevê**, e vale saber: a falha do `ProductModel`. O Python parseia aquele arquivo
+corretamente e o Spark não, então nenhuma simulação local o pegaria. O indicador indireto é a
+quantidade de TABs dentro de campo aspado — `Person` tem 10 e carrega, `JobCandidate` tem 1 e
+carrega, `ProductModel` tinha 48 e falha. Nenhuma outra das 64 tem esse padrão.
+
 ### O notebook de ingestão é gerado
 
 ```bash
