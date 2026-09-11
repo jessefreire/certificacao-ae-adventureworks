@@ -15,4 +15,4 @@
 # analise.
 #
 # Se algum dia o guia da casa subir a versao fixada, apagar esta linha e conferir.
-ingestao-adventure-works.sql
+01-ingestao-adventure-works.sql

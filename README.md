@@ -10,7 +10,7 @@ São **dois** arquivos, e os dois são notebooks do Databricks (`Workspace → I
 
 | # | Arquivo | O que é |
 |---|---|---|
-| 1 | [`databricks/ingestao-adventure-works.sql`](databricks/ingestao-adventure-works.sql) | Cria e carrega a camada bruta. **Pré-requisito**, roda uma vez |
+| 1 | [`databricks/01-ingestao-adventure-works.sql`](databricks/01-ingestao-adventure-works.sql) | Cria e carrega a camada bruta. **Pré-requisito**, roda uma vez |
 | 2 | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | A análise da Etapa 2. **Entregável** |
 
 Nada mais precisa ser executado. Os antigos `01-ddl`, `02.x-carga`, `02.99-recarga-limpa` e
@@ -87,7 +87,7 @@ O clone fica em `Desafio/adventureworks-oficial/`, **fora do git**.
 
 ## Ingestão
 
-Um notebook, [`databricks/ingestao-adventure-works.sql`](databricks/ingestao-adventure-works.sql),
+Um notebook, [`databricks/01-ingestao-adventure-works.sql`](databricks/01-ingestao-adventure-works.sql),
 com 80 células em três seções: as **17 tabelas que a análise usa**, as **47 restantes** da camada
 bruta, e as **conferências**.
 

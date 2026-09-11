@@ -45,7 +45,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 AQUI = Path(__file__).resolve().parent
 REPO = AQUI.parent
-NOTEBOOK = REPO / "databricks" / "ingestao-adventure-works.sql"
+NOTEBOOK = REPO / "databricks" / "01-ingestao-adventure-works.sql"
 
 PADRAO_ORIGEM = Path(
     r"D:\Documentos\Indicium AI\Formação AE\Desafio\adventureworks-oficial\AdventureWorks")

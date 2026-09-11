@@ -63,7 +63,7 @@
 # MAGIC ## Antes de rodar
 # MAGIC
 # MAGIC A ingestão tem de estar feita e conferida:
-# MAGIC `databricks/ingestao-adventure-works.sql`. As seis conferências da seção 3 dele
+# MAGIC `databricks/01-ingestao-adventure-works.sql`. As seis conferências da seção 3 dele
 # MAGIC passaram — as **64 tabelas** com a contagem idêntica a dos arquivos de origem, zero
 # MAGIC órfão nas sete juncoes, 27.659 pedidos sem vendedor preservados como NULL, o aceite
 # MAGIC fechando em `12.646.112,1607` e zero linha fora de um centavo no `linetotal`.

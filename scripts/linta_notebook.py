@@ -52,7 +52,7 @@ REPO = AQUI.parent
 CONFIG = REPO / ".sqlfluff"
 
 PADRAO = [
-    REPO / "databricks" / "ingestao-adventure-works.sql",
+    REPO / "databricks" / "01-ingestao-adventure-works.sql",
     REPO / "databricks" / "02-analise-exploratoria.py",
 ]
 

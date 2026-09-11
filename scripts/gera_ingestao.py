@@ -80,7 +80,7 @@ REPO = AQUI.parent
 PADRAO_ORIGEM = Path(
     r"D:\Documentos\Indicium AI\Formação AE\Desafio\adventureworks-oficial\AdventureWorks")
 ORIGEM = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(os.environ.get("AW_HOME", PADRAO_ORIGEM))
-SAIDA = REPO / "databricks" / "ingestao-adventure-works.sql"
+SAIDA = REPO / "databricks" / "01-ingestao-adventure-works.sql"
 
 CATALOGO = "workspace"
 SCHEMA = "adventure_works"

@@ -19,7 +19,7 @@ Esta é a parte que importa, e a que duas tentativas erradas ensinaram:
 
   - acentuar um identificador quebra o código (`ESCOPO_ANALISE`)
   - acentuar um nome de arquivo quebra o caminho: a primeira tentativa
-    transformou `ingestao-adventure-works.sql` em `ingestão-...` dentro de um
+    transformou `01-ingestao-adventure-works.sql` em `ingestão-...` dentro de um
     `Path(...)`, e o script passaria a abrir arquivo inexistente
   - acentuar SQL quebra a consulta: a segunda tentativa trocou o alias `juncao`
     por `junção` dentro de uma célula `%sql`, e o linter reprovou
@@ -143,7 +143,7 @@ PROTEGIDO = [
     re.compile(r"https?://\S+"),
     re.compile(r"\b[\w.-]+(?:/[\w.-]+)+\b"),
     re.compile(r"\b[\w][\w.-]*\.(?:py|sql|md|txt|csv|json|pptx|docx|ipynb|yml|yaml)\b"),
-    re.compile(r"\b(?:ingestao-adventure-works|02-analise-exploratoria|gera_ingestao|"
+    re.compile(r"\b(?:01-ingestao-adventure-works|02-analise-exploratoria|gera_ingestao|"
                r"linta_notebook|titula_celulas|audita_tipos|confere_portugues|"
                r"01-kpis-e-perguntas|01\.01-mapa-completo|desafio-adventureworks|"
                r"adventureworks-oficial|raw_adventure_works|adventure_works|"
