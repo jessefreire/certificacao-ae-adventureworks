@@ -43,7 +43,7 @@ entrega/       links.txt, que o briefing exige em arquivo de texto
 | 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | **ingestão completa e conferida** |
 | 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
 | 6 | Mockup do dashboard | JPEG, no Figma | — |
-| 7 | Dashboard | Power BI ou Databricks AI/BI | — |
+| 7 | Dashboard | **Power BI** — `.pbix` com as medidas DAX documentadas dentro do arquivo | — |
 | 8 | Regras de negócio | documento | — |
 | 9 | Apresentação | slides | seções das Etapas 1 e 2 prontas |
 | 10 | Vídeo | 3-5 min | — |
@@ -60,7 +60,7 @@ entrega"` é critério de nota. O mapa 1:1:
 | Link do repositório com os modelos dbt | `entrega/links.txt` — projeto dbt pendente |
 | PDF do modelo conceitual | pendente, Etapa 3 — decisões em [`docs/03-decisoes-de-modelagem.md`](docs/03-decisoes-de-modelagem.md) |
 | JPEG do mockup, feito no Figma | pendente, Etapa 6 |
-| PBIX com as medidas DAX documentadas dentro do arquivo, **ou** link + JSON do AI/BI | pendente, Etapa 7 |
+| PBIX com as medidas DAX documentadas dentro do arquivo | pendente, Etapa 7 — **Power BI decidido**, AI/BI descartado |
 | Arquivo com a documentação das regras de negócio | pendente, Etapa 8 |
 | Apresentação em slides | `Desafio/entregaveis/` (fora do git) |
 | Vídeo de 3 a 5 minutos | pendente, Etapa 10 |

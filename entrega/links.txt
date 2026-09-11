@@ -12,13 +12,13 @@ GitHub (projeto de transformação, com os modelos dbt)
   PENDENTE: o projeto dbt da Etapa 5 ainda não existe.
 
 
-Dashboard
+Dashboard — POWER BI (decidido)
   PENDENTE — Etapa 7.
-  Se for feito no AI/BI do Databricks, entra o link aqui.
-  Se for Power BI, o entregável e o próprio .pbix, com as medidas DAX
-  documentadas dentro do arquivo.
-  ATENÇÃO: a conta do Databricks e Free Edition e pessoal. Testar o
-  compartilhamento público ANTES de depender dele.
+  NÃO entra link aqui: em Power BI o entregável é o próprio arquivo .pbix,
+  dentro da pasta da submissão, com as medidas DAX documentadas DENTRO do
+  arquivo (campo de descrição de cada medida).
+  A alternativa do AI/BI do Databricks foi descartada — ela exigiria link
+  público, e a conta é Free Edition e pessoal.
 
 
 Vídeo (YouTube, Drive ou Dropbox)
