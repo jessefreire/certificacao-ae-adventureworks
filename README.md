@@ -39,13 +39,13 @@ entrega/       links.txt, que o briefing exige em arquivo de texto
 |---|---|---|---|
 | 1 | KPIs e perguntas de negócio | [`docs/01-kpis-e-perguntas.md`](docs/01-kpis-e-perguntas.md) · [mapa](docs/01.01-mapa-completo.md) | **completa** |
 | 2 | Análise exploratória | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | **completa** — executada e conferida |
-| 3 | Modelo conceitual | PDF | — |
+| 3 | Modelo conceitual | [`docs/03-decisoes-de-modelagem.md`](docs/03-decisoes-de-modelagem.md) · PDF | **decisões fechadas** — diagrama pendente |
 | 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud | **ingestão completa e conferida** |
 | 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
 | 6 | Mockup do dashboard | JPEG, no Figma | — |
 | 7 | Dashboard | Power BI ou Databricks AI/BI | — |
 | 8 | Regras de negócio | documento | — |
-| 9 | Apresentação | slides | seção da Etapa 1 pronta |
+| 9 | Apresentação | slides | seções das Etapas 1 e 2 prontas |
 | 10 | Vídeo | 3-5 min | — |
 | 11 | Planejamento do projeto | PDF — opcional | — |
 
@@ -58,7 +58,7 @@ entrega"` é critério de nota. O mapa 1:1:
 |---|---|
 | Notebook da análise exploratória, em Python ou SQL, com código, gráficos e comentário por insight | `databricks/02-analise-exploratoria.py` |
 | Link do repositório com os modelos dbt | `entrega/links.txt` — projeto dbt pendente |
-| PDF do modelo conceitual | pendente, Etapa 3 |
+| PDF do modelo conceitual | pendente, Etapa 3 — decisões em [`docs/03-decisoes-de-modelagem.md`](docs/03-decisoes-de-modelagem.md) |
 | JPEG do mockup, feito no Figma | pendente, Etapa 6 |
 | PBIX com as medidas DAX documentadas dentro do arquivo, **ou** link + JSON do AI/BI | pendente, Etapa 7 |
 | Arquivo com a documentação das regras de negócio | pendente, Etapa 8 |
