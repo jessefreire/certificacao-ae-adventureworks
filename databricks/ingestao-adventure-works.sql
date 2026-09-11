@@ -97,6 +97,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -120,6 +121,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -144,6 +146,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -172,6 +175,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -193,6 +197,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -215,6 +220,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -236,6 +242,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -255,6 +262,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -275,6 +283,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -315,6 +324,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -341,6 +351,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -366,6 +377,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -390,6 +402,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -409,6 +422,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -450,6 +464,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -476,6 +491,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -494,6 +510,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -533,6 +550,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -552,6 +570,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -572,6 +591,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -590,6 +610,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -610,6 +631,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -630,6 +652,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -650,6 +673,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -668,6 +692,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -687,6 +712,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -711,6 +737,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -742,6 +769,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -763,6 +791,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -783,6 +812,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -802,6 +832,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -822,6 +853,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -840,9 +872,9 @@ select
     , cast(_c2 as int) as componentid
     , cast(_c3 as timestamp) as startdate
     , cast(_c4 as timestamp) as enddate
-    , cast(_c5 as decimal(19, 4)) as unitmeasurecode
+    , cast(_c5 as string) as unitmeasurecode
     , cast(_c6 as smallint) as bomlevel
-    , cast(_c7 as string) as perassemblyqty
+    , cast(_c7 as decimal(8, 2)) as perassemblyqty
     , cast(_c8 as timestamp) as modifieddate
 from read_files(
     '/Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/BillOfMaterials.csv'
@@ -851,6 +883,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -869,6 +902,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -890,6 +924,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -910,6 +945,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -929,6 +965,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -947,6 +984,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -958,7 +996,7 @@ select
     cast(_c0 as int) as locationid
     , cast(_c1 as string) as name
     , cast(_c2 as decimal(19, 4)) as costrate
-    , cast(_c3 as string) as availability
+    , cast(_c3 as decimal(8, 2)) as availability
     , cast(_c4 as timestamp) as modifieddate
 from read_files(
     '/Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/Location.csv'
@@ -967,6 +1005,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -989,6 +1028,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1009,6 +1049,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1027,6 +1068,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1045,6 +1087,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1064,6 +1107,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1083,6 +1127,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1101,6 +1146,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1125,6 +1171,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1149,6 +1196,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1157,7 +1205,7 @@ from read_files(
 -- Production.UnitMeasure: 3 colunas
 create or replace table workspace.adventure_works.unitmeasure as
 select
-    cast(_c0 as decimal(19, 4)) as unitmeasurecode
+    cast(_c0 as string) as unitmeasurecode
     , cast(_c1 as string) as name
     , cast(_c2 as timestamp) as modifieddate
 from read_files(
@@ -1167,6 +1215,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1192,6 +1241,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1208,7 +1258,7 @@ select
     , cast(_c5 as timestamp) as scheduledenddate
     , cast(_c6 as timestamp) as actualstartdate
     , cast(_c7 as timestamp) as actualenddate
-    , cast(_c8 as string) as actualresourcehrs
+    , cast(_c8 as decimal(9, 4)) as actualresourcehrs
     , cast(_c9 as decimal(19, 4)) as plannedcost
     , cast(_c10 as decimal(19, 4)) as actualcost
     , cast(_c11 as timestamp) as modifieddate
@@ -1219,6 +1269,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1241,7 +1292,7 @@ select
     , cast(_c6 as decimal(19, 4)) as minorderqty
     , cast(_c7 as decimal(19, 4)) as maxorderqty
     , cast(_c8 as decimal(19, 4)) as onorderqty
-    , cast(_c9 as decimal(19, 4)) as unitmeasurecode
+    , cast(_c9 as string) as unitmeasurecode
     , cast(_c10 as timestamp) as modifieddate
 from read_files(
     '/Volumes/workspace/adventure_works/raw_adventure_works/AdventureWorks/data/ProductVendor.csv'
@@ -1250,6 +1301,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1265,8 +1317,8 @@ select
     , cast(_c4 as int) as productid
     , cast(_c5 as decimal(19, 4)) as unitprice
     , cast(_c6 as decimal(19, 4)) as linetotal
-    , cast(_c7 as string) as receivedqty
-    , cast(_c8 as string) as rejectedqty
+    , cast(_c7 as decimal(8, 2)) as receivedqty
+    , cast(_c8 as decimal(8, 2)) as rejectedqty
     , cast(_c9 as decimal(19, 4)) as stockedqty
     , cast(_c10 as timestamp) as modifieddate
 from read_files(
@@ -1276,6 +1328,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1304,6 +1357,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1325,6 +1379,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1348,6 +1403,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1371,6 +1427,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1389,6 +1446,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1411,6 +1469,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1429,6 +1488,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1449,6 +1509,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1471,6 +1532,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1492,6 +1554,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1513,6 +1576,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 
@@ -1532,6 +1596,7 @@ from read_files(
     , header => false
     , nullValue => ''
     , quote => '"'
+    , escape => '"'
     , mode => 'FAILFAST'
 );
 

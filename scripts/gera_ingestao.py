@@ -45,8 +45,14 @@ disciplina e passa a ser propriedade do codigo.
     delas com 22 campos onde ha 6 colunas). Com a aspa habilitada, as 65 tabelas
     ficam consistentes, nenhuma contagem muda, e o XML entra limpo em vez de
     escapado — conferido campo a campo nas 17 da analise.
+  - `escape => '"'`, e nao a barra invertida que o Spark usa por padrao. O arquivo
+    escapa aspa DUPLICANDO-a, convencao CSV, e nao com barra. Sem declarar isso, o
+    leitor trata cada barra invertida do conteudo como escape e o registro se desfaz: o
+    `jobcandidate` tem 86 barras invertidas e o `productmodel` 236, sempre dentro do
+    XML. O `person` e o `store`, que carregaram bem, tem ZERO — foi essa assimetria
+    que apontou a causa.
   - `mode => 'FAILFAST'`: linha ruim falha alto, em vez de virar NULL em silencio.
-    Foi ele que pegou o problema acima, e por isso fica
+    Foi ele que pegou os dois problemas acima, e por isso fica
   - dinheiro em `decimal(19, 4)`, nunca `double`: o teste de aceite do briefing tem
     de fechar ao centavo, e a soma exata tem 4 casas decimais
 
@@ -133,10 +139,38 @@ def ident(col):
     return f"`{c}`" if c in RESERVADAS else c
 
 
+def e_numerico(tipo_pg):
+    t = tipo_pg.strip().lower()
+    return t.startswith(("decimal", "numeric", "money", "int", "smallint", "bigint",
+                         "serial", "real", "double", "float"))
+
+
 def tipo_databricks(nome_col, tipo_pg):
+    """Traduz o tipo do install.sql (Postgres) para o do Databricks.
+
+    Duas regras que a primeira versao errou, e as duas custaram carga interrompida:
+
+    1. `decimal(p, s)` caia no fallback de texto, porque o mapeamento so reconhecia
+       `numeric` sem precisao. Cinco colunas numericas viravam string em silencio —
+       `perassemblyqty`, `availability`, `actualresourcehrs`, `receivedqty` e
+       `rejectedqty`.
+    2. a lista DINHEIRO era aplicada pelo NOME da coluna, sem olhar o tipo de
+       origem. `unitmeasurecode` e `char(3)` — codigo de unidade, tipo 'EA' — e
+       virava `decimal(19, 4)`. O cast estourava com CAST_INVALID_INPUT.
+
+    Por isso a lista de dinheiro agora so vale quando a origem JA e numerica, e a
+    precisao declarada na origem e preservada quando nao e coluna de valor.
+    """
     t = tipo_pg.strip().lower()
     c = nome_col.lower()
-    if t.startswith("numeric") or c in DINHEIRO:
+
+    m = re.match(r"(?:numeric|decimal)\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)", t)
+    if m:
+        return "decimal(19, 4)" if c in DINHEIRO else f"decimal({m.group(1)}, {m.group(2)})"
+    if t.startswith(("numeric", "decimal", "money")):
+        return "decimal(19, 4)"
+    # DINHEIRO so pode promover coluna que ja e numerica na origem
+    if c in DINHEIRO and e_numerico(t):
         return "decimal(19, 4)"
     if t in ("serial", "int", "integer"):
         return "int"
@@ -234,6 +268,7 @@ def celula_da_tabela(schema, original, tabela, cols):
         f"    , header => false\n"
         f"    , nullValue => ''\n"
         f"    , quote => '\"'\n"
+        f"    , escape => '\"'\n"
         f"    , mode => 'FAILFAST'\n"
         f");"
     )
@@ -257,6 +292,17 @@ for schema, original in tabelas_do_install(texto):
     n_tsv = campos_no_tsv(original)
     if n_tsv != len(cols):
         problemas.append(f"{original}: DDL {len(cols)} colunas, TSV {n_tsv} campos")
+
+    # Um tipo numerico na origem nunca deve virar string, e um tipo textual nunca
+    # deve virar decimal. As duas coisas aconteceram e derrubaram a carga, entao
+    # ficam barradas aqui em vez de aparecerem como erro no Databricks.
+    for col, tp in cols:
+        destino = tipo_databricks(col, tp)
+        if e_numerico(tp) and destino == "string":
+            problemas.append(f"{original}.{col}: origem {tp} numerica virou string")
+        if not e_numerico(tp) and destino.startswith("decimal"):
+            problemas.append(f"{original}.{col}: origem {tp} textual virou {destino}")
+
     tabelas[original.lower()] = (schema, original, cols)
 
 assert not problemas, "divergencia entre DDL e arquivo:\n  " + "\n  ".join(problemas)

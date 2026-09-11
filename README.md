@@ -263,6 +263,18 @@ E a auditoria que deveria ter pego isso antes conferia apenas a **primeira linha
 arquivo. Hoje o gerador confere **todas**, e falha alto se uma tabela tiver linhas com
 contagens diferentes de campos.
 
+**Dois erros no mapeamento de tipos, que só apareceram na execução.** O `decimal(p, s)` da
+origem caía no fallback de texto, porque o mapeamento só reconhecia `numeric` sem precisão —
+cinco colunas numéricas viravam `string` em silêncio (`perassemblyqty`, `availability`,
+`actualresourcehrs`, `receivedqty`, `rejectedqty`). E a lista de colunas monetárias era aplicada
+pelo **nome**, sem olhar o tipo de origem: `unitmeasurecode` é `char(3)` — código de unidade,
+como `'EA '` — e virava `decimal(19, 4)`, estourando com `CAST_INVALID_INPUT`.
+
+São 8 colunas afetadas, **nenhuma nas 17 da análise**. Hoje a lista de dinheiro só promove
+coluna que já é numérica na origem, a precisão declarada é preservada, e o gerador **barra**
+qualquer numérico que vire string ou textual que vire decimal — em vez de deixar isso aparecer
+como erro no Databricks.
+
 **`group by all` não é parseável pela 1.4.5**, e eu havia usado em 37 lugares. O guia da casa
 também marca `group by 1, 2` como prática ruim — então a coluna vai escrita, uma por linha e com
 vírgula à frente.
