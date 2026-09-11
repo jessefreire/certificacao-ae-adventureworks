@@ -1,6 +1,6 @@
 # Desafio Final — Adventure Works
 
-Projeto de certificação da Formação Analytics Engineer (Indicium). Constrói uma plataforma de
+Projeto de certificação da Formação Analytics Engineer (Indicium AI). Constrói uma plataforma de
 dados para a área comercial da Adventure Works: modelagem dimensional, transformação em dbt com
 testes e documentação, e dashboard.
 
@@ -413,9 +413,9 @@ As Etapas 1 e 2 têm dois decks cada, em `Desafio/entregaveis/`, **fora do contr
 As seções se concatenam no deck final; as versões de vídeo ocupam ~60 s cada, dentro dos 3 a 5
 minutos que o briefing pede.
 
-Ficam fora do git porque saem com a identidade visual da Indicium e logos de clientes reais, e
+Ficam fora do git porque saem com a identidade visual da Indicium AI e logos de clientes reais, e
 este repositório é público. Para revisar e exportar PDF, abrir no **Google Slides** — é lá que as
-fontes da Indicium são nativas.
+fontes da Indicium AI são nativas.
 
 A seção da Etapa 2 **não repete** o que a da Etapa 1 já mostra (tipo de cartão, catálogo parado,
 promoção por canal, a tabela dos nove indicadores). Ela mostra o que a exploração acrescentou: a

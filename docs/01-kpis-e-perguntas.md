@@ -282,7 +282,7 @@ O briefing pede quatro coisas nesta etapa: **pesquisar e definir os KPIs**, defi
 **justificar**.
 Esta seção cobre a primeira e a terceira.
 
-Cada indicador é registrado com o conjunto de atributos que o referencial da Indicium exige
+Cada indicador é registrado com o conjunto de atributos que o referencial da Indicium AI exige
 — *"nome, definição, fórmula de cálculo, fonte dos dados, periodicidade e responsável"*
 (`2.7) Como definir indicadores da plataforma e acompanhá-los`, linha 226) — mais três que
 faltam ali e que são o que liga o indicador ao modelo dimensional e à pergunta que o
@@ -528,7 +528,7 @@ ticket_medio = sum(salesorderdetail.linetotal)
                / count(distinct salesorderdetail.salesorderid)
 ```
 
-> Sem alias de iniciais de propósito: o code style da Indicium proíbe apelidar tabela de até
+> Sem alias de iniciais de propósito: o code style da Indicium AI proíbe apelidar tabela de até
 > três palavras, e manda prefixar a coluna com o nome inteiro. Ver
 > `resumo_code_style_indicium.md` no Módulo IV.
 
@@ -628,7 +628,7 @@ Tensão real entre as perguntas:
 > Recomendação: **uma fato no grão de item de pedido**, com `salesorderid` como **dimensão
 > degenerada**, e `qtd_pedidos` definida como `count(distinct salesorderid)` em vez de
 > `count(*)`. Motivos: o item é o grão mais fino que as perguntas exigem, atributos de
-> cabeçalho se repetem sem prejuízo, e o code style da Indicium pede PK única por modelo —
+> cabeçalho se repetem sem prejuízo, e o code style da Indicium AI pede PK única por modelo —
 > aqui é `salesorderdetailid`, que já é única e natural.
 >
 > O preço a pagar, que precisa estar documentado: **toda** medida de contagem de pedidos
@@ -749,7 +749,7 @@ Não é a lista de KPIs. É esta sequência:
    isso roda a cada carga. O CRM e o Web Analytics prometeram visão; nenhum dos dois
    provou o número. É essa a diferença, e é honesta.
 4. **O que pedimos dela.** Validar os KPIs desta lista. É o passo 10 do método de modelo
-   conceitual da Indicium (*"valide a modelagem com as áreas de negócio"*) e, na prática,
+   conceitual da Indicium AI (*"valide a modelagem com as áreas de negócio"*) e, na prática,
    é o que transforma a cética em coautora.
 
 ---
@@ -787,7 +787,7 @@ modelos da Etapa 5 nascer certo:
   Postgres não tem o schema `dbo` que aparece nele). ⚠️ O **2008** é do título do diagrama,
   **não** da base: o dado carregado é a porta da versão **2014**. É um engano fácil de
   cometer, porque as duas fontes vivem no mesmo briefing
-- Referencial Indicium (local, não versionado): `3.1) Por onde começar o Modelo Conceitual`
+- Referencial Indicium AI (local, não versionado): `3.1) Por onde começar o Modelo Conceitual`
   (passo a passo, linhas 247-257), `2.7) Como definir indicadores` (atributos por
   indicador, adotado na §3)
 - **Módulo 3 do curso** (`resumo_modulo3.md` Anexo C e o slide *Bridge Tables*) — é a base da

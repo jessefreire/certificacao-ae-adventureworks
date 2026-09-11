@@ -3,7 +3,7 @@
 Registrado **antes** de qualquer contato com material de avaliação. As duas decisões saem
 de três fontes, todas legítimas: o briefing do desafio, o
 [`indicium-code-style`](https://github.com/indiciumtech/indicium-code-style) (público), o
-referencial de processos da Indicium, e medição direta nos CSVs da base.
+referencial de processos da Indicium AI, e medição direta nos CSVs da base.
 
 ## Decisão 1 — grão da tabela fato
 
