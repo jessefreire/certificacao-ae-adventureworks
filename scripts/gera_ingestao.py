@@ -245,7 +245,7 @@ def campos_no_tsv(arquivo):
     carga interrompida: o `jobcandidate` tem 12 linhas com 4 campos e UMA com 5,
     e o `productmodel` tem seis linhas fora do padrão, uma delas com 22 campos
     onde há 6 colunas. Com `mode = FAILFAST` — que e o certo — isso derruba a
-    carga na linha ruim, e não no comeco.
+    carga na linha ruim, e não no começo.
 
     Lê com a aspa CSV habilitada, que e como o Databricks vai ler. Assim a
     conferência aqui e a carga la enxergam o mesmo arquivo.
