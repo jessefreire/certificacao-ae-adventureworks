@@ -147,7 +147,7 @@ AMBIGUAS = {
     # singular contra plural do verbo
     "tem", "vem",
     # verbo contra substantivo ou contra infinitivo com pronome (`ligá-la`)
-    "liga", "acompanha", "caia", "gera", "continuo", "valido", "conta", "torna", "sabia",
+    "liga", "acompanha", "caia", "gera", "documenta", "considera", "continuo", "valido", "conta", "torna", "sabia",
     "critica", "medida", "secretaria", "duvida", "publica", "pratica",
 }
 
@@ -171,6 +171,8 @@ def _sem_acento(palavra):
 # `level`) nem `-ao` solto (quebraria `grao` já coberto e nomes próprios).
 SUFIXOS = [
     ("coes", "ções"), ("soes", "sões"), ("cao", "ção"), ("sao", "são"),
+    # `-tao`: sugestao, questao, gestao. Pego por um erro real no notebook.
+    ("tao", "tão"),
     ("encia", "ência"), ("ancia", "ância"), ("avel", "ável"), ("ivel", "ível"),
     ("orio", "ório"), ("ario", "ário"),
 ]

@@ -80,7 +80,7 @@
 # MAGIC Precisa de **compute de notebook** anexado, e não apenas do SQL warehouse: as células
 # MAGIC de gráfico rodam `toPandas()` e matplotlib, que e código Python.
 # MAGIC
-# MAGIC Sugestao para a primeira execução: va **célula por célula ate a seção 2**. Se o número
+# MAGIC Sugestão para a primeira execução: vá **célula por célula ate a seção 2**. Se o número
 # MAGIC do CEO fechar ali, o resto e análise sobre base confiável e `Run all below` resolve.
 # MAGIC
 # MAGIC ## Duas convenções que valem para todo o notebook
