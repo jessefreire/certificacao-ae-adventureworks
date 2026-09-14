@@ -1,0 +1,10 @@
+packages:
+  # A faixa, e nao `1.3.1` cravado, resolve uma contradicao entre dois documentos da casa:
+  # o `dbt_coding_conventions.md` lista pinar patch exato como pratica RUIM e pede faixa de
+  # minor; a skill `dbt-packages-tests` e o projeto banvic-dbt pinam 1.3.1 porque a 1.4.1
+  # pode nao funcionar com Databricks. A faixa satisfaz os dois.
+  #
+  # Nao e enfeite: a `dim_dates` do modelo nasce da macro `date_spine`, que e o padrao da
+  # casa para dimensao de datas (ADR013, documento `2.3)` do referencial).
+  - package: dbt-labs/dbt_utils
+    version: [">=1.3.0", "<1.4.0"]

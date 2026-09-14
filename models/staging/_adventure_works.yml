@@ -1,0 +1,185 @@
+version: 2
+
+sources:
+  - name: adventure_works
+    description: >
+      Camada bruta do AdventureWorks 2014 OLTP, carregada de um Volume do Unity Catalog pelo
+      notebook `databricks/01-ingestao-adventure-works.sql`. O briefing determina o uso
+      exclusivo deste schema como origem.
+
+      Das 68 tabelas do `install.sql`, 64 carregam e 47 ficam fora do escopo de análise. As
+      17 declaradas aqui são as que o modelo dimensional consome — declarar uma source é
+      assumir o teste e a documentação dela, então a lista é deliberadamente curta.
+    database: workspace
+    schema: adventure_works
+
+    tables:
+      # ---------------------------------------------------------------- geografia
+      - name: countryregion
+        description: "Paises. Alimenta o atributo de pais em dim_geography."
+        columns:
+          - name: countryregioncode
+            description: "Codigo ISO do pais. Chave primaria."
+            data_tests: [unique, not_null]
+
+      - name: stateprovince
+        description: "Estados e provincias. Compoe a chave de cidade em dim_geography."
+        columns:
+          - name: stateprovinceid
+            data_tests: [unique, not_null]
+          - name: countryregioncode
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'countryregion')
+                  field: countryregioncode
+
+      - name: address
+        description: >
+          Enderecos. O modelo usa o endereco de COBRANCA do pedido (billtoaddressid).
+          Medido: bill-to e ship-to diferem em apenas 99 dos 31.465 pedidos (0,31%).
+        columns:
+          - name: addressid
+            data_tests: [unique, not_null]
+          - name: city
+            description: "Nome da cidade. NAO e unico: 575 nomes para 613 pares (cidade, estado)."
+
+      # ---------------------------------------------------------------- cliente
+      - name: person
+        description: "Pessoas fisicas. Alimenta o nome do cliente quando nao ha loja."
+        columns:
+          - name: businessentityid
+            data_tests: [unique, not_null]
+
+      - name: store
+        description: "Lojas revendedoras. Tem prioridade sobre person no nome do cliente."
+        columns:
+          - name: businessentityid
+            data_tests: [unique, not_null]
+
+      - name: customer
+        description: "Clientes. Pessoa fisica ou revenda, conforme personid ou storeid."
+        columns:
+          - name: customerid
+            data_tests: [unique, not_null]
+
+      - name: creditcard
+        description: >
+          Cartoes de credito. O tipo de cartao e um dos cortes que o briefing pede, embora a
+          analise tenha mostrado distribuicao quase uniforme entre os quatro tipos.
+        columns:
+          - name: creditcardid
+            data_tests: [unique, not_null]
+
+      # ---------------------------------------------------------------- produto
+      - name: productcategory
+        description: "Categorias de produto. Nivel mais alto da hierarquia."
+        columns:
+          - name: productcategoryid
+            data_tests: [unique, not_null]
+
+      - name: productsubcategory
+        description: "Subcategorias. 209 dos 504 produtos nao tem subcategoria, e nenhum deles vende."
+        columns:
+          - name: productsubcategoryid
+            data_tests: [unique, not_null]
+
+      - name: product
+        description: >
+          Produtos. Sao 504, dos quais 266 vendem e 238 nunca apareceram em pedido. A
+          dimensao mantem todos: um inner join com subcategoria eliminaria os sem
+          classificacao e a constatacao de catalogo ocioso deixaria de ser respondivel.
+        columns:
+          - name: productid
+            data_tests: [unique, not_null]
+
+      - name: specialoffer
+        description: "Ofertas e descontos aplicados ao item de pedido."
+        columns:
+          - name: specialofferid
+            data_tests: [unique, not_null]
+
+      # ---------------------------------------------------------------- venda
+      - name: salesterritory
+        description: "Territorios de venda. Cuidado: o pais daqui NAO e o mesmo de dim_geography."
+        columns:
+          - name: territoryid
+            data_tests: [unique, not_null]
+
+      - name: salesperson
+        description: >
+          Vendedores. O salespersonid do pedido e nulo em 27.659 dos 31.465 pedidos (87,9%),
+          e o conjunto coincide EXATAMENTE com os pedidos online: nao e dado faltante, e o
+          significado do canal. A dimensao precisa de membro "sem vendedor".
+        columns:
+          - name: businessentityid
+            data_tests: [unique, not_null]
+
+      - name: salesreason
+        description: >
+          Motivos de venda. Dez motivos em tres categorias (Marketing, Promotion, Other). A
+          pergunta (f) do briefing filtra pela CATEGORIA `reasontype`, nao pelo nome.
+        columns:
+          - name: salesreasonid
+            data_tests: [unique, not_null]
+
+      - name: salesorderheader
+        description: >
+          Cabecalho do pedido. Uma linha por pedido, 31.465 no total, de mai/2011 a jun/2014.
+          O `onlineorderflag` separa varejo de revenda, e e o eixo de controle de toda a
+          analise: a revenda e 12,1% dos pedidos e 73% da receita.
+        columns:
+          - name: salesorderid
+            data_tests: [unique, not_null]
+          - name: customerid
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'customer')
+                  field: customerid
+          - name: billtoaddressid
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'address')
+                  field: addressid
+
+      - name: salesorderdetail
+        description: >
+          Item de pedido, 121.317 linhas. E o GRAO da fact_sales, e o unico lugar onde a
+          receita bruta existe: `orderqty * unitprice` soma 12.646.112,1607 em 2011, que e o
+          numero que o CEO acompanha. O `linetotal` e a receita liquida, 12.641.672,2130.
+        columns:
+          - name: salesorderdetailid
+            data_tests: [unique, not_null]
+          - name: salesorderid
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'salesorderheader')
+                  field: salesorderid
+          - name: productid
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'product')
+                  field: productid
+
+      - name: salesorderheadersalesreason
+        description: >
+          Ponte de origem entre pedido e motivo. So tem linha para os 23.012 pedidos QUE TEM
+          motivo — os outros 8.453 (26,9%, incluindo 100% da revenda) nao existem aqui. Por
+          isso a bridge do modelo nao e copia desta tabela: ela acrescenta os ausentes com
+          motivo "nao informado", senao esse membro fica inalcancavel.
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              arguments:
+                combination_of_columns:
+                  - salesorderid
+                  - salesreasonid
+        columns:
+          - name: salesorderid
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'salesorderheader')
+                  field: salesorderid
+          - name: salesreasonid
+            data_tests:
+              - relationships:
+                  to: source('adventure_works', 'salesreason')
+                  field: salesreasonid

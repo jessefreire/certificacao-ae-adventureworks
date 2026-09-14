@@ -13,10 +13,11 @@ entregaveis/
 adventureworks-oficial/
 indicium-code-style/
 
-# dbt (Etapa 5)
-dbt/target/
-dbt/dbt_packages/
-dbt/logs/
+# dbt — o projeto fica na RAIZ do repositório, porque é o que o dbt Cloud espera e o que
+# evita ter de configurar "project subdirectory". Por isso os caminhos são sem prefixo.
+target/
+dbt_packages/
+logs/
 .user.yml
 
 # Credenciais — nunca versionar

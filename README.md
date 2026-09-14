@@ -29,7 +29,8 @@ Regra de nomenclatura: **número = etapa do briefing; sem número = infraestrutu
 docs/          documentos de etapa
 databricks/    o que roda no Databricks (os dois notebooks)
 scripts/       geradores e linter — o notebook de ingestão é gerado, não escrito à mão
-dbt/           Etapa 5
+models/        os modelos dbt (Etapa 5)
+dbt_project.yml, packages.yml — na raiz, porque o projeto dbt E a raiz do repositorio
 entrega/       links.txt, que o briefing exige em arquivo de texto
 ```
 

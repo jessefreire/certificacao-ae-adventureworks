@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__salesorderdetail
+    description: >
+      Item de pedido, renomeado e tipado. 121.317 linhas, uma por produto dentro de um
+      pedido — e o grao que a fact_sales vai herdar.
+
+      Acrescenta as tres medidas de receita que a origem nao separa: bruta, desconto e
+      liquida. A origem traz so o `linetotal`, que e a liquida; a bruta e o que o briefing
+      chama de receita e o que o CEO acompanha.
+    columns:
+      - name: sales_order_detail_id
+        description: "Chave primaria do item."
+        data_tests: [unique, not_null]
+
+      - name: sales_order_id
+        description: "Pedido a que o item pertence. Degenerada na fato, e ligacao com a bridge."
+        data_tests: [not_null]
+
+      - name: product_id
+        description: "Produto vendido."
+        data_tests: [not_null]
+
+      - name: special_offer_id
+        description: "Oferta aplicada ao item. Sempre preenchida: 1 significa 'sem desconto'."
+        data_tests: [not_null]
+
+      - name: order_quantity
+        description: "Unidades vendidas."
+        data_tests: [not_null]
+
+      - name: unit_price
+        description: "Preco unitario. ATRIBUTO, nao metrica: somar preco unitario nao significa nada."
+
+      - name: unit_price_discount_rate
+        description: "Taxa de desconto, de 0 a 1. ATRIBUTO, nao metrica, pelo mesmo motivo."
+
+      - name: net_revenue
+        description: "Receita liquida, o `linetotal` da origem. Soma 12.641.672,2130 em 2011."
+        data_tests: [not_null]
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
+
+      - name: gross_revenue
+        description: >
+          Receita bruta, `order_quantity * unit_price`. E a medida do aceite do CEO:
+          12.646.112,1607 em 2011.
+        data_tests: [not_null]
+
+      - name: discount_amount
+        description: "Bruta menos liquida. Somavel em qualquer corte, ao contrario da taxa."
