@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__salesterritory
+    description: >
+      Territorios de venda. O pais daqui (territory_country_region_code) NAO e
+      o mesmo pais de dim_geography — descrevem a mesma venda por angulos
+      diferentes, e ambos vao aparecer na mesma tela se nao forem nomeados
+      distintamente.
+    columns:
+      - name: territory_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: territory_name
+        description: "Nome do territorio."
+
+      - name: territory_country_region_code
+        description: "Pais do territorio. Nao confundir com o pais de dim_geography."
+
+      - name: territory_group
+        description: "Agrupamento regional (origem: coluna `group`)."
+
+      - name: sales_year_to_date
+        description: "Vendas acumuladas no ano corrente. Atributo do territorio, nao metrica de pedido."
+
+      - name: sales_last_year
+        description: "Vendas do ano anterior."
+
+      - name: cost_year_to_date
+        description: "Custo acumulado no ano corrente."
+
+      - name: cost_last_year
+        description: "Custo do ano anterior."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
