@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__customer
+    description: >
+      Clientes. Liga person (pessoa fisica) ou store (revenda) a um customerid.
+      customer_type nasce aqui: 'revenda' quando ha store_id, 'pessoa fisica'
+      quando nao ha — e o mesmo eixo que onlineorderflag separa na fato.
+    columns:
+      - name: customer_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: person_id
+        description: "Pessoa fisica associada, quando o cliente e comprador direto."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__person')
+                field: business_entity_id
+
+      - name: store_id
+        description: "Loja associada, quando o cliente e revenda."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__store')
+                field: business_entity_id
+
+      - name: territory_id
+        description: "Territorio de vendas do cliente."
+
+      - name: account_number
+        description: "Numero de conta do cliente."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
+
+      - name: customer_type
+        description: "'revenda' ou 'pessoa fisica', derivado de store_id."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['revenda', 'pessoa fisica']
