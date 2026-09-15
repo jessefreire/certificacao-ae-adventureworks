@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__stateprovince
+    description: >
+      Estados e provincias. Compoe a chave composta de cidade em dim_geography —
+      575 nomes de cidade existem em 613 pares (cidade, estado).
+    columns:
+      - name: state_province_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: state_province_code
+        description: "Sigla do estado."
+
+      - name: country_region_code
+        description: "Pais a que o estado pertence."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__countryregion')
+                field: country_region_code
+
+      - name: is_only_state_province
+        description: "Indica se o registro representa o pais inteiro, sem subdivisao."
+
+      - name: state_province_name
+        description: "Nome do estado ou provincia."
+
+      - name: territory_id
+        description: "Territorio de vendas associado."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__salesreason
+    description: >
+      Motivos de venda. Dez motivos em tres categorias (Marketing, Promotion,
+      Other). A pergunta (f) do briefing filtra pela CATEGORIA
+      (sales_reason_type = 'Promotion'), nao pelo nome — existe um motivo
+      chamado "On Promotion" que e categoria "Promotion", mas os dois
+      conceitos nao sao a mesma coisa.
+    columns:
+      - name: sales_reason_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: sales_reason_name
+        description: "Nome do motivo."
+
+      - name: sales_reason_type
+        description: "Categoria do motivo: Marketing, Promotion ou Other."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

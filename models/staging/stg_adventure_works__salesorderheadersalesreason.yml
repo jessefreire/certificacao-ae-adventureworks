@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__salesorderheadersalesreason
+    description: >
+      Ponte de origem entre pedido e motivo. So tem linha para os 23.012
+      pedidos QUE TEM motivo — os outros 8.453 (26,9%, incluindo 100% da
+      revenda) nao existem aqui. Por isso a bridge do modelo dimensional
+      nao e copia desta tabela: ela acrescenta os ausentes com motivo "nao
+      informado", senao esse membro fica inalcancavel.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - sales_order_id
+              - sales_reason_id
+    columns:
+      - name: sales_order_id
+        description: "Pedido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__salesorderheader')
+                field: sales_order_id
+
+      - name: sales_reason_id
+        description: "Motivo."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__salesreason')
+                field: sales_reason_id
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

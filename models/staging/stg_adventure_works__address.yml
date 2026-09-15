@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__address
+    description: >
+      Enderecos. O modelo usa o endereco de COBRANCA do pedido (billtoaddressid) para
+      montar dim_geography. Medido: bill-to e ship-to diferem em apenas 99 dos 31.465
+      pedidos (0,31%), entao nao ha necessidade de uma segunda dimensao de papel.
+    columns:
+      - name: address_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: address_line_1
+        description: "Linha 1 do endereco."
+
+      - name: address_line_2
+        description: "Linha 2 do endereco, quando existe."
+
+      - name: city
+        description: >
+          Nome da cidade. NAO e unico: 575 nomes distintos para 613 pares
+          (cidade, estado) — 38 cidades existem em mais de um estado.
+
+      - name: state_province_id
+        description: "Estado a que o endereco pertence. Compoe a chave composta de cidade."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__stateprovince')
+                field: state_province_id
+
+      - name: postal_code
+        description: "CEP do endereco."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__creditcard
+    description: >
+      Cartoes de credito. O tipo de cartao e um dos cortes que o briefing pede,
+      embora a analise tenha mostrado distribuicao quase uniforme entre os
+      quatro tipos.
+    columns:
+      - name: credit_card_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: card_type
+        description: "Bandeira do cartao."
+
+      - name: expiration_month
+        description: "Mes de expiracao."
+
+      - name: expiration_year
+        description: "Ano de expiracao."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__store
+    description: >
+      Lojas revendedoras. Tem prioridade sobre person no nome do cliente em
+      dim_customer: coalesce(store.store_name, person).
+    columns:
+      - name: business_entity_id
+        description: "Chave primaria. Compartilhada com person.businessentityid no dominio de entidades."
+        data_tests: [unique, not_null]
+
+      - name: store_name
+        description: "Nome da loja."
+
+      - name: sales_person_id
+        description: "Vendedor responsavel pela loja."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

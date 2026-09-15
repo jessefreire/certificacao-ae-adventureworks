@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__productsubcategory
+    description: >
+      Subcategorias de produto. 209 dos 504 produtos nao tem subcategoria, e
+      nenhum deles vende.
+    columns:
+      - name: product_subcategory_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: product_category_id
+        description: "Categoria a que a subcategoria pertence."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__productcategory')
+                field: product_category_id
+
+      - name: product_subcategory_name
+        description: "Nome da subcategoria."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

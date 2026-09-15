@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__product
+    description: >
+      Produtos. Sao 504, dos quais 266 vendem e 238 nunca apareceram em pedido.
+      A dimensao mantem todos — um inner join com subcategoria eliminaria os
+      sem classificacao e a constatacao de catalogo ocioso deixaria de ser
+      respondivel.
+    columns:
+      - name: product_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: product_name
+        description: "Nome do produto."
+
+      - name: product_number
+        description: "Codigo do produto."
+
+      - name: is_make_flag
+        description: "Indica se o produto e fabricado internamente."
+
+      - name: is_finished_good
+        description: "Indica se o produto e vendido diretamente ao cliente."
+
+      - name: color
+        description: "Cor do produto."
+
+      - name: safety_stock_level
+        description: "Estoque minimo de seguranca."
+
+      - name: reorder_point
+        description: "Ponto de reposicao."
+
+      - name: standard_cost
+        description: "Custo padrao. Atributo de custo, nao de receita."
+
+      - name: list_price
+        description: "Preco de tabela."
+
+      - name: product_size
+        description: "Tamanho do produto."
+
+      - name: size_unit_measure_code
+        description: "Unidade de medida do tamanho."
+
+      - name: weight_unit_measure_code
+        description: "Unidade de medida do peso."
+
+      - name: weight
+        description: "Peso do produto."
+
+      - name: days_to_manufacture
+        description: "Dias necessarios para fabricar."
+
+      - name: product_line
+        description: "Linha de produto."
+
+      - name: product_class
+        description: "Classe do produto (origem: coluna `class`)."
+
+      - name: product_style
+        description: "Estilo do produto (origem: coluna `style`)."
+
+      - name: product_subcategory_id
+        description: >
+          Subcategoria do produto. 209 de 504 produtos nao tem valor aqui —
+          e sao justamente os 238 que nunca venderam.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__productsubcategory')
+                field: product_subcategory_id
+
+      - name: product_model_id
+        description: "Modelo do produto. productmodel esta fora do escopo das 17 tabelas."
+
+      - name: sell_start_date
+        description: "Inicio da venda."
+
+      - name: sell_end_date
+        description: "Fim da venda, quando descontinuado."
+
+      - name: discontinued_date
+        description: "Data de descontinuacao."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

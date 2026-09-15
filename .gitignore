@@ -29,3 +29,4 @@ profiles.yml
 # Sistema
 .DS_Store
 Thumbs.db
+dbt_internal_packages/

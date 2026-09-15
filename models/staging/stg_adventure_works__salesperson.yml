@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__salesperson
+    description: >
+      Vendedores. O salespersonid do pedido e nulo em 27.659 dos 31.465
+      pedidos (87,9%), e o conjunto coincide EXATAMENTE com os pedidos
+      online: nao e dado faltante, e o significado do canal.
+    columns:
+      - name: business_entity_id
+        description: "Chave primaria. Compartilhada com person.businessentityid."
+        data_tests: [unique, not_null]
+
+      - name: territory_id
+        description: "Territorio de atuacao."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__salesterritory')
+                field: territory_id
+
+      - name: sales_quota
+        description: "Meta de vendas."
+
+      - name: bonus
+        description: "Bonus do vendedor."
+
+      - name: commission_pct
+        description: "Percentual de comissao. Atributo, nao metrica."
+
+      - name: sales_year_to_date
+        description: "Vendas acumuladas no ano corrente."
+
+      - name: sales_last_year
+        description: "Vendas do ano anterior."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
