@@ -1,0 +1,134 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__salesorderheader
+    description: >
+      Cabecalho do pedido. is_online_order separa varejo de revenda — o eixo
+      de controle de toda a analise: a revenda e 12,1% dos pedidos e 73% da
+      receita. subtotal, tax_amount, freight_amount e total_due_amount ficam
+      de fora da fato por decisao (03-decisoes-de-modelagem.md): nenhuma das
+      seis perguntas do briefing os usa.
+    columns:
+      - name: sales_order_id
+        description: "Chave primaria do pedido."
+        data_tests: [unique, not_null]
+
+      - name: revision_number
+        description: "Numero de revisao do pedido."
+
+      - name: order_date
+        description: "Data do pedido. Base do teste de aceite do CEO."
+        data_tests: [not_null]
+
+      - name: due_date
+        description: "Data de vencimento."
+
+      - name: ship_date
+        description: "Data de envio."
+
+      - name: order_status
+        description: "Status do pedido. Constante 5 em toda a base, confirmado na Etapa 2."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [5]
+
+      - name: is_online_order
+        description: "Eixo de canal: true = varejo online, false = revenda."
+        data_tests: [not_null]
+
+      - name: sales_order_number
+        description: "Numero de pedido usado pelo negocio."
+        data_tests: [not_null]
+
+      - name: purchase_order_number
+        description: "Numero de ordem de compra do cliente, quando existe."
+
+      - name: account_number
+        description: "Numero de conta do cliente."
+
+      - name: customer_id
+        description: "Cliente do pedido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__customer')
+                field: customer_id
+
+      - name: sales_person_id
+        description: "Vendedor do pedido. Nulo em 87,9% dos casos — todos online."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__salesperson')
+                field: business_entity_id
+
+      - name: territory_id
+        description: "Territorio do pedido. Zero pedido sem territorio, conferido na Etapa 2."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__salesterritory')
+                field: territory_id
+
+      - name: bill_to_address_id
+        description: >
+          Endereco de COBRANCA. E o que dim_geography usa. Zero pedido sem
+          endereco, conferido na Etapa 2.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__address')
+                field: address_id
+
+      - name: ship_to_address_id
+        description: >
+          Endereco de ENTREGA. Difere do de cobranca em apenas 99 de 31.465
+          pedidos (0,31%) — nao vira dimensao separada.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__address')
+                field: address_id
+
+      - name: ship_method_id
+        description: "Metodo de envio. Tabela de origem fora do escopo das 17."
+
+      - name: credit_card_id
+        description: "Cartao usado. Nulo em 1.131 pedidos (sem cartao)."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__creditcard')
+                field: credit_card_id
+
+      - name: credit_card_approval_code
+        description: "Codigo de aprovacao da transacao."
+
+      - name: currency_rate_id
+        description: "Taxa de cambio. Tabela de origem fora do escopo das 17."
+
+      - name: subtotal
+        description: "Receita liquida do pedido. Fora da fato por decisao — nao usado nas 6 perguntas."
+        data_tests: [not_null]
+
+      - name: tax_amount
+        description: "Imposto do pedido. Fora da fato por decisao."
+        data_tests: [not_null]
+
+      - name: freight_amount
+        description: "Frete do pedido. Fora da fato por decisao."
+        data_tests: [not_null]
+
+      - name: total_due_amount
+        description: "Total do pedido. Fora da fato por decisao."
+        data_tests: [not_null]
+
+      - name: order_comment
+        description: "Comentario livre do pedido (origem: coluna `comment`)."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
