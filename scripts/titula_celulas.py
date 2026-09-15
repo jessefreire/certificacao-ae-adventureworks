@@ -10,7 +10,7 @@ Rodar de novo e seguro: os títulos existentes são removidos antes de reaplicar
 A primeira versão disto DERIVAVA o título da primeira linha de comentário de cada
 célula. O resultado foi ruim de um jeito que só aparece no painel do Databricks:
 
-  - título com 58 caracteres na mediana, contra ~22 visiveis — 40 de 42 cortados
+  - título com 58 caracteres na mediana, contra ~22 visíveis — 40 de 42 cortados
   - `gráfico` abrindo nove títulos e `perfil` abrindo sete, gastando o espaço
     visível ANTES de chegar ao que distingue a célula
   - nenhuma numeração, num notebook cujas seções já são numeradas no markdown
