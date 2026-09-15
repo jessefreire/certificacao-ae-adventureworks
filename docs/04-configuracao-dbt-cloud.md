@@ -209,6 +209,27 @@ referencial registra.
 **Os testes de source não são decorativos:** o briefing exige, entre as demonstrações do
 vídeo, um `dbt test --select source:*` passando.
 
+## Os comandos, e o que cada um faz de fato
+
+| Comando | Faz | Não faz |
+|---|---|---|
+| `dbt debug` | testa a conexão — autentica, acha catalog/schema | não toca em modelo nenhum |
+| `dbt deps` | baixa os pacotes do `packages.yml`, trava a versão no `package-lock.yml` | não roda modelo |
+| `dbt run` | **cria** os objetos no Databricks a partir dos `.sql` | não testa nada |
+| `dbt test` | roda os `data_tests` dos `.yml` contra o que **já existe** | não cria nada |
+| `dbt build` | `run` + `test` juntos, na ordem certa, modelo por modelo | — é o atalho recomendado |
+| `dbt compile` | só traduz Jinja para SQL puro, sem executar | útil para depurar SQL gerado |
+| `dbt docs generate` | monta a documentação navegável a partir dos `.yml` | rodar só no fim |
+
+**A ordem importa por um motivo concreto:** `dbt test` antes de `dbt run` falha com
+`TABLE_OR_VIEW_NOT_FOUND`, porque o objeto testado ainda não existe no Databricks. `dbt
+build` nunca inverte essa ordem, e por isso é preferível a rodar os dois separados.
+
+**Prefira `--select <modelo>` a rodar o projeto inteiro**, a partir do momento em que
+houver mais de um modelo. Com um só, não faz diferença; com dezessete, rodar tudo a cada
+`Ctrl+S` é lento e mistura erro do modelo novo com modelo que já estava ok. É o padrão que
+`05-plano-de-entrega-dbt.md` usa em cada branch: `dbt build --select <modelo>`.
+
 ## Passo 8 — validar
 
 No Studio, a ordem canônica que o Módulo IV registra:

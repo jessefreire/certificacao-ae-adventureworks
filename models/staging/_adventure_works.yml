@@ -30,8 +30,9 @@ sources:
           - name: countryregioncode
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'countryregion')
-                  field: countryregioncode
+                  arguments:
+                    to: source('adventure_works', 'countryregion')
+                    field: countryregioncode
 
       - name: address
         description: >
@@ -133,13 +134,15 @@ sources:
           - name: customerid
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'customer')
-                  field: customerid
+                  arguments:
+                    to: source('adventure_works', 'customer')
+                    field: customerid
           - name: billtoaddressid
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'address')
-                  field: addressid
+                  arguments:
+                    to: source('adventure_works', 'address')
+                    field: addressid
 
       - name: salesorderdetail
         description: >
@@ -152,13 +155,15 @@ sources:
           - name: salesorderid
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'salesorderheader')
-                  field: salesorderid
+                  arguments:
+                    to: source('adventure_works', 'salesorderheader')
+                    field: salesorderid
           - name: productid
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'product')
-                  field: productid
+                  arguments:
+                    to: source('adventure_works', 'product')
+                    field: productid
 
       - name: salesorderheadersalesreason
         description: >
@@ -176,10 +181,12 @@ sources:
           - name: salesorderid
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'salesorderheader')
-                  field: salesorderid
+                  arguments:
+                    to: source('adventure_works', 'salesorderheader')
+                    field: salesorderid
           - name: salesreasonid
             data_tests:
               - relationships:
-                  to: source('adventure_works', 'salesreason')
-                  field: salesreasonid
+                  arguments:
+                    to: source('adventure_works', 'salesreason')
+                    field: salesreasonid
