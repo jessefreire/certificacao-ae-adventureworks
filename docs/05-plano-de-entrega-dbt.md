@@ -25,6 +25,32 @@ fatia: `chore/habilita-seeds`, depois uma dimensão, depois a documentação, de
 E o code style é explícito: *"um model não está completo sem testes e documentação"*. Então
 o `.yml` com descrições e testes entra **junto** com o modelo, na mesma branch.
 
+## Progresso da branch 1 — staging
+
+> Atualizado a cada modelo commitado. Conferido direto no branch remoto, não de memória.
+
+| # | Modelo | Estado |
+|---|---|---|
+| 1 | `countryregion` | ✅ |
+| 2 | `stateprovince` | ✅ |
+| 3 | `address` | ✅ |
+| 4 | `person` | ✅ |
+| 5 | `store` | pendente |
+| 6 | `customer` | pendente |
+| 7 | `creditcard` | pendente |
+| 8 | `productcategory` | pendente |
+| 9 | `productsubcategory` | pendente |
+| 10 | `product` | pendente |
+| 11 | `specialoffer` | pendente |
+| 12 | `salesterritory` | pendente |
+| 13 | `salesperson` | pendente |
+| 14 | `salesreason` | pendente |
+| 15 | `salesorderheader` | pendente |
+| 16 | `salesorderdetail` | ✅ — nasceu antes da branch, via commit direto no repositório |
+| 17 | `salesorderheadersalesreason` | pendente |
+
+**5 de 17 prontos.**
+
 ## As nove branches
 
 | # | Branch | Entrega | Pronto quando |
