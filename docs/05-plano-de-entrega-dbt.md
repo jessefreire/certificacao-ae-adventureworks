@@ -157,3 +157,43 @@ avaliado, e vira roteiro do vídeo depois.
 O briefing exige, na lista de demonstrações do vídeo, um **`dbt test --select source:*`**
 passando. Ele já passa hoje, com os 39 testes das fontes — mas vale rodar de novo depois da
 última branch, porque source quebra quando alguém mexe no schema de origem e ninguém percebe.
+
+## Como comunicar isto no vídeo e nos slides
+
+### A linha do tempo real, e como narrar sem imprecisão
+
+`dbt_project.yml`, `packages.yml`, `_adventure_works.yml` (as 17 fontes) e o primeiro
+modelo de staging (`stg_adventure_works__salesorderdetail`) **não nasceram no Studio** — 
+foram versionados direto por `git`, antes mesmo de o dbt Cloud ser conectado, a partir do
+que já estava decidido em [`03.01-modelo-conceitual.md`](03.01-modelo-conceitual.md) e
+[`03-decisoes-de-modelagem.md`](03-decisoes-de-modelagem.md). A branch só os **puxou**
+depois, com "Pull from main".
+
+O briefing não exige que cada linha seja digitada ao vivo — só que `dbt run`,
+`dbt test --select source:*` e `dbt test` **rodem de verdade na tela** (item 4.2). Mas
+dizer "fiz tudo isso aqui, do zero" seria impreciso. A narrativa correta é mais forte que a
+imprecisa: **o modelo foi desenhado primeiro** (Etapa 3, com evidência medida em cada
+decisão), **as fontes e o primeiro modelo nasceram desse desenho**, e o resto da staging é
+construído **ao vivo**, em branch, com PR de verdade. É o processo que o item **2.7**
+avalia, e é o que um AE sênior faz — modelar antes de codificar.
+
+### Roteiro do trecho de vídeo sobre a camada de staging
+
+1. Mostre o diagrama (`03.01-modelo-conceitual.md` ou o PDF): *"A partir das decisões
+   registradas aqui, defini a primeira camada — staging, que só renomeia e tipa, sem
+   lógica de negócio."*
+2. Abra `_adventure_works.yml`: *"São as 17 fontes do escopo, cada uma com teste de
+   chave."* Rode `dbt test --select source:*` na tela.
+3. Abra `stg_adventure_works__salesorderdetail.sql`: *"É aqui que a métrica bruta nasce,
+   porque a origem só traz a líquida. É o número que o CEO acompanha."*
+4. Rode `dbt build --select stg_adventure_works__salesorderdetail` mostrando sucesso.
+5. Mostre o `.yml` do modelo, destaque a marca "ATRIBUTO, não métrica" em `unit_price`.
+6. Feche com a branch: *"A partir daqui, cada modelo segue este mesmo fluxo — branch,
+   build, PR, merge."* Mostre o PR aberto ou mesclado no GitHub — é a prova do item 2.12.
+
+### Nos slides (Etapa 9)
+
+- A estrela, direto do PDF da Etapa 3.
+- Um slide só para "por que duas receitas": a bruta nasce no staging porque o CEO a pede
+  nominalmente; a líquida é o que a origem já trazia pronta.
+- O link do PR mesclado, como evidência do processo — não só do resultado.
