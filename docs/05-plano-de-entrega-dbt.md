@@ -1,8 +1,9 @@
 # Etapa 5 — plano de entrega em branches
 
-A Etapa 5 vale **metade da nota** do desafio: doze dos vinte e oito itens do formulário de
-avaliação, com peso 5,00 de 10. Um deles, o **2.12**, é sobre boas práticas de Git — então a
-forma de construir também conta, não só o resultado.
+A Etapa 5 é a transformação em dbt: o item mais extenso do briefing, com testes de
+source, testes de chave primária, documentação das marts e testes de qualidade. A forma de
+construir também conta — o briefing pede o código hospedado em repositório, e isso implica
+boas práticas de Git, não só o resultado final.
 
 Este documento é o plano: o que cada branch entrega, o que prova que ela está pronta, e o
 ritual de PR que o projeto segue.
@@ -115,9 +116,10 @@ apontar outra coisa.
 
 ### Por que a nona é separada
 
-Ela é o item **2.10** do formulário — o mais objetivo dos vinte e oito — e o briefing cita o
-pedido do CEO nominalmente. Num PR próprio, ela vira um commit que se abre no vídeo e se diz
-"este é o teste que o CEO pediu". Dentro de outro PR, some no meio.
+O briefing cita o pedido do CEO nominalmente, e é o teste mais objetivo de todo o
+projeto — dá para verificar sozinho, sem julgamento. Num PR próprio, ela vira um commit que
+se abre no vídeo e se diz "este é o teste que o CEO pediu". Dentro de outro PR, some no
+meio.
 
 ### Por que as dimensões não viram uma só
 
@@ -202,29 +204,29 @@ dim_geography, com endereco, estado e pais denormalizados.
 ## Como conferir
 dbt build --select dim_geography
 
-## Itens do formulário que isto atende
-2.8 (documentacao das marts) · 2.9 (chaves e testes) · 2.11 (logica SQL)
+## Pontos do briefing que isto atende
+documentação das marts · testes nas chaves · lógica SQL
 ```
 
-O último bloco não é burocracia: ele obriga a pensar se o PR realmente atende ao que vai ser
-avaliado, e vira roteiro do vídeo depois.
+O último bloco não é burocracia: ele obriga a pensar se o PR realmente entrega o que o
+briefing pede, e vira roteiro do vídeo depois.
 
 ## O que fica pronto ao fim das nove
 
-| Item do formulário | Onde nasce |
+| Requisito do briefing | Onde nasce |
 |---|---|
-| 2.1 Organização do projeto | estrutura de pastas, desde a branch 1 |
-| 2.2 `dbt_project.yml` | já em `main` |
-| 2.3 Code style | sqlfluff em cada modelo |
-| 2.4 Fontes e mapeamento | já em `main`, `_adventure_works.yml` |
-| 2.5 Documentação e testes de source | já em `main`, 39 testes |
-| 2.6 Modelagem de stagings | branch 1 |
-| 2.7 Conformidade com o modelo conceitual | branches 2 a 8, contra o `03.01` |
-| 2.8 Documentação das marts | `.yml` de cada modelo |
-| 2.9 Chaves e testes de schema | `unique` + `not_null` em cada PK |
-| 2.10 Teste de regra de negócio | branch 9 |
-| 2.11 Lógica SQL | todas |
-| 2.12 Boas práticas de Git | as nove, pelo próprio ritual |
+| Organização do projeto | estrutura de pastas, desde a branch 1 |
+| `dbt_project.yml` | já em `main` |
+| Code style | sqlfluff em cada modelo |
+| Fontes e mapeamento | já em `main`, `_adventure_works.yml` |
+| Documentação e testes de source | já em `main`, 39 testes |
+| Modelagem de stagings | branch 1 |
+| Conformidade com o modelo conceitual | branches 2 a 8, contra o `03.01` |
+| Documentação das marts | `.yml` de cada modelo |
+| Chaves e testes de schema | `unique` + `not_null` em cada PK |
+| Teste de regra de negócio | branch 9 |
+| Lógica SQL | todas |
+| Boas práticas de Git | as nove, pelo próprio ritual |
 
 ## Uma coisa a não esquecer no fim
 
@@ -244,7 +246,7 @@ que já estava decidido em [`03.01-modelo-conceitual.md`](03.01-modelo-conceitua
 depois, com "Pull from main".
 
 O briefing não exige que cada linha seja digitada ao vivo — só que `dbt run`,
-`dbt test --select source:*` e `dbt test` **rodem de verdade na tela** (item 4.2). Mas
+`dbt test --select source:*` e `dbt test` **rodem de verdade na tela**. Mas
 dizer "fiz tudo isso aqui, do zero" seria impreciso. A narrativa correta é mais forte que a
 imprecisa: **o modelo foi desenhado primeiro** (Etapa 3, com evidência medida em cada
 decisão), **as fontes e o primeiro modelo nasceram desse desenho**, e o resto da staging é
@@ -263,7 +265,8 @@ avalia, e é o que um AE sênior faz — modelar antes de codificar.
 4. Rode `dbt build --select stg_adventure_works__salesorderdetail` mostrando sucesso.
 5. Mostre o `.yml` do modelo, destaque a marca "ATRIBUTO, não métrica" em `unit_price`.
 6. Feche com a branch: *"A partir daqui, cada modelo segue este mesmo fluxo — branch,
-   build, PR, merge."* Mostre o PR aberto ou mesclado no GitHub — é a prova do item 2.12.
+   build, PR, merge."* Mostre o PR aberto ou mesclado no GitHub — é a prova das boas
+   práticas de Git que o briefing pede.
 
 ### Nos slides (Etapa 9)
 

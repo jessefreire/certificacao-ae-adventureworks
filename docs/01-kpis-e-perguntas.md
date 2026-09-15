@@ -22,10 +22,10 @@ propostos (§3) e justificativa em cada um
 
 ## 1. Quem decide, quem paga e quem atrapalha
 
-O briefing não descreve só uma empresa — descreve um **conflito**. Ignorar isso é perder
-metade da nota, porque um dos critérios de avaliação é literalmente *"articular a
-importância de uma cultura data-driven, tendo em mente que a Diretora Comercial desconhece
-o potencial do dado para melhorar a performance"*.
+O briefing não descreve só uma empresa — descreve um **conflito**. Ele pede explicitamente
+*"articular a importância de uma cultura data-driven, tendo em mente que a Diretora
+Comercial desconhece o potencial do dado para melhorar a performance"* — ignorar isso é
+perder a narrativa que o próprio briefing pede.
 
 | Pessoa | Papel | O que quer | O que nos exige |
 |---|---|---|---|

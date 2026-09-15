@@ -1,7 +1,7 @@
 # Etapa 4 — configurar o dbt Cloud sobre o Databricks
 
-Fecha o item **1.3 Configuração de Ambiente** do formulário de avaliação, e é pré-requisito
-da Etapa 5, que vale metade da nota.
+Fecha a configuração do ambiente que o briefing pede na Etapa 4, e é pré-requisito
+da Etapa 5.
 
 Este documento segue o caminho que as **aulas práticas** usam — dbt Cloud com Databricks,
 registrado em `SETUP_AMBIENTE_AULAS.md` no repositório de formação, com as pegadinhas que
@@ -95,8 +95,8 @@ O IDE do dbt Cloud chama-se **Studio** (era "Develop"; o nome mudou e a document
 ainda usa o antigo).
 
 **A `main` aparece travada, com um cadeado.** Isso não é erro: é proteção. Crie uma branch
-antes de editar qualquer coisa — o que também atende o item **2.12 Boas Práticas de Git** do
-formulário, porque a Etapa 5 passa a nascer em PR.
+antes de editar qualquer coisa — a Etapa 5 passa a nascer em PR, boa prática de Git
+independente de qualquer critério de correção.
 
 Duas leituras do Studio que confundem no começo:
 
@@ -143,9 +143,9 @@ models:
 
 **Uma divergência declarada:** o `dbt_coding_conventions.md` pede `ephemeral` como
 materialização padrão global. Aqui ela é declarada **por camada**, como no `banvic-dbt` e no
-fluxo `ae-fullflow`. O motivo é o item **4.3** do formulário: o vídeo precisa demonstrar o
-`dbt run` criando objetos no Databricks, e modelo `ephemeral` não cria objeto nenhum — vira
-CTE. Escolha consciente, não descuido.
+fluxo `ae-fullflow`. O motivo é que o briefing pede uma demonstração do `dbt run` criando
+objetos no Databricks, e modelo `ephemeral` não cria objeto nenhum — vira CTE. Escolha
+consciente, não descuido.
 
 ## Passo 6 — `packages.yml` e `dbt deps`
 
@@ -171,7 +171,7 @@ o padrão da casa (ADR013, documento `2.3)` do referencial).
 ## Passo 7 — a source
 
 Só as **17 tabelas do escopo**. Declarar source é assumir teste e documentação dela, e o
-item **2.5** do formulário cobra exatamente isso.
+briefing pede exatamente isso na Etapa 5: documentação de tabelas e testes de source.
 
 O arquivo vive em `models/staging/` e começa com `_` para o dbt não o confundir com model —
 convenção que o material do Módulo IV registra. Em `models/staging/_adventure_works.yml`:
@@ -246,10 +246,10 @@ dbt test
 **Nunca rode `dbt test` antes de `dbt run`** — sem os objetos criados, o teste falha com
 `TABLE_OR_VIEW_NOT_FOUND`, e o erro parece de modelagem quando é de ordem.
 
-Para o item 1.3 fechar, basta um `dbt run` que complete. Um modelo de staging já prova que o
-ambiente está de pé; os outros vêm na Etapa 5.
+Para a configuração do ambiente fechar, basta um `dbt run` que complete. Um modelo de
+staging já prova que o ambiente está de pé; os outros vêm na Etapa 5.
 
-## O que fecha o item 1.3
+## O que comprova a configuração do ambiente
 
 | Evidência | Como mostrar no vídeo |
 |---|---|
