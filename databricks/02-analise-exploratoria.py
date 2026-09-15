@@ -883,7 +883,7 @@
 # MAGIC %md
 # MAGIC ## d.1 — Quanto as cinco primeiras concentram?
 # MAGIC
-# MAGIC Mesma logica de `c.1`: o ranking sem o peso pode sugerir o contrário da verdade.
+# MAGIC Mesma lógica de `c.1`: o ranking sem o peso pode sugerir o contrário da verdade.
 
 # COMMAND ----------
 

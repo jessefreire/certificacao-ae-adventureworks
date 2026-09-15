@@ -42,7 +42,7 @@ entrega/       links.txt, que o briefing exige em arquivo de texto
 | 2 | Análise exploratória | [`databricks/02-analise-exploratoria.py`](databricks/02-analise-exploratoria.py) | **completa** — executada e conferida |
 | 3 | Modelo conceitual | [`docs/03.01-modelo-conceitual.md`](docs/03.01-modelo-conceitual.md) → PDF · [decisões](docs/03-decisoes-de-modelagem.md) | **completa** |
 | 4 | DW na nuvem + dbt | Databricks Free Edition + dbt Cloud · [tutorial](docs/04-configuracao-dbt-cloud.md) | **ingestão completa e conferida** — dbt Cloud pendente |
-| 5 | Transformação dbt | modelos, docs, testes de source/PK/qualidade | — |
+| 5 | Transformação dbt | modelos, docs, testes · [plano de entrega](docs/05-plano-de-entrega-dbt.md) | **em andamento** — projeto e fontes no ar |
 | 6 | Mockup do dashboard | JPEG, no Figma | — |
 | 7 | Dashboard | **Power BI** — `.pbix` com as medidas DAX documentadas dentro do arquivo | — |
 | 8 | Regras de negócio | documento | — |
