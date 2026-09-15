@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__countryregion
+    description: "Paises. Alimenta o atributo de pais em dim_geography."
+    columns:
+      - name: country_region_code
+        description: "Codigo ISO do pais. Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: country_region_name
+        description: "Nome do pais."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
