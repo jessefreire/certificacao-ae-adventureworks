@@ -102,17 +102,29 @@ apontar outra coisa.
 
 ## As nove branches
 
-| # | Branch | Entrega | Pronto quando |
-|---|---|---|---|
-| 1 | `feature/staging-adventure-works` | os 17 `stg_*` e seus `.yml` | `dbt build --select staging` verde |
-| 2 | `feature/dim-dates` | `dim_dates` por `dbt_utils.date_spine` | calendário sem buraco em mês sem venda |
-| 3 | `feature/dim-product` | produto + subcategoria + categoria | 504 produtos, com os 238 que nunca venderam |
-| 4 | `feature/dim-customer` | cliente + pessoa + loja | `coalesce` com loja em prioridade, e `customer_type` |
-| 5 | `feature/dim-geography` | endereço + estado + país | chave composta cidade + estado |
-| 6 | `feature/dim-simples` | cartão, território, oferta, vendedor, motivo | membros "não informado" nos três que precisam |
-| 7 | `feature/bridge-order-sales-reason` | a ponte | cobre os 31.465 pedidos, com `allocation_factor` |
-| 8 | `feature/fact-sales` | a fato e o teste de PK | `dbt test --select fact_sales` verde |
-| 9 | `feature/teste-aceite-ceo` | o teste de regra de negócio | fecha em **12.646.112,16** |
+**Cada branch de dimensão constrói o par `int_` + `dim_` junto, quando a dimensão precisa
+de lógica de negócio** — nunca uma branch "intermediate" separada, que cairia na mesma
+armadilha de camada horizontal que a seção anterior já rejeitou. É o padrão que o próprio
+BanVic seguiu: `feat: adiciona pipeline de contas (stg, int_dimensao, int_fato, dim)`, tudo
+no mesmo PR.
+
+As quatro promessas já feitas nos comentários da staging (branch 1) cobram isso agora:
+`product` ("a marcação Sem subcategoria acontece no intermediate"), `salesperson` (membro
+"sem vendedor"), `salesreason` (membro "não informado"), `salesorderheadersalesreason` (a
+ponte real, com cobertura completa). Uma quinta não estava escrita ainda:
+`creditcard` também precisa do membro "sem cartão" — 1.131 pedidos sem cartão registrado.
+
+| # | Branch | Entrega | `int_` necessário? | Pronto quando |
+|---|---|---|---|---|
+| 1 | `feature/staging-adventure-works` | os 17 `stg_*` e seus `.yml` | — | `dbt build --select staging` verde |
+| 2 | `feature/dim-dates` | `dim_dates` por `dbt_utils.date_spine` | não — gerada, sem staging de origem | calendário sem buraco em mês sem venda |
+| 3 | `feature/dim-product` | produto + subcategoria + categoria | **sim** — junta as 3 tabelas, aplica "Sem subcategoria" | 504 produtos, com os 238 que nunca venderam |
+| 4 | `feature/dim-customer` | cliente + pessoa + loja | a conferir — `customer_type` já nasceu no staging; ver se o `coalesce` de nome cabe lá ou pede `int_` | `coalesce` com loja em prioridade |
+| 5 | `feature/dim-geography` | endereço + estado + país | a conferir — só join simples, provável que não precise | chave composta cidade + estado |
+| 6 | `feature/dim-simples` | cartão, território, oferta, vendedor, motivo | **sim, em 3 de 5** — vendedor, motivo e cartão pedem membro "não informado"; território e oferta provavelmente não | membros "não informado" nos três que precisam |
+| 7 | `feature/bridge-order-sales-reason` | a ponte | **sim** — é o próprio `int_`: cobre os 31.465 pedidos, com `allocation_factor` | cobre os 31.465 pedidos |
+| 8 | `feature/fact-sales` | a fato e o teste de PK | a conferir — depende do que sobrar de cálculo fora dos `int_` já prontos | `dbt test --select fact_sales` verde |
+| 9 | `feature/teste-aceite-ceo` | o teste de regra de negócio | não — só teste, sem modelo novo | fecha em **12.646.112,16** |
 
 ### Por que a nona é separada
 
