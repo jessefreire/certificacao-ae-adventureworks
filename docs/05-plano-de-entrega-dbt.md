@@ -25,6 +25,54 @@ fatia: `chore/habilita-seeds`, depois uma dimensão, depois a documentação, de
 E o code style é explícito: *"um model não está completo sem testes e documentação"*. Então
 o `.yml` com descrições e testes entra **junto** com o modelo, na mesma branch.
 
+## `.yml` ao lado do `.sql`, não em pasta `schema/`
+
+O `dbt_coding_conventions.md` é literal: *"documentation and tests for each model
+should be placed in a `schema.yml` file **alongside** the model file"* — "alongside"
+é mesma pasta, não subpasta. O motivo que o documento dá: achar mais fácil, ver de
+relance quem tem teste e quem não tem, e evitar conflito de merge.
+
+O projeto BanVic usou uma subpasta `models/staging/erp_banvic/schema/` para os `.yml`,
+separada dos `.sql` — o que **diverge** do code style, não o segue. Neste projeto, cada
+`.yml` fica ao lado do `.sql` correspondente, seguindo a convenção normativa ao pé da
+letra.
+
+### Duas alternativas não oficiais, registradas para decisão futura
+
+Nenhuma das duas está no `dbt_coding_conventions.md`. Ficam aqui para o caso de alguém
+da Indicium AI, na prática, confirmar um padrão diferente do que o documento escrito diz
+— aí a mudança já vem registrada, com a fonte e o custo de cada opção.
+
+**1. Pasta `schema/` separada dos `.sql`** — o que o BanVic fez nas aulas. Separa
+visualmente "o que faz" de "o que documenta e testa", mas contraria o `alongside`
+explícito da linha 339, e o próprio code style lista como benefício do padrão dele
+"evitar conflito de merge" — que a subpasta não compromete, mas também não ajuda.
+
+**2. Pasta por domínio, um modelo por pasta** — o guia oficial do **dbt Labs**
+("How we structure our dbt projects"), não da Indicium AI:
+
+```
+models/
+└── staging/
+    ├── customers/
+    │   ├── stg_customers.sql
+    │   └── _customers__models.yml
+    └── orders/
+        ├── stg_orders.sql
+        └── _orders__models.yml
+```
+
+Aqui o `.yml` é **por domínio**, cobrindo vários modelos — o que contraria a outra regra
+do code style, "um arquivo por model, nomeado `<nome do model>.yml`". E o padrão existe
+para projetos com **múltiplas fontes de dados** isoladas; este projeto tem uma fonte só
+(`adventure_works`, 17 tabelas), então 17 subpastas de uma tabela cada não organizaria
+nada — só acrescentaria nível de diretório. Faria sentido se o projeto um dia ganhasse
+uma segunda fonte, e aí a pasta seria por **fonte**, não por tabela individual.
+
+**Decisão atual:** seguir o code style ao pé da letra — `.sql` e `.yml` juntos, direto em
+`models/staging/`, sem subpasta. Revisitar se a conferência com alguém da Indicium AI
+apontar outra coisa.
+
 ## Progresso da branch 1 — staging
 
 > Atualizado a cada modelo commitado. Conferido direto no branch remoto, não de memória.

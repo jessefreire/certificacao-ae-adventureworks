@@ -144,6 +144,10 @@ AMBIGUAS = {
     # artigo, contração e pronome contra a forma acentuada
     "a", "as", "no", "nos", "e", "esta", "estas", "este", "ate", "para", "da", "de",
     "do", "por", "pode", "la", "lo", "pais",
+    # "ai" e interjeicao valida por direito proprio, e colide em minusculo com a sigla
+    # "AI" de "Indicium AI" — a razao de frequencia (21 contra 3) fica abaixo do limiar
+    # de 10x que despreza `que`/`quê`, entao a heuristica sozinha nao bastou aqui.
+    "ai",
     # singular contra plural do verbo
     "tem", "vem",
     # verbo contra substantivo ou contra infinitivo com pronome (`ligá-la`)
