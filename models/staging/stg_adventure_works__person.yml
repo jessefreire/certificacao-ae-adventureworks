@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__person
+    description: >
+      Pessoas fisicas. Alimenta o nome do cliente em dim_customer quando nao ha
+      loja associada — a prioridade e coalesce(store.name, person).
+    columns:
+      - name: business_entity_id
+        description: "Chave primaria. Compartilhada com store.businessentityid no dominio de entidades."
+        data_tests: [unique, not_null]
+
+      - name: person_type
+        description: "Categoria da pessoa na origem (IN, SC, EM, entre outras)."
+
+      - name: is_name_western_style
+        description: "Indica se o nome segue a ordem ocidental (primeiro, ultimo)."
+
+      - name: title
+        description: "Tratamento (Sr., Sra.)."
+
+      - name: first_name
+        description: "Primeiro nome."
+
+      - name: middle_name
+        description: "Nome do meio, quando existe."
+
+      - name: last_name
+        description: "Sobrenome."
+
+      - name: suffix
+        description: "Sufixo (Jr., III), quando existe."
+
+      - name: email_promotion_level
+        description: "Nivel de opt-in para e-mail promocional."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."
