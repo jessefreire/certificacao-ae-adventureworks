@@ -83,21 +83,21 @@ apontar outra coisa.
 | 2 | `stateprovince` | ✅ |
 | 3 | `address` | ✅ |
 | 4 | `person` | ✅ |
-| 5 | `store` | pendente |
-| 6 | `customer` | pendente |
-| 7 | `creditcard` | pendente |
-| 8 | `productcategory` | pendente |
-| 9 | `productsubcategory` | pendente |
-| 10 | `product` | pendente |
-| 11 | `specialoffer` | pendente |
-| 12 | `salesterritory` | pendente |
-| 13 | `salesperson` | pendente |
-| 14 | `salesreason` | pendente |
-| 15 | `salesorderheader` | pendente |
+| 5 | `store` | ✅ |
+| 6 | `customer` | ✅ |
+| 7 | `creditcard` | ✅ |
+| 8 | `productcategory` | ✅ |
+| 9 | `productsubcategory` | ✅ |
+| 10 | `product` | ✅ |
+| 11 | `specialoffer` | ✅ |
+| 12 | `salesterritory` | ✅ |
+| 13 | `salesperson` | ✅ |
+| 14 | `salesreason` | ✅ |
+| 15 | `salesorderheader` | ✅ |
 | 16 | `salesorderdetail` | ✅ — nasceu antes da branch, via commit direto no repositório |
-| 17 | `salesorderheadersalesreason` | pendente |
+| 17 | `salesorderheadersalesreason` | ✅ |
 
-**5 de 17 prontos.**
+**17 de 17 prontos.** `dbt build --select staging` e `dbt test --select source:*` passam limpos.
 
 ## As nove branches
 
