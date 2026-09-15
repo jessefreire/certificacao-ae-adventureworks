@@ -25,6 +25,18 @@ fatia: `chore/habilita-seeds`, depois uma dimensão, depois a documentação, de
 E o code style é explícito: *"um model não está completo sem testes e documentação"*. Então
 o `.yml` com descrições e testes entra **junto** com o modelo, na mesma branch.
 
+## `.yml` ao lado do `.sql`, não em pasta `schema/`
+
+O `dbt_coding_conventions.md` é literal: *"documentation and tests for each model
+should be placed in a `schema.yml` file **alongside** the model file"* — "alongside"
+é mesma pasta, não subpasta. O motivo que o documento dá: achar mais fácil, ver de
+relance quem tem teste e quem não tem, e evitar conflito de merge.
+
+O projeto BanVic usou uma subpasta `models/staging/erp_banvic/schema/` para os `.yml`,
+separada dos `.sql` — o que **diverge** do code style, não o segue. Neste projeto, cada
+`.yml` fica ao lado do `.sql` correspondente, seguindo a convenção normativa ao pé da
+letra.
+
 ## Progresso da branch 1 — staging
 
 > Atualizado a cada modelo commitado. Conferido direto no branch remoto, não de memória.
