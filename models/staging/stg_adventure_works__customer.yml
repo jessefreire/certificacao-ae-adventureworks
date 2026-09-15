@@ -3,9 +3,9 @@ version: 2
 models:
   - name: stg_adventure_works__customer
     description: >
-      Clientes. Liga person (pessoa fisica) ou store (revenda) a um customerid.
-      customer_type nasce aqui: 'revenda' quando ha store_id, 'pessoa fisica'
-      quando nao ha — e o mesmo eixo que onlineorderflag separa na fato.
+      Clientes. Liga person (pessoa fisica) ou store (revenda) a um
+      customerid. customer_type nasce no intermediate, nao aqui — staging
+      so renomeia e tipa.
     columns:
       - name: customer_id
         description: "Chave primaria."
@@ -35,10 +35,3 @@ models:
 
       - name: modified_at
         description: "Data de modificacao na origem."
-
-      - name: customer_type
-        description: "'revenda' ou 'pessoa fisica', derivado de store_id."
-        data_tests:
-          - accepted_values:
-              arguments:
-                values: ['revenda', 'pessoa fisica']
