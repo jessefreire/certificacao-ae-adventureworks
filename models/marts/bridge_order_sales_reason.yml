@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: bridge_order_sales_reason
+    description: >
+      Ponte muitos-para-muitos entre pedido e motivo de venda. Cobre os
+      31.465 pedidos. Receita mora na fato — esta ponte filtra e fatia,
+      nunca se soma através dela sem multiplicar por allocation_factor.
+    columns:
+      - name: sales_order_id
+        description: "Pedido. Degenerada na fato — nao tem dimensao propria."
+        data_tests: [not_null]
+
+      - name: sales_reason_key
+        description: "Motivo. -1 e 'Nao informado' em dim_sales_reason."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_sales_reason')
+                field: sales_reason_key
+
+      - name: allocation_factor
+        description: "1 / numero de motivos do pedido. Nunca some sem multiplicar por ele."
+        data_tests: [not_null]
