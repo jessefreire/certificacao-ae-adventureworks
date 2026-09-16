@@ -128,7 +128,7 @@ cartão"), `salesorderheadersalesreason` (a ponte real, com cobertura completa).
 | 2 | `feature/dim-product` | produto + subcategoria + categoria | **sim** — junta as 3 tabelas, aplica "Sem subcategoria" | 504 produtos, com os 238 que nunca venderam |
 | 3 | `feature/dim-customer` | cliente + pessoa + loja | **sim** — `customer_type` e o `coalesce` de nome (loja em prioridade) nascem aqui, não na staging | `coalesce` com loja em prioridade |
 | 4 | `feature/dim-geography` | endereço + estado + país | **sim** — resolve `city_label` ("Cidade, UF") | chave composta cidade + estado |
-| 5 | `feature/dim-simples` | cartão, território, oferta, vendedor, motivo | **sim, em 3 de 5** — vendedor, motivo e cartão pedem membro "não informado"; território e oferta provavelmente não | membros "não informado" nos três que precisam |
+| 5 | `feature/dim-complementares` | cartão, território, oferta, vendedor, motivo | **sim, em 3 de 5** — vendedor, motivo e cartão pedem membro "não informado"; território e oferta provavelmente não | membros "não informado" nos três que precisam |
 | 6 | `feature/bridge-order-sales-reason` | a ponte | **sim** — é o próprio `int_`: cobre os 31.465 pedidos, com `allocation_factor` | cobre os 31.465 pedidos |
 | 7 | `feature/dim-dates` | `dim_dates` por `dbt_utils.date_spine` | não — gerada, sem staging de origem | calendário sem buraco em mês sem venda |
 | 8 | `feature/fact-sales` | a fato e o teste de PK | **sim** — `gross_revenue` e `discount_amount` nascem aqui, não na staging | `dbt test --select fact_sales` verde |
@@ -145,7 +145,7 @@ cartão"), `salesorderheadersalesreason` (a ponte real, com cobertura completa).
 | 2 | `feature/dim-product` | `int_adventure_works__product` | `dim_product` | ✅ mesclada |
 | 3 | `feature/dim-customer` | `int_adventure_works__customer` | `dim_customer` | ✅ mesclada |
 | 4 | `feature/dim-geography` | `int_adventure_works__geography` | `dim_geography` | 🔧 em andamento |
-| 5 | `feature/dim-simples` | `int_adventure_works__creditcard`, `int_adventure_works__salesperson`, `int_adventure_works__salesreason` (3 de 5; território e oferta não precisam) | `dim_credit_card`, `dim_territory`, `dim_special_offer`, `dim_salesperson`, `dim_sales_reason` | pendente |
+| 5 | `feature/dim-complementares` | `int_adventure_works__creditcard`, `int_adventure_works__salesperson`, `int_adventure_works__salesreason` (3 de 5; território e oferta não precisam) | `dim_credit_card`, `dim_territory`, `dim_special_offer`, `dim_salesperson`, `dim_sales_reason` | pendente |
 | 6 | `feature/bridge-order-sales-reason` | `int_adventure_works__order_sales_reason` (cobertura completa + `allocation_factor`) | `bridge_order_sales_reason` | pendente |
 | 7 | `feature/dim-dates` | — (gerada) | `dim_dates` | pendente |
 | 8 | `feature/fact-sales` | `int_adventure_works__sales` (junta item + cabeçalho, calcula `gross_revenue`/`discount_amount`) | `fact_sales` | pendente |
@@ -178,7 +178,7 @@ BanVic (`feature/transacoes-datas`) junta o pipeline de transações **e** `dim_
 mesmo PR, duas coisas diferentes. A régua usada aqui: PR separado quando o modelo carrega
 uma decisão que vale a pena ver isolada (o "Sem subcategoria", o `coalesce` + `customer_type`,
 a chave composta de cidade); PR conjunto quando é repetição do mesmo padrão trivial em
-vários lugares pequenos — por isso `dim-simples` continua junto, cinco dimensões num PR só.
+vários lugares pequenos — por isso `dim-complementares` continua junto, cinco dimensões num PR só.
 
 ## O ritual, por branch
 
