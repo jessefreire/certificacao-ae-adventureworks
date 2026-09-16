@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_territory
+    description: >
+      Territorios de venda. territory_country NAO e o mesmo pais de
+      dim_geography — descrevem a mesma venda por angulos diferentes, e por
+      isso os nomes sao distintos.
+    columns:
+      - name: territory_key
+        description: "Chave primaria. Reaproveita o territory_id da origem."
+        data_tests: [unique, not_null]
+
+      - name: territory_name
+        description: "Nome do territorio."
+
+      - name: territory_country
+        description: "Pais do territorio. Nao confundir com dim_geography.billing_country."
+
+      - name: territory_group
+        description: "Agrupamento regional."

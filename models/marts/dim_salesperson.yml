@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_salesperson
+    description: >
+      Vendedores. Inclui o membro "Sem vendedor" (-1), que cobre 87,9% dos
+      pedidos — todos online. Sem esse membro, filtrar por vendedor
+      apagaria o varejo inteiro.
+    columns:
+      - name: salesperson_key
+        description: "Chave primaria. -1 e o membro 'Sem vendedor'."
+        data_tests: [unique, not_null]
+
+      - name: salesperson_name
+        description: "Nome do vendedor, ou 'Sem vendedor'."
+
+      - name: sales_quota
+        description: "Meta de vendas. Nulo para o membro sintetico."
+
+      - name: commission_pct
+        description: "Percentual de comissao. Nulo para o membro sintetico."

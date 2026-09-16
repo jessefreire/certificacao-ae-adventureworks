@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_adventure_works__specialoffer
+    description: "Ofertas e descontos aplicados ao item de pedido."
+    columns:
+      - name: special_offer_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: offer_description
+        description: "Descricao da oferta."
+
+      - name: discount_pct
+        description: "Percentual de desconto da oferta. Atributo, nao metrica."
+
+      - name: offer_type
+        description: "Tipo da oferta (origem: coluna `type`)."
+
+      - name: offer_category
+        description: "Categoria da oferta."
+
+      - name: start_date
+        description: "Inicio da vigencia."
+
+      - name: end_date
+        description: "Fim da vigencia."
+
+      - name: min_quantity
+        description: "Quantidade minima para a oferta valer."
+
+      - name: max_quantity
+        description: "Quantidade maxima."
+
+      - name: modified_at
+        description: "Data de modificacao na origem."

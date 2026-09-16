@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: int_adventure_works__creditcard
+    description: >
+      Cartao de credito, com membro "Sem cartao" (-1) acrescentado por
+      union all. Cobre os 1.131 pedidos que nao tem credit_card_id.
+    columns:
+      - name: credit_card_id
+        description: "Chave primaria. -1 e o membro sintetico."
+        data_tests: [unique, not_null]
+
+      - name: card_type
+        description: "'Sem cartao' quando credit_card_id e -1."
+        data_tests: [not_null]
