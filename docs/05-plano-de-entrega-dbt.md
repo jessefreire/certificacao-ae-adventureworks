@@ -127,12 +127,29 @@ cartão"), `salesorderheadersalesreason` (a ponte real, com cobertura completa).
 | 1 | `feature/staging-adventure-works` | os 17 `stg_*` e seus `.yml` | — | `dbt build --select staging` verde |
 | 2 | `feature/dim-product` | produto + subcategoria + categoria | **sim** — junta as 3 tabelas, aplica "Sem subcategoria" | 504 produtos, com os 238 que nunca venderam |
 | 3 | `feature/dim-customer` | cliente + pessoa + loja | **sim** — `customer_type` e o `coalesce` de nome (loja em prioridade) nascem aqui, não na staging | `coalesce` com loja em prioridade |
-| 4 | `feature/dim-geography` | endereço + estado + país | a conferir — só join simples, provável que não precise | chave composta cidade + estado |
+| 4 | `feature/dim-geography` | endereço + estado + país | **sim** — resolve `city_label` ("Cidade, UF") | chave composta cidade + estado |
 | 5 | `feature/dim-simples` | cartão, território, oferta, vendedor, motivo | **sim, em 3 de 5** — vendedor, motivo e cartão pedem membro "não informado"; território e oferta provavelmente não | membros "não informado" nos três que precisam |
 | 6 | `feature/bridge-order-sales-reason` | a ponte | **sim** — é o próprio `int_`: cobre os 31.465 pedidos, com `allocation_factor` | cobre os 31.465 pedidos |
 | 7 | `feature/dim-dates` | `dim_dates` por `dbt_utils.date_spine` | não — gerada, sem staging de origem | calendário sem buraco em mês sem venda |
 | 8 | `feature/fact-sales` | a fato e o teste de PK | **sim** — `gross_revenue` e `discount_amount` nascem aqui, não na staging | `dbt test --select fact_sales` verde |
 | 9 | `feature/teste-aceite-ceo` | o teste de regra de negócio | não — só teste, sem modelo novo | fecha em **12.646.112,16** |
+
+## Progresso das branches 2 a 9 — intermediate e marts
+
+> Atualizado a cada modelo commitado, como a tabela da branch 1. `int_` e `dim_`/`fact_`/
+> `bridge_` de uma mesma linha viajam juntos no mesmo commit — ver "Uma dúvida resolvida:
+> granularidade de commit e de PR" mais abaixo.
+
+| # | Branch | `int_` | `dim_` / `fact_` / `bridge_` | Estado |
+|---|---|---|---|---|
+| 2 | `feature/dim-product` | `int_adventure_works__product` | `dim_product` | ✅ mesclada |
+| 3 | `feature/dim-customer` | `int_adventure_works__customer` | `dim_customer` | ✅ mesclada |
+| 4 | `feature/dim-geography` | `int_adventure_works__geography` | `dim_geography` | 🔧 em andamento |
+| 5 | `feature/dim-simples` | `int_adventure_works__creditcard`, `int_adventure_works__salesperson`, `int_adventure_works__salesreason` (3 de 5; território e oferta não precisam) | `dim_credit_card`, `dim_territory`, `dim_special_offer`, `dim_salesperson`, `dim_sales_reason` | pendente |
+| 6 | `feature/bridge-order-sales-reason` | `int_adventure_works__order_sales_reason` (cobertura completa + `allocation_factor`) | `bridge_order_sales_reason` | pendente |
+| 7 | `feature/dim-dates` | — (gerada) | `dim_dates` | pendente |
+| 8 | `feature/fact-sales` | `int_adventure_works__sales` (junta item + cabeçalho, calcula `gross_revenue`/`discount_amount`) | `fact_sales` | pendente |
+| 9 | `feature/teste-aceite-ceo` | — | teste `tests/assert_receita_bruta_2011.sql` | pendente |
 
 ### Por que a nona é separada
 
@@ -148,6 +165,20 @@ BanVic. Não vale: dimensão é onde moram as decisões difíceis — o membro d
 vendedor, que cobre 87,9% dos pedidos; a chave de cidade, que existe porque 38 cidades se
 repetem entre estados; os produtos sem venda, que um `inner join` eliminaria. PR pequeno é
 onde essas decisões ficam visíveis para quem revisa.
+
+### Uma dúvida resolvida: granularidade de commit e de PR
+
+**Commit: um por entrega coesa, não por arquivo.** Quando `int_` e `dim_` formam uma
+dimensão só, os dois entram no mesmo commit — é o que o BanVic fez de verdade:
+`e93dc96 finalizado a dimensão de clientes` cobre o par inteiro. Diferente da branch 1, onde
+cada `stg_` era independente e por isso ganhou commit próprio.
+
+**PR por par não é regra — é escolha, e nem o BanVic foi consistente com ela.** O PR #6 do
+BanVic (`feature/transacoes-datas`) junta o pipeline de transações **e** `dim_datas` no
+mesmo PR, duas coisas diferentes. A régua usada aqui: PR separado quando o modelo carrega
+uma decisão que vale a pena ver isolada (o "Sem subcategoria", o `coalesce` + `customer_type`,
+a chave composta de cidade); PR conjunto quando é repetição do mesmo padrão trivial em
+vários lugares pequenos — por isso `dim-simples` continua junto, cinco dimensões num PR só.
 
 ## O ritual, por branch
 
