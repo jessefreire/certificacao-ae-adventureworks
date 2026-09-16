@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: >
+      Produtos, 504 no total — 266 vendem e 238 nunca apareceram em pedido.
+      Mantida a decisao registrada em 03-decisoes-de-modelagem.md: nenhum
+      produto e descartado, mesmo sem subcategoria.
+    columns:
+      - name: product_key
+        description: "Chave primaria. Reaproveita o product_id da origem."
+        data_tests: [unique, not_null]
+
+      - name: product_name
+        description: "Nome do produto."
+
+      - name: product_number
+        description: "Codigo do produto."
+
+      - name: subcategory
+        description: "'Sem subcategoria' quando o produto nao tem uma."
+
+      - name: category
+        description: "'Sem categoria' quando o produto nao tem subcategoria."
+
+      - name: list_price
+        description: "Preco de tabela."
+
+      - name: color
+        description: "Cor do produto."
+
+      - name: product_line
+        description: "Linha de produto."

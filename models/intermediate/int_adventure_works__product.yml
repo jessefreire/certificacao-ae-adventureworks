@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: int_adventure_works__product
+    description: >
+      Produto enriquecido com categoria e subcategoria. Left join em vez de
+      inner: 209 dos 504 produtos nao tem subcategoria, e nenhum deles vende
+      — perder essas linhas tornaria essa constatacao irrespondivel.
+    columns:
+      - name: product_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: product_subcategory_name
+        description: "'Sem subcategoria' quando o produto nao tem uma."
+
+      - name: product_category_name
+        description: "'Sem categoria' quando o produto nao tem subcategoria (e por consequencia, categoria)."
