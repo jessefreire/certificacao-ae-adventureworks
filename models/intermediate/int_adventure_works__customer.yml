@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: int_adventure_works__customer
+    description: >
+      Cliente com o nome resolvido (loja em prioridade sobre pessoa fisica) e
+      customer_type — o mesmo eixo de canal que onlineorderflag separa na fato.
+    columns:
+      - name: customer_id
+        description: "Chave primaria."
+        data_tests: [unique, not_null]
+
+      - name: customer_name
+        description: "coalesce(store.store_name, person.first_name || ' ' || person.last_name)."
+        data_tests: [not_null]
+
+      - name: customer_type
+        description: "'revenda' ou 'pessoa fisica', derivado de store_id."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["revenda", "pessoa fisica"]

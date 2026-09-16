@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: >
+      Clientes. customer_type separa revenda de pessoa fisica — o mesmo eixo
+      que onlineorderflag usa na fato, e que muda a leitura de toda a
+      analise (revenda e 12,1% dos pedidos e 73% da receita).
+    columns:
+      - name: customer_key
+        description: "Chave primaria. Reaproveita o customer_id da origem."
+        data_tests: [unique, not_null]
+
+      - name: customer_name
+        description: "Nome da loja, ou nome completo da pessoa fisica."
+
+      - name: customer_type
+        description: "'revenda' ou 'pessoa fisica'."
+
+      - name: account_number
+        description: "Numero de conta do cliente."
