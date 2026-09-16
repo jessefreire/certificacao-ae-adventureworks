@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: dim_sales_reason
+    description: >
+      Motivos de venda. Inclui o membro "Nao informado" (-1), que cobre
+      26,9% dos pedidos — incluindo 100% da revenda, 73% da receita.
+    columns:
+      - name: sales_reason_key
+        description: "Chave primaria. -1 e o membro 'Nao informado'."
+        data_tests: [unique, not_null]
+
+      - name: reason_name
+        description: "Nome do motivo, ou 'Nao informado'."
+
+      - name: reason_type
+        description: >
+          Categoria: Marketing, Promotion, Other, ou 'Nao informado'. A
+          pergunta (f) do briefing filtra por reason_type = 'Promotion'.

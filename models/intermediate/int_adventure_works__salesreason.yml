@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: int_adventure_works__salesreason
+    description: >
+      Motivo de venda com membro "Nao informado" (-1). Cobre os 8.453
+      pedidos sem motivo (26,9%), incluindo 100% da revenda — sem esse
+      membro, 73% da receita some de qualquer visual filtrado por motivo.
+    columns:
+      - name: sales_reason_id
+        description: "Chave primaria. -1 e o membro sintetico."
+        data_tests: [unique, not_null]
+
+      - name: sales_reason_name
+        description: "'Nao informado' quando sales_reason_id e -1."
+        data_tests: [not_null]
+
+      - name: sales_reason_type
+        description: >
+          Categoria: Marketing, Promotion, Other, ou 'Nao informado' para o
+          membro sintetico — nao confundir com a categoria real 'Other'.
+        data_tests: [not_null]
