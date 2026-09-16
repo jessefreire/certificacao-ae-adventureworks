@@ -3,7 +3,7 @@ version: 2
 models:
   - name: stg_adventure_works__creditcard
     description: >
-      Cartoes de credito. O tipo de cartao e um dos cortes que o briefing pede,
+      Cartoes de credito. O tipo de cartao e uma das quebras que o briefing pede,
       embora a analise tenha mostrado distribuicao quase uniforme entre os
       quatro tipos.
     columns:

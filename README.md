@@ -198,11 +198,11 @@ existe só no online, o ticket por país varia por mistura de canal, as cinco ma
 
 Os **nove gráficos** vêm em dois grupos, e a divisão é proposital. Os cinco primeiros existem
 onde o gráfico mostra algo que a tabela não mostra — a quebra da série, a uniformidade que
-desqualifica um corte, a cauda longa do catálogo, a confusão entre canal e mercado, e a
+desqualifica uma quebra, a cauda longa do catálogo, a confusão entre canal e mercado, e a
 comparação que só vale dentro do mesmo canal. Os quatro últimos respondem visualmente as
 perguntas **(b)**, **(c)**, **(d)** e **(f)**, que são rankings. Com os nove, cada uma das seis
 perguntas do briefing tem ao menos um visual — e os quatro últimos já são o rascunho do
-dashboard da Etapa 7, com o mesmo corte e o mesmo aviso de escopo.
+dashboard da Etapa 7, com a mesma quebra e o mesmo aviso de escopo.
 
 ## Convenções de código
 
