@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: int_adventure_works__order_sales_reason
+    description: >
+      Ponte cobrindo os 31.465 pedidos (nao so os 23.012 com motivo), com
+      allocation_factor somando 1 por pedido.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - sales_order_id
+              - sales_reason_id
+    columns:
+      - name: sales_order_id
+        description: "Pedido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_adventure_works__salesorderheader')
+                field: sales_order_id
+
+      - name: sales_reason_id
+        description: "Motivo. -1 e o membro sintetico 'Nao informado'."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_adventure_works__salesreason')
+                field: sales_reason_id
+
+      - name: allocation_factor
+        description: "1 / numero de motivos do pedido. Soma 1 por pedido."
+        data_tests: [not_null]
