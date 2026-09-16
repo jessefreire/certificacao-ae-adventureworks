@@ -144,8 +144,8 @@ cartão"), `salesorderheadersalesreason` (a ponte real, com cobertura completa).
 |---|---|---|---|---|
 | 2 | `feature/dim-product` | `int_adventure_works__product` | `dim_product` | ✅ mesclada |
 | 3 | `feature/dim-customer` | `int_adventure_works__customer` | `dim_customer` | ✅ mesclada |
-| 4 | `feature/dim-geography` | `int_adventure_works__geography` | `dim_geography` | 🔧 em andamento |
-| 5 | `feature/dim-complementares` | `int_adventure_works__creditcard`, `int_adventure_works__salesperson`, `int_adventure_works__salesreason` (3 de 5; território e oferta não precisam) | `dim_credit_card`, `dim_territory`, `dim_special_offer`, `dim_salesperson`, `dim_sales_reason` | pendente |
+| 4 | `feature/dim-geography` | `int_adventure_works__geography` | `dim_geography` | ✅ mesclada — via `fix/geography-temp`, ver nota abaixo |
+| 5 | `feature/dim-complementares` | `int_adventure_works__creditcard`, `int_adventure_works__salesperson`, `int_adventure_works__salesreason` (3 de 5; território e oferta não precisam) | `dim_credit_card`, `dim_territory`, `dim_special_offer`, `dim_salesperson`, `dim_sales_reason` | 🔧 pronta para PR — as 5 dimensões passam juntas em `dbt build` |
 | 6 | `feature/bridge-order-sales-reason` | `int_adventure_works__order_sales_reason` (cobertura completa + `allocation_factor`) | `bridge_order_sales_reason` | pendente |
 | 7 | `feature/dim-dates` | — (gerada) | `dim_dates` | pendente |
 | 8 | `feature/fact-sales` | `int_adventure_works__sales` (junta item + cabeçalho, calcula `gross_revenue`/`discount_amount`) | `fact_sales` | pendente |
@@ -198,13 +198,30 @@ GitHub), **"Pull from main"** numa branch de feature (traz a `main` para dentro 
 o que trouxe o `dbt_project.yml` e as fontes para `feature/staging-adventure-works`, logo
 depois de criada).
 
-Três coisas que já custaram tempo neste projeto e no BanVic:
+Seis coisas que já custaram tempo neste projeto e no BanVic:
 
 - **`Ctrl+S` antes de rodar.** O dbt Cloud executa o arquivo salvo, não o que está na tela.
   Sem salvar, você depura um problema que já corrigiu.
 - **A `main` aparece travada com cadeado.** É proteção, não erro.
 - **Se o PR acusar conflito**, confira primeiro se `base` e `compare` não estão invertidos.
   É o engano mais comum e não parece o que é.
+- **Editar com a branch errada selecionada não perde o trabalho.** Se o Studio oferecer só
+  "Commit to new branch" numa branch protegida, é porque as mudanças ainda não pertencem a
+  nenhum commit — dá para trocar de branch primeiro (sem commitar) e ver se elas
+  acompanham. Se não acompanharem, commite numa branch temporária qualquer e abra o PR
+  contra a branch certa, em vez de contra a `main` — ou, se o diff vier vazio na
+  comparação, é sinal de que o conteúdo já estava mesclado e a branch temporária pode ser
+  descartada sem PR nenhum. Foi o que aconteceu na branch `dim-geography`: o desvio virou
+  `fix/geography-temp`, e ela nunca precisou de PR de verdade.
+- **`--select modelo` sozinho não reconstrói dependências que sumiram do warehouse**, mesmo
+  com `+modelo`. Se um `ref()` disser `TABLE_OR_VIEW_NOT_FOUND` para algo que já devia
+  existir, liste os dois nomes explicitamente no `--select` — e, se persistir, confira se o
+  arquivo de origem não está vazio (aconteceu com `stg_adventure_works__specialoffer`: os
+  dois arquivos foram commitados em branco desde o começo, e só apareceu quando a view
+  sumiu do Databricks).
+- **Depois de um susto desses, vale varrer os arquivos-irmãos por segurança** —
+  `git show origin/main:<arquivo> | wc -c` em todos os modelos da mesma pasta detecta
+  qualquer outro arquivo vazio escondido, em segundos.
 
 ## Mensagem de commit
 
