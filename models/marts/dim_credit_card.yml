@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: dim_credit_card
+    description: >
+      Cartoes de credito. Inclui o membro "Sem cartao" (-1), para os 1.131
+      pedidos que nao tem cartao registrado.
+    columns:
+      - name: credit_card_key
+        description: "Chave primaria. -1 e o membro 'Sem cartao'."
+        data_tests: [unique, not_null]
+
+      - name: card_type
+        description: "Bandeira do cartao, ou 'Sem cartao'."
