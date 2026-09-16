@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_special_offer
+    description: "Ofertas e descontos aplicados ao item de pedido."
+    columns:
+      - name: special_offer_key
+        description: "Chave primaria. Reaproveita o special_offer_id da origem."
+        data_tests: [unique, not_null]
+
+      - name: offer_description
+        description: "Descricao da oferta."
+
+      - name: offer_type
+        description: "Tipo da oferta."
+
+      - name: offer_category
+        description: "Categoria da oferta."
+
+      - name: discount_pct
+        description: "Percentual de desconto. Atributo, nao metrica: nao soma."
