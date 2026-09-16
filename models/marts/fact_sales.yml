@@ -1,0 +1,123 @@
+version: 2
+
+models:
+  - name: fact_sales
+    description: >
+      Fato de vendas, grao item de pedido. 121.317 linhas. Chaves renomeadas
+      para o padrao _key, casando com a PK de cada dimensao.
+    columns:
+      - name: sales_order_detail_id
+        description: "Chave primaria. O grao: um item de pedido."
+        data_tests: [unique, not_null]
+
+      - name: sales_order_id
+        description: "Pedido, degenerada. Liga com a bridge."
+        data_tests: [not_null]
+
+      - name: sales_order_number
+        description: "Numero do pedido, degenerada."
+        data_tests: [not_null]
+
+      - name: order_date
+        description: "Coluna fisica de data, para o teste de aceite do CEO nao precisar de join."
+        data_tests: [not_null]
+
+      - name: product_key
+        description: "FK para dim_product."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_key
+
+      - name: customer_key
+        description: "FK para dim_customer."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_key
+
+      - name: bill_to_geography_key
+        description: "FK para dim_geography, lado do faturamento."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geography')
+                field: bill_to_geography_key
+
+      - name: credit_card_key
+        description: "FK para dim_credit_card. -1 para pedido sem cartao."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_credit_card')
+                field: credit_card_key
+
+      - name: territory_key
+        description: "FK para dim_territory."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_territory')
+                field: territory_key
+
+      - name: special_offer_key
+        description: "FK para dim_special_offer."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_special_offer')
+                field: special_offer_key
+
+      - name: salesperson_key
+        description: "FK para dim_salesperson. -1 para venda online, sem vendedor."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_salesperson')
+                field: salesperson_key
+
+      - name: status
+        description: "Status do pedido na origem."
+        data_tests: [not_null]
+
+      - name: channel
+        description: "'online' ou 'revenda' — o eixo de controle de toda a analise."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["online", "revenda"]
+
+      - name: has_promotion_reason
+        description: "Atalho para a pergunta (f), sem atravessar a bridge."
+        data_tests: [not_null]
+
+      - name: unit_price
+        description: "Preco unitario. Atributo, nao metrica: somar nao significa nada."
+
+      - name: unit_price_discount_rate
+        description: "Taxa de desconto, de 0 a 1. Atributo, nao metrica."
+
+      - name: order_quantity
+        description: "Unidades vendidas."
+        data_tests: [not_null]
+
+      - name: gross_revenue
+        description: "orderqty * unitprice. E a medida do aceite do CEO: 12.646.112,1607 em 2011."
+        data_tests: [not_null]
+
+      - name: discount_amount
+        description: "gross_revenue menos net_revenue."
+        data_tests: [not_null]
+
+      - name: net_revenue
+        description: "linetotal da origem. Soma 12.641.672,2130 em 2011."
+        data_tests: [not_null]
