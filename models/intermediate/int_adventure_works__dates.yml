@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: int_adventure_works__dates
+    description: >
+      Calendario gerado por dbt_utils.date_spine, 2011-01-01 a 2014-12-31.
+      is_full_year e falso para 2011 e 2014, que sao truncados na janela de
+      vendas real (mai/2011 a jun/2014).
+    columns:
+      - name: date_day
+        description: "Chave primaria. Um dia por linha."
+        data_tests: [unique, not_null]
+
+      - name: year
+        data_tests: [not_null]
+
+      - name: month
+        data_tests: [not_null]
+
+      - name: month_name
+        description: "Nome do mes por extenso, em portugues."
+        data_tests: [not_null]
+
+      - name: quarter
+        data_tests: [not_null]
+
+      - name: is_full_year
+        description: "Falso para 2011 e 2014 — comparacao ano a ano sobre eles engana."
+        data_tests: [not_null]
