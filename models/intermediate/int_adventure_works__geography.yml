@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: int_adventure_works__geography
+    description: >
+      Endereco com estado e pais resolvidos, e city_label ("Cidade, UF") para
+      distinguir as 38 cidades que existem em mais de um estado.
+    columns:
+      - name: address_id
+        description: "Chave primaria. Vira bill_to_geography_key em dim_geography."
+        data_tests: [unique, not_null]
+
+      - name: city_label
+        description: "'Cidade, UF'. Chave de exibicao que nao confunde cidades homonimas."
+        data_tests: [not_null]
