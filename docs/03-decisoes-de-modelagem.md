@@ -294,7 +294,7 @@ de origem para ele.
 
 | # | Pergunta | Caminho |
 |---|---|---|
-| (a) | pedidos, quantidade e valor por 9 cortes | fato → cada dimensão; o corte por **motivo** usa a ponte com `allocated_revenue_by_reason` |
+| (a) | pedidos, quantidade e valor por 9 quebras | fato → cada dimensão; o quebra por **motivo** usa a ponte com `allocated_revenue_by_reason` |
 | (b) | maior valor médio por pedido, por produto | fato → `dim_product` · `dim_dates` · `dim_geography` |
 | (c) | top 10 clientes | fato → `dim_customer`, filtrável pelas demais |
 | (d) | top 5 cidades | fato → `dim_geography`, por `city_key` |

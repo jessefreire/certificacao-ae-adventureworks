@@ -62,11 +62,11 @@ São **14 aprofundamentos**, distribuídos por onde a veia é mais rica: 3 em (a
 em cada uma das outras. Cada um passou por dois filtros:
 
 1. **Nasce de uma das seis.** Se não nasce, não entra — por rigoroso que fosse o tema.
-2. **O dado responde, e o corte discrimina.** Se as duas respostas possíveis levam à mesma
-   ação, ou se o corte devolve um único valor, a pergunta não presta.
+2. **O dado responde, e o quebra discrimina.** Se as duas respostas possíveis levam à mesma
+   ação, ou se o quebra devolve um único valor, a pergunta não presta.
 
 > **As evidências abaixo foram apuradas nos CSVs da base oficial.** Elas estão aqui para
-> provar que o dado sustenta a pergunta e que o corte informa algo — não como análise. A
+> provar que o dado sustenta a pergunta e que o quebra informa algo — não como análise. A
 > análise completa, com gráficos e comentário por insight, é a **Etapa 2**.
 
 > ⚠️ **Um eixo que atravessa tudo: o canal.** A Adventure Works é duas empresas na mesma
@@ -82,16 +82,16 @@ em cada uma das outras. Cada um passou por dois filtros:
 > *Qual o número de pedidos, a quantidade comprada e o valor total da transação por produto,
 > tipo de cartão, motivo da venda, data da venda, cliente, status, cidade, estado e país?*
 
-É a pergunta mais larga do briefing: 3 métricas × 9 cortes. O que ela literalmente pede é a
+É a pergunta mais larga do briefing: 3 métricas × 9 quebras. O que ela literalmente pede é a
 tabela fato inteira com todas as dimensões plugadas.
 
-#### a.1 — Quais dos nove cortes de fato discriminam?
+#### a.1 — Quais dos nove quebras de fato discriminam?
 
 | | |
 |---|---|
-| **O que responde** | Se cada um dos nove cortes separa a receita em grupos diferentes, ou se devolve grupos iguais. |
+| **O que responde** | Se cada um dos nove quebras separa a receita em grupos diferentes, ou se devolve grupos iguais. |
 | **Evidência** | **Dois dos nove não discriminam.** `status` é constante: 100% dos 31.465 pedidos estão em `5` (Shipped), zero exceções. `tipo de cartão` é praticamente uniforme: ColonialVoice 24,4%, SuperiorCard 24,3%, Distinguish 24,1%, Vista 23,6%, sem cartão 3,6%. |
-| **Por que existe** | O briefing manda entregar os nove. Entregar sem dizer que dois não informam nada é o mesmo erro do CRM que decepcionou a Silvana: uma tela cheia de cortes, nenhum acionável. Dizer qual corte não discrimina é o oposto — e é barato. |
+| **Por que existe** | O briefing manda entregar os nove. Entregar sem dizer que dois não informam nada é o mesmo erro do CRM que decepcionou a Silvana: uma tela cheia de quebras, nenhum acionável. Dizer qual quebra não discrimina é o oposto — e é barato. |
 | **Decide** | Onde gastar espaço de tela e atenção. `status` e `tipo de cartão` entram como filtro documentado, não como visual de destaque. |
 
 > Tentei ancorar o canal em `tipo de cartão`, apostando que pedido sem cartão fosse revenda.
@@ -102,16 +102,16 @@ tabela fato inteira com todas as dimensões plugadas.
 
 | | |
 |---|---|
-| **O que responde** | O complemento do corte por produto: não o que vendeu, mas o que nunca vendeu. |
+| **O que responde** | O complemento do quebra por produto: não o que vendeu, mas o que nunca vendeu. |
 | **Evidência** | **238 dos 504 produtos (47%) nunca venderam.** Dos 266 que vendem, o top 10 concentra 28,2% da receita. |
 | **Por que existe** | Quase metade do catálogo custa cadastro, estoque e atenção comercial sem devolver receita. Isso não aparece em nenhuma das seis, porque todas perguntam sobre o que vendeu. |
 | **Decide** | Poda de portfólio — a única economia desta lista que não depende de vender mais nada. |
 
-#### a.3 — O corte por motivo da venda cobre a empresa inteira?
+#### a.3 — O quebra por motivo da venda cobre a empresa inteira?
 
 | | |
 |---|---|
-| **O que responde** | Que fração do negócio o corte por motivo realmente descreve. |
+| **O que responde** | Que fração do negócio o quebra por motivo realmente descreve. |
 | **Evidência** | **Não cobre.** Motivo de venda existe **só no online** — a revenda tem **zero** pedidos com motivo. Somando, 8.453 pedidos (26,9%) não têm motivo nenhum, e 4.482 têm mais de um. |
 | **Por que existe** | Sem esse aviso, um gráfico de "receita por motivo" parece descrever a Adventure Works e descreve só o varejo online — de onde vem a menor parte da receita. É erro por omissão, do tipo que ninguém percebe. |
 | **Decide** | Que o visual de motivo leve rótulo explícito de escopo, e que exista o balde "sem motivo informado" em vez de um `inner join` que apaga um quarto da base. |
@@ -278,7 +278,7 @@ resposta passa a ser verificável, e o teste roda a cada carga.
 ## 3. Catálogo de indicadores
 
 O briefing pede quatro coisas nesta etapa: **pesquisar e definir os KPIs**, definir as
-**perguntas de negócio** (§2), **propor quais vão para o dashboard** (§3.1, com a regra de corte em §3.2) e
+**perguntas de negócio** (§2), **propor quais vão para o dashboard** (§3.1, com a regra de quebra em §3.2) e
 **justificar**.
 Esta seção cobre a primeira e a terceira.
 
@@ -286,7 +286,7 @@ Cada indicador é registrado com o conjunto de atributos que o referencial da In
 — *"nome, definição, fórmula de cálculo, fonte dos dados, periodicidade e responsável"*
 (`2.7) Como definir indicadores da plataforma e acompanhá-los`, linha 226) — mais três que
 faltam ali e que são o que liga o indicador ao modelo dimensional e à pergunta que o
-originou: **grão**, **dimensões de corte** e **responde**.
+originou: **grão**, **dimensões de quebra** e **responde**.
 
 Sobre o campo **responsável**: são papéis do briefing, não pessoas reais. Quem responde por
 um indicador é quem toma a decisão que ele destrava — não quem o calcula.
@@ -443,7 +443,7 @@ um indicador é quem toma a decisão que ele destrava — não quem o calcula.
 
 ---
 
-### 3.2 Regra de corte — por que estes nove
+### 3.2 Regra de quebra — por que estes nove
 
 Declarada, para a escolha ser auditável em vez de gosto pessoal. **Entra no dashboard o
 indicador que satisfaz ao menos uma condição:**
@@ -482,7 +482,7 @@ diz a que etapa pertence.
 
 > **Pertence à Etapas 3 e 5.**
 
-As perguntas e os cortes estão na §2. Aqui ficam as **métricas** que elas exigem e a
+As perguntas e os quebras estão na §2. Aqui ficam as **métricas** que elas exigem e a
 armadilha de cálculo que precede qualquer SQL.
 
 ### A.1 As métricas, com a fórmula
@@ -586,7 +586,7 @@ com dois e 153 com três). São 14,2% dos pedidos que têm motivo — receita su
 total do dashboard não fechar de forma visível.
 
 **Segunda armadilha no mesmo lugar:** **8.453 pedidos (26,9%) não têm motivo nenhum.**
-Qualquer corte por motivo perde mais de um quarto da base em silêncio — precisa de um bucket
+Qualquer quebra por motivo perde mais de um quarto da base em silêncio — precisa de um bucket
 **"sem motivo informado"** explícito, não um `inner join` que some as linhas.
 
 ### B.2 O que é "Promotion" na pergunta (f)? — ✅ resolvido, não é decisão
@@ -695,7 +695,7 @@ Fonte: `install.sql` + os 72 TSV de `AdventureWorks/data/`.
 
 **A contagem de schemas do briefing está certa; o que falta é o nome.** Ele diz "5 schemas"
 e lista quatro (HR, sales, production, purchasing) — o quinto é **`Person`**, e é ele que
-guarda `Address`, `StateProvince` e `CountryRegion`. Sem esse schema não existe corte por
+guarda `Address`, `StateProvince` e `CountryRegion`. Sem esse schema não existe quebra por
 cidade, estado ou país, que quatro das seis perguntas exigem. Vale dizer que `CountryRegion`
 mora em `Person`, não em `Sales`, o que não é intuitivo.
 
