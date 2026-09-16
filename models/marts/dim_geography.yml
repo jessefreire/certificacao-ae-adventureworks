@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: dim_geography
+    description: >
+      Geografia de cobranca (billtoaddressid do pedido). Medido: bill-to e
+      ship-to diferem em apenas 99 de 31.465 pedidos (0,31%), entao nao ha
+      dimensao de papel duplo — so esta.
+    columns:
+      - name: bill_to_geography_key
+        description: "Chave primaria. Reaproveita o address_id da origem."
+        data_tests: [unique, not_null]
+
+      - name: city
+        description: "Nome da cidade. Use city_label para exibicao — nao e unico sozinho."
+
+      - name: state_province_id
+        description: "Compoe a chave composta de cidade junto com city."
+
+      - name: city_label
+        description: "'Cidade, UF'. Distingue as 38 cidades que existem em mais de um estado."
+
+      - name: state_province
+        description: "Nome do estado."
+
+      - name: billing_country
+        description: >
+          Pais de cobranca. NAO confundir com dim_territory.territory_country
+          — descrevem a mesma venda por angulos diferentes.
+
+      - name: postal_code
+        description: "CEP."
