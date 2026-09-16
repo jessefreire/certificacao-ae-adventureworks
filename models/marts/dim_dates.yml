@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: dim_dates
+    description: >
+      Calendario de 2011 a 2014. is_full_year e falso para 2011 e 2014,
+      que sao anos truncados na janela real de vendas (mai/2011 a jun/2014)
+      — comparacao ano a ano sobre eles engana.
+    columns:
+      - name: date_day
+        description: "Chave primaria. Um dia por linha."
+        data_tests: [unique, not_null]
+
+      - name: year
+        description: "Ano."
+
+      - name: month
+        description: "Mes, numerico."
+
+      - name: month_name
+        description: "Nome do mes por extenso, em portugues."
+
+      - name: quarter
+        description: "Trimestre."
+
+      - name: is_full_year
+        description: "Falso para 2011 e 2014."
