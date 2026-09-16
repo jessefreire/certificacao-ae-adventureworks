@@ -159,8 +159,13 @@ onde essas decisões ficam visíveis para quem revisa.
 5. Studio:   Commit and sync
 6. GitHub:   abre o PR  ->  base: main  <-  compare: feature/<nome>
 7. GitHub:   merge
-8. Studio:   volta para main  ->  Pull from main
+8. Studio:   volta para main  ->  Pull from remote
 ```
+
+O botão muda de nome conforme a branch: **"Pull from remote"** na própria `main` (busca do
+GitHub), **"Pull from main"** numa branch de feature (traz a `main` para dentro dela — foi
+o que trouxe o `dbt_project.yml` e as fontes para `feature/staging-adventure-works`, logo
+depois de criada).
 
 Três coisas que já custaram tempo neste projeto e no BanVic:
 
