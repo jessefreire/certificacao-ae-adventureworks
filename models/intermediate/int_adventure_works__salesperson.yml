@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: int_adventure_works__salesperson
+    description: >
+      Vendedor com nome resolvido e membro "Sem vendedor" (-1). Cobre os
+      27.659 pedidos online sem salespersonid — o conjunto coincide
+      exatamente com o canal, nao e dado faltante.
+    columns:
+      - name: business_entity_id
+        description: "Chave primaria. -1 e o membro sintetico."
+        data_tests: [unique, not_null]
+
+      - name: salesperson_name
+        description: "'Sem vendedor' quando business_entity_id e -1."
+        data_tests: [not_null]
+
+      - name: sales_quota
+        description: "Meta de vendas. Nulo para o membro sintetico."
+
+      - name: commission_pct
+        description: "Percentual de comissao. Atributo, nao metrica. Nulo para o membro sintetico."
