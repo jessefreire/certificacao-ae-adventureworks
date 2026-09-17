@@ -146,10 +146,13 @@ cartão"), `salesorderheadersalesreason` (a ponte real, com cobertura completa).
 | 3 | `feature/dim-customer` | `int_adventure_works__customer` | `dim_customer` | ✅ mesclada |
 | 4 | `feature/dim-geography` | `int_adventure_works__geography` | `dim_geography` | ✅ mesclada — via `fix/geography-temp`, ver nota abaixo |
 | 5 | `feature/dim-complementares` | `int_adventure_works__creditcard`, `int_adventure_works__salesperson`, `int_adventure_works__salesreason` (3 de 5; território e oferta não precisam) | `dim_credit_card`, `dim_territory`, `dim_special_offer`, `dim_salesperson`, `dim_sales_reason` | 🔧 pronta para PR — as 5 dimensões passam juntas em `dbt build` |
-| 6 | `feature/bridge-order-sales-reason` | `int_adventure_works__order_sales_reason` (cobertura completa + `allocation_factor`) | `bridge_order_sales_reason` | pendente |
-| 7 | `feature/dim-dates` | — (gerada) | `dim_dates` | pendente |
-| 8 | `feature/fact-sales` | `int_adventure_works__sales` (junta item + cabeçalho, calcula `gross_revenue`/`discount_amount`) | `fact_sales` | pendente |
-| 9 | `feature/teste-aceite-ceo` | — | teste `tests/assert_receita_bruta_2011.sql` | pendente |
+| 6 | `feature/bridge-order-sales-reason` | `int_adventure_works__order_sales_reason` (cobertura completa + `allocation_factor`) | `bridge_order_sales_reason` | ✅ mesclada |
+| 7 | `feature/dim-dates` | — (gerada) | `dim_dates` | ✅ mesclada — via `Revert`, ver nota abaixo |
+| 8 | `feature/fact-sales` | `int_adventure_works__sales` (junta item + cabeçalho, calcula `gross_revenue`/`discount_amount`) | `fact_sales` | ✅ mesclada |
+| 9 | `feature/teste-aceite-ceo` | — | teste `tests/assert_receita_bruta_2011.sql` | ✅ mesclada |
+
+**As nove branches estão fechadas.** `dbt build` completo: **234 de 234 testes e modelos
+verdes.**
 
 ### Por que a nona é separada
 
@@ -198,7 +201,7 @@ GitHub), **"Pull from main"** numa branch de feature (traz a `main` para dentro 
 o que trouxe o `dbt_project.yml` e as fontes para `feature/staging-adventure-works`, logo
 depois de criada).
 
-Seis coisas que já custaram tempo neste projeto e no BanVic:
+Sete coisas que já custaram tempo neste projeto e no BanVic:
 
 - **`Ctrl+S` antes de rodar.** O dbt Cloud executa o arquivo salvo, não o que está na tela.
   Sem salvar, você depura um problema que já corrigiu.
@@ -222,6 +225,12 @@ Seis coisas que já custaram tempo neste projeto e no BanVic:
 - **Depois de um susto desses, vale varrer os arquivos-irmãos por segurança** —
   `git show origin/main:<arquivo> | wc -c` em todos os modelos da mesma pasta detecta
   qualquer outro arquivo vazio escondido, em segundos.
+- **O workspace do Studio pode divergir do GitHub sem motivo aparente.** Depois do merge de
+  `dim_dates`, a `main` no Studio mostrou os arquivos da branch como "Deleted", mesmo com o
+  PR mesclado — `git ls-tree origin/main` confirmou que os quatro arquivos estavam intactos
+  no remoto. O menu de branch tem um **"Revert"** que resolve, restaurando o workspace local
+  ao estado do remoto — mas ele descarta **qualquer coisa não commitada** no mesmo workspace,
+  então vale conferir se não há trabalho novo ainda sem commit antes de usar.
 
 ## Mensagem de commit
 
@@ -323,8 +332,8 @@ O briefing não exige que cada linha seja digitada ao vivo — só que `dbt run`
 dizer "fiz tudo isso aqui, do zero" seria impreciso. A narrativa correta é mais forte que a
 imprecisa: **o modelo foi desenhado primeiro** (Etapa 3, com evidência medida em cada
 decisão), **as fontes e o primeiro modelo nasceram desse desenho**, e o resto da staging é
-construído **ao vivo**, em branch, com PR de verdade. É o processo que o item **2.7**
-avalia, e é o que um AE sênior faz — modelar antes de codificar.
+construído **ao vivo**, em branch, com PR de verdade. É o processo que demonstra
+engenharia madura, e é o que um AE sênior faz — modelar antes de codificar.
 
 ### Roteiro do trecho de vídeo sobre a camada de staging
 

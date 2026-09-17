@@ -8,11 +8,11 @@ manual: o Chrome imprime sem interface, e o script confere que o diagrama saiu.
 
 ## Por que gerar em vez de escrever o HTML à mão
 
-O entregável do item 1.1 do formulário é o diagrama, e o do item 1.2 é o mapeamento de
-fontes. Os dois vivem em `docs/03.01-modelo-conceitual.md`, que é versionado e renderiza no
-GitHub. Um HTML escrito à mão seria uma **segunda** cópia do mesmo conteúdo, e as duas
-divergiriam na primeira correção — exatamente o risco que o item 2.7 do formulário cobra
-entre diagrama e projeto.
+O briefing pede o diagrama conceitual em PDF, com o mapeamento das tabelas de origem de
+cada dimensão/fato. Os dois vivem em `docs/03.01-modelo-conceitual.md`, que é versionado e
+renderiza no GitHub. Um HTML escrito à mão seria uma **segunda** cópia do mesmo conteúdo, e
+as duas divergiriam na primeira revisão — exatamente o risco de manter diagrama e projeto
+dessincronizados.
 
 Então o markdown entra inteiro, embutido, e quem renderiza é o navegador: `marked` para o
 texto e `mermaid` para o diagrama. O PDF passa a ser uma fotografia do arquivo versionado.

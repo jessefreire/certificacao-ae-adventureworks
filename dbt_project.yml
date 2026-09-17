@@ -34,6 +34,6 @@ models:
 
 # Uma divergencia declarada: o `dbt_coding_conventions.md` pede `ephemeral` como
 # materializacao padrao global. Aqui ela e declarada POR CAMADA, como no banvic-dbt e no
-# fluxo `ae-fullflow`. O motivo e o item 4.3 do formulario de avaliacao: o video precisa
-# demonstrar o `dbt run` criando objetos no Databricks, e modelo `ephemeral` nao cria objeto
-# nenhum — vira CTE. Escolha consciente, nao descuido.
+# fluxo `ae-fullflow`. O motivo e o briefing: o video precisa demonstrar o `dbt run`
+# criando objetos no Databricks, e modelo `ephemeral` nao cria objeto nenhum — vira CTE.
+# Escolha consciente, nao descuido.
