@@ -1,0 +1,49 @@
+table '`workspace` `dbt_jessefreire_marts` `dim_salesperson`'
+	lineageTag: 2d96a9ef-3a01-4925-843b-23044a9d5fb3
+
+	column salesperson_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 08880c3b-36eb-4317-9ed8-f9df54d94249
+		summarizeBy: none
+		sourceColumn: salesperson_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column salesperson_name
+		dataType: string
+		lineageTag: 266b969a-790c-484c-9b6e-23a0912d52d9
+		summarizeBy: none
+		sourceColumn: salesperson_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_quota
+		dataType: double
+		lineageTag: 7dd44a1b-42e9-43c3-b019-5d6385803e2a
+		summarizeBy: none
+		sourceColumn: sales_quota
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column commission_pct
+		dataType: double
+		lineageTag: be0bf5fc-9246-44fc-8be7-27fb884195c7
+		summarizeBy: none
+		sourceColumn: commission_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition '`workspace` `dbt_jessefreire_marts` `dim_salesperson`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    dim_salesperson_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="dim_salesperson",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    dim_salesperson_dbt_jessefreire_marts_workspace_Table
+

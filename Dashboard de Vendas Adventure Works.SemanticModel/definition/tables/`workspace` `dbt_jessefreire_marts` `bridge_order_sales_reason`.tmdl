@@ -1,0 +1,50 @@
+table '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`'
+	lineageTag: cbdffdb5-2528-4ee2-9348-1563f92cbcc3
+
+	/// Receita liquida do pedido multiplicada por allocation_factor (1/numero de motivos do pedido), somada linha a linha da ponte. Nunca some receita da fato direto atraves da ponte: infla o resultado em ~29%.
+	measure 'Receita por Motivo de Venda' =
+			SUMX(
+			    '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`',
+			    '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`'[allocation_factor]
+			        * CALCULATE(SUM('`workspace` `dbt_jessefreire_marts` `fact_sales`'[net_revenue]))
+			)
+		formatString: R$ #,##0.00
+		lineageTag: fdacd63c-9d91-40c1-afea-b5df3621ec85
+
+	column sales_order_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 53b069ab-6310-4925-aaeb-b9e6fdc7d18c
+		summarizeBy: none
+		sourceColumn: sales_order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_reason_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 12c9c4ee-92f2-4c5c-bbc6-cd0296b46189
+		summarizeBy: none
+		sourceColumn: sales_reason_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column allocation_factor
+		dataType: double
+		lineageTag: 3e26d664-f3f9-4788-adbc-be4437257f29
+		summarizeBy: sum
+		sourceColumn: allocation_factor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    bridge_order_sales_reason_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="bridge_order_sales_reason",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    bridge_order_sales_reason_dbt_jessefreire_marts_workspace_Table
+

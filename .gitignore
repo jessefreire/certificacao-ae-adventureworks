@@ -30,3 +30,11 @@ profiles.yml
 .DS_Store
 Thumbs.db
 dbt_internal_packages/
+
+# Power BI — o projeto e versionado como PBIP (pasta de texto), nao como binario.
+# O .pbix e so o formato de exportacao final pra entrega, gerado a partir do PBIP.
+*.pbix
+
+# Estado local do Power BI Desktop — nao versionar (por-maquina, cache binario)
+.pbi/cache.abf
+.pbi/localSettings.json

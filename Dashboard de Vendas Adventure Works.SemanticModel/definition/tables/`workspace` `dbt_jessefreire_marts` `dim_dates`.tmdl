@@ -1,0 +1,70 @@
+table '`workspace` `dbt_jessefreire_marts` `dim_dates`'
+	lineageTag: a8be8576-0485-4f72-bb56-06e1cd67e066
+	dataCategory: Time
+
+	column date_day
+		dataType: dateTime
+		isUnique
+		formatString: Long Date
+		lineageTag: 62e01802-324a-448c-81c4-9ef245042d62
+		summarizeBy: none
+		sourceColumn: date_day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 2685bed5-27d1-4586-ae99-38e16754e8d8
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 34f52983-030f-4691-a28a-e2c034c71c7a
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: fa3d819f-49c1-496e-8566-0427067f52c6
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 59c99a5c-f147-4585-90c4-d7dfa8a1151b
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_full_year
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2e1f7e64-b5b8-447b-b467-fd9f880bd7ef
+		summarizeBy: none
+		sourceColumn: is_full_year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '`workspace` `dbt_jessefreire_marts` `dim_dates`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    dim_dates_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="dim_dates",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    dim_dates_dbt_jessefreire_marts_workspace_Table
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Dashboard de Vendas Adventure Works"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9e6d1ac6-e76c-4c29-93e8-25a1119c9c89"
+  }
+}

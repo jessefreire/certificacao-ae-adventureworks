@@ -1,0 +1,79 @@
+table '`workspace` `dbt_jessefreire_marts` `dim_product`'
+	lineageTag: 879c8912-5ad3-4f34-8d37-1cabc0902d4e
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 86effc4d-7bfe-499e-a0e5-0a27c02e6a6b
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name
+		dataType: string
+		lineageTag: 1e45c676-ae13-485f-afb3-3b7adb7767cf
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_number
+		dataType: string
+		lineageTag: c7ac9e47-7aeb-4429-ac0a-d049f8b3d898
+		summarizeBy: none
+		sourceColumn: product_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column subcategory
+		dataType: string
+		lineageTag: 1bf31040-e27c-4ce1-988b-561e89904757
+		summarizeBy: none
+		sourceColumn: subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 6c859c61-d1ad-44e4-8cb9-f5000dca89b2
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column list_price
+		dataType: double
+		lineageTag: 785cba1f-1500-46c7-94f1-6d459445c86d
+		summarizeBy: none
+		sourceColumn: list_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column color
+		dataType: string
+		lineageTag: 341175b0-6ca0-4755-b8de-8b1266f122a0
+		summarizeBy: none
+		sourceColumn: color
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_line
+		dataType: string
+		lineageTag: 2d33447f-4fd7-4b7d-b22e-19d3a80fdc68
+		summarizeBy: none
+		sourceColumn: product_line
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '`workspace` `dbt_jessefreire_marts` `dim_product`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    dim_product_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="dim_product",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    dim_product_dbt_jessefreire_marts_workspace_Table
+

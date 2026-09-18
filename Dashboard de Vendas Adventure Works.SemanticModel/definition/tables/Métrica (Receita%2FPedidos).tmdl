@@ -1,0 +1,43 @@
+table 'Métrica (Receita/Pedidos)'
+	lineageTag: 5250c694-c66b-47f8-b025-4d2c76d4e8d8
+
+	column 'Métrica (Receita/Pedidos) Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8bd9399d-8eac-41f1-8ae0-b5c4bf37d9f4
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	column 'Métrica (Receita/Pedidos) Fields'
+		dataType: string
+		isHidden
+		lineageTag: f7df5d22-9712-4013-b85d-c1168110dbb6
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Métrica (Receita/Pedidos) Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Métrica (Receita/Pedidos)'
+		dataType: string
+		lineageTag: 4dbe1e1a-e196-46af-9da8-7e656081331d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Métrica (Receita/Pedidos) Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Métrica (Receita/Pedidos) Fields'
+
+	partition 'Métrica (Receita/Pedidos)' = calculated
+		mode: import
+		source =
+				{
+				    ("Receita", NAMEOF('`workspace` `dbt_jessefreire_marts` `fact_sales`'[Receita Líquida]), 0),
+				    ("Pedidos", NAMEOF('`workspace` `dbt_jessefreire_marts` `fact_sales`'[Número de Pedidos]), 1)
+				}
+

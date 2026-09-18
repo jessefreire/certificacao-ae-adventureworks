@@ -1,0 +1,443 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "213090e0020333faf11a",
+  "position": {
+    "x": 24,
+    "y": 492,
+    "z": 2000,
+    "height": 376,
+    "width": 1232,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_product`"
+                    }
+                  },
+                  "Property": "category"
+                }
+              },
+              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_product`.category",
+              "nativeQueryRef": "category",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_product`"
+                    }
+                  },
+                  "Property": "product_name"
+                }
+              },
+              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_product`.product_name",
+              "nativeQueryRef": "product_name",
+              "active": false
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                    }
+                  },
+                  "Property": "Número de Pedidos"
+                }
+              },
+              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Número de Pedidos",
+              "nativeQueryRef": "Número de Pedidos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                    }
+                  },
+                  "Property": "Itens Vendidos"
+                }
+              },
+              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Itens Vendidos",
+              "nativeQueryRef": "Itens Vendidos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                    }
+                  },
+                  "Property": "Receita Líquida"
+                }
+              },
+              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Receita Líquida",
+              "nativeQueryRef": "Receita Líquida"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                    }
+                  },
+                  "Property": "Ticket Médio"
+                }
+              },
+              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Ticket Médio",
+              "nativeQueryRef": "Ticket Médio"
+            }
+          ]
+        }
+      }
+    },
+    "expansionStates": [
+      {
+        "roles": [
+          "Rows"
+        ],
+        "levels": [
+          {
+            "queryRefs": [
+              "`workspace` `dbt_jessefreire_marts` `dim_product`.category"
+            ],
+            "isCollapsed": true,
+            "identityKeys": [
+              {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_product`"
+                    }
+                  },
+                  "Property": "category"
+                }
+              }
+            ],
+            "isPinned": true
+          },
+          {
+            "queryRefs": [
+              "`workspace` `dbt_jessefreire_marts` `dim_product`.product_name"
+            ],
+            "isCollapsed": true,
+            "isPinned": true
+          }
+        ],
+        "root": {}
+      }
+    ],
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'growToFit'"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6B85'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "rowHeaders": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#032164'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#032164'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColorPrimary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColorSecondary": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F7F9FC'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "16D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'None'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Matriz — Pedidos, Quantidade e Valor'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#032164'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "6462959a83b0e5ae90a0",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "`workspace` `dbt_jessefreire_marts` `dim_product`"
+              }
+            },
+            "Property": "category"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "8ee8702f5525a2ba5698",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "`workspace` `dbt_jessefreire_marts` `dim_product`"
+              }
+            },
+            "Property": "product_name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "fc89d3599a0dd5bb29dd",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+              }
+            },
+            "Property": "Número de Pedidos"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1296191d3376121eb9cb",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+              }
+            },
+            "Property": "Itens Vendidos"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "94765d7a4403a82b9d6b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+              }
+            },
+            "Property": "Receita Líquida"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "0b179f2acaa64ed666ec",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+              }
+            },
+            "Property": "Ticket Médio"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}
