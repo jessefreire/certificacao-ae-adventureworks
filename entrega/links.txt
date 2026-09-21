@@ -9,11 +9,12 @@ trava.
 GitHub (projeto de transformação, com os modelos dbt)
   https://github.com/jessefreire/certificacao-ae-adventureworks
   O projeto vive na raiz deste repositório — nada de subpasta.
-  PENDENTE: o projeto dbt da Etapa 5 ainda não existe.
+  COMPLETO: dbt build fecha em 234/234 testes e modelos verdes.
 
 
 Dashboard — POWER BI (decidido)
-  PENDENTE — Etapa 7.
+  COMPLETO — Etapa 7. 4 páginas (Capa, Visão Geral & Produtos, Clientes,
+  Análise Geográfica), 45 medidas DAX documentadas dentro do arquivo.
   NÃO entra link aqui: em Power BI o entregável é o próprio arquivo .pbix,
   dentro da pasta da submissão, com as medidas DAX documentadas DENTRO do
   arquivo (campo de descrição de cada medida).
@@ -26,10 +27,12 @@ Vídeo (YouTube, Drive ou Dropbox)
 
 
 Também vão na pasta da submissão, como arquivo e não como link:
-  - modelo conceitual em PDF (Etapa 3)
-  - mockup do dashboard em JPEG, feito no Figma (Etapa 6)
-  - documentação das regras de negócio (Etapa 8)
-  - apresentação exportada em JPEG ou PDF (Etapa 9)
+  - modelo conceitual em PDF (Etapa 3) — COMPLETO
+  - mockup do dashboard em JPEG (Etapa 6) — COMPLETO (mockup de alta
+    fidelidade, 4 páginas; Figma avaliado e substituído por design canvas)
+  - documentação das regras de negócio (Etapa 8) — COMPLETO
+  - apresentação exportada em JPEG ou PDF (Etapa 9) — PENDENTE, falta
+    montar o deck final a partir das seções por etapa já prontas
 
 Limite do Moodle: 40 MB. Acima disso, subir o zip para o Drive e entregar o
 link — público.
