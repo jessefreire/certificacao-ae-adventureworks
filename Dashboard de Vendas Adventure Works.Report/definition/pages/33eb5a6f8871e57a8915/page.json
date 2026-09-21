@@ -14,7 +14,7 @@
               "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'VisaoGeralProdutos-fundo@2x.png'"
+                    "Value": "'AdventureWorks-VisaoGeralProdutos-fundo.svg'"
                   }
                 }
               },
@@ -23,14 +23,14 @@
                   "ResourcePackageItem": {
                     "PackageName": "RegisteredResources",
                     "PackageType": 1,
-                    "ItemName": "VisaoGeralProdutos-fundo@2x2820760109892614.png"
+                    "ItemName": "AdventureWorks-VisaoGeralProdu6195042804491854.svg"
                   }
                 }
               },
               "scaling": {
                 "expr": {
                   "Literal": {
-                    "Value": "'Fit'"
+                    "Value": "'Normal'"
                   }
                 }
               }

@@ -65,6 +65,16 @@
       "type": "RegisteredResources",
       "items": [
         {
+          "name": "AdventureWorks-AnaliseGeografi1422539059401181.svg",
+          "path": "AdventureWorks-AnaliseGeografi1422539059401181.svg",
+          "type": "Image"
+        },
+        {
+          "name": "AdventureWorks-Clientes-fundo7535464242024229.svg",
+          "path": "AdventureWorks-Clientes-fundo7535464242024229.svg",
+          "type": "Image"
+        },
+        {
           "name": "AdventureWorks-Logo-Card.svg",
           "path": "AdventureWorks-Logo-Card.svg",
           "type": "Image"
@@ -75,24 +85,14 @@
           "type": "Image"
         },
         {
-          "name": "AnaliseGeografica-fundo@1x12513730515601806.png",
-          "path": "AnaliseGeografica-fundo@1x12513730515601806.png",
-          "type": "Image"
-        },
-        {
-          "name": "Clientes-fundo@2x9859950347839423.png",
-          "path": "Clientes-fundo@2x9859950347839423.png",
+          "name": "AdventureWorks-VisaoGeralProdu6195042804491854.svg",
+          "path": "AdventureWorks-VisaoGeralProdu6195042804491854.svg",
           "type": "Image"
         },
         {
           "name": "Storm.json",
           "path": "Storm.json",
           "type": "CustomTheme"
-        },
-        {
-          "name": "VisaoGeralProdutos-fundo@2x2820760109892614.png",
-          "path": "VisaoGeralProdutos-fundo@2x2820760109892614.png",
-          "type": "Image"
         }
       ]
     }

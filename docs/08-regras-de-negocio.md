@@ -65,7 +65,7 @@ por motivo.
 **Atalho degenerado**: `fact_sales.has_promotion_reason` responde à pergunta (f) — "qual
 produto tem mais unidades vendidas pelo motivo Promotion" — sem precisar atravessar a ponte,
 porque só existe um motivo da categoria "Promotion" no catálogo (nenhum pedido casa duas
-vezes com esse filtro).
+vezes com esse filtro; detalhe em §9).
 
 ## 4. Membros sintéticos (`-1`) — onde existem e o que significam
 
@@ -108,7 +108,43 @@ a própria data) e `dim_geography` (`bill_to_geography_key` = `address_id` da or
 cidade sozinha não é única — 38 cidades existem em mais de um estado; para exibição, usar
 `city_label`, no formato "Cidade, UF").
 
-## 8. Regra de teste (herdada da Etapa 5)
+## 8. Vendas brutas vs. líquidas — o desconto já embutido no `linetotal`
+
+`gross_revenue` (`unitprice × orderqty`, **antes** do desconto) é a métrica auditada pelo
+CEO — bate exato com o teste de aceite de 2011 (US$ 12.646.112,1607). `net_revenue` é o
+`linetotal` da origem, e `linetotal` **já sai com o desconto aplicado**:
+
+```
+linetotal = unitprice * (1 - unitpricediscount) * orderqty
+gross_revenue = unitprice * orderqty
+discount_amount = gross_revenue - net_revenue
+```
+
+**Armadilha real, não hipotética**: a fórmula do briefing para ticket médio é *"gross
+revenue − product discounts / number of orders"*. Quem lê "gross revenue" como
+`sum(linetotal)` e **ainda** subtrai o desconto de novo desconta duas vezes — o ticket médio
+sai baixo demais. `linetotal` já é `gross_revenue − discount_amount`; não subtrair `discount`
+de novo em cima dele.
+
+## 9. "Promotion" na pergunta (f) — motivo específico, não categoria ambígua
+
+A pergunta (f) pede o produto com mais unidades vendidas pelo motivo **"Promotion"**. O
+catálogo de motivos tem duas colunas que pareciam ambíguas entre si — `name` e `reason_type`
+— mas na prática só existe **um** motivo com `reason_type = 'Promotion'`: `On Promotion`
+(id 2), entre os 10 motivos cadastrados. Não é uma categoria com vários membros, é um motivo
+único — por isso `fact_sales.has_promotion_reason` (ver §3) pode responder a pergunta (f)
+direto na fato, sem atravessar a ponte `bridge_order_sales_reason`.
+
+## 11. `status` é constante — não vale slicer nem gráfico dedicado
+
+`fact_sales.status` é `5` ("Shipped"/"Faturado") em **100% dos 31.465 pedidos**, sem uma
+única exceção — não existe tabela de origem para ele, o rótulo é mapeado direto no modelo.
+Não discrimina nada: um slicer ou gráfico de status sempre mostraria uma única barra. A
+decisão de desenho é deixá-lo **só como coluna** na tabela "Pedidos detalhados" (rotulado
+"Faturado"), sem visual dedicado — ele existe pra ser citado (ex. no vídeo de entrega), não
+pra ser filtrado.
+
+## 12. Regra de teste (herdada da Etapa 5)
 
 Toda tabela mart tem teste `unique` + `not_null` na chave primária, e toda FK da fato tem
 teste `relationships` apontando para a dimensão correspondente — 234/234 testes verdes,

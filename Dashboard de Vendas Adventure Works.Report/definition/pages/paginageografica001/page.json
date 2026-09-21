@@ -14,7 +14,7 @@
               "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'AnaliseGeografica-fundo@1x.png'"
+                    "Value": "'AdventureWorks-AnaliseGeografica-fundo.svg'"
                   }
                 }
               },
@@ -23,7 +23,7 @@
                   "ResourcePackageItem": {
                     "PackageName": "RegisteredResources",
                     "PackageType": 1,
-                    "ItemName": "AnaliseGeografica-fundo@1x12513730515601806.png"
+                    "ItemName": "AdventureWorks-AnaliseGeografi1422539059401181.svg"
                   }
                 }
               },

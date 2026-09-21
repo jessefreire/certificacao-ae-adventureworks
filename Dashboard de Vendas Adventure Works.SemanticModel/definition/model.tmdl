@@ -24,7 +24,6 @@ ref table dim_salesperson
 ref table dim_special_offer
 ref table dim_territory
 ref table fact_sales
-ref table 'Dimensão (Categoria/Produto)'
 ref table 'Métrica (Receita/Pedidos)'
 ref table 'Atualização do Modelo'
 ref table 'Métrica (Motivo)'

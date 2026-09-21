@@ -3,10 +3,10 @@
   "name": "clKpiReceitaTop1001",
   "position": {
     "x": 770,
-    "y": 231.66666666666669,
+    "y": 249,
     "z": 10000,
-    "height": 108.33333333333334,
-    "width": 236.66666666666669,
+    "height": 91,
+    "width": 237,
     "tabOrder": 10000
   },
   "visual": {

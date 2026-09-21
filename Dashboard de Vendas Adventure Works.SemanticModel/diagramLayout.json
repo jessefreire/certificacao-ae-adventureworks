@@ -10,19 +10,6 @@
       "nodes": [
         {
           "location": {
-            "x": 1136.7798637248081,
-            "y": 637.861685476073
-          },
-          "nodeIndex": "Dimensão (Categoria/Produto)",
-          "nodeLineageTag": "d6c791a2-54b3-4ba0-9989-2b6a8d7cfd00",
-          "size": {
-            "height": 152,
-            "width": 234
-          },
-          "zIndex": 16
-        },
-        {
-          "location": {
             "x": 1593.8604426994038,
             "y": 342.39548837858894
           },
