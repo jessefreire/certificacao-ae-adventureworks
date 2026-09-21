@@ -38,3 +38,7 @@ dbt_internal_packages/
 # Estado local do Power BI Desktop — nao versionar (por-maquina, cache binario).
 # Sem prefixo porque a pasta .pbi aparece dentro de .Report/ e .SemanticModel/, nao na raiz.
 .pbi/
+
+# Auditoria da skill /pbi-modelo-review — leva marca de terceiro (Xperiun) no rodape
+# do HTML/MD gerado, e este repositorio e publico. Roda local, nunca versiona.
+_review/
