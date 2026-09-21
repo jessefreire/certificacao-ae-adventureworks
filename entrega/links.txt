@@ -31,8 +31,8 @@ Também vão na pasta da submissão, como arquivo e não como link:
   - mockup do dashboard em JPEG (Etapa 6) — COMPLETO (mockup de alta
     fidelidade, 4 páginas; Figma avaliado e substituído por design canvas)
   - documentação das regras de negócio (Etapa 8) — COMPLETO
-  - apresentação exportada em JPEG ou PDF (Etapa 9) — PENDENTE, falta
-    montar o deck final a partir das seções por etapa já prontas
+  - apresentação exportada em PDF (Etapa 9) — COMPLETO ("Video Final -
+    Roteiro.pdf", o deck conciso de apoio ao vídeo)
 
 Limite do Moodle: 40 MB. Acima disso, subir o zip para o Drive e entregar o
 link — público.
