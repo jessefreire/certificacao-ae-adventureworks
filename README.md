@@ -61,7 +61,7 @@ entrega"` é critério de nota. O mapa 1:1:
 | Link do repositório com os modelos dbt | `entrega/links.txt` — projeto dbt no ar, 234/234 testes verdes |
 | PDF do modelo conceitual | `Desafio/entregaveis/` (fora do git), gerado de [`docs/03.01-modelo-conceitual.md`](docs/03.01-modelo-conceitual.md) |
 | JPEG do mockup, feito no Figma | mockup de alta fidelidade aprovado (artifact) — exportação final pendente |
-| PBIX com as medidas DAX documentadas dentro do arquivo | `Desafio/desafio-adventureworks/Dashboard de Vendas Adventure Works.pbip` — **Power BI**, AI/BI descartado |
+| PBIX com as medidas DAX documentadas dentro do arquivo | `Desafio/desafio-adventureworks/powerbi/Dashboard de Vendas Adventure Works.pbip` — **Power BI**, AI/BI descartado |
 | Arquivo com a documentação das regras de negócio | [`docs/08-regras-de-negocio.md`](docs/08-regras-de-negocio.md) |
 | Apresentação em slides | `Desafio/entregaveis/` (fora do git) — seções das Etapas 1 a 8 prontas |
 | Vídeo de 3 a 5 minutos | pendente, Etapa 10 |
