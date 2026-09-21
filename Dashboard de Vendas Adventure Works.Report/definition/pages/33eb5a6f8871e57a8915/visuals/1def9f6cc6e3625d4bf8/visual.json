@@ -3,10 +3,10 @@
   "name": "1def9f6cc6e3625d4bf8",
   "position": {
     "x": 24,
-    "y": 165,
+    "y": 259.33333333333331,
     "z": 0,
-    "height": 74,
-    "width": 299,
+    "height": 71.333333333333329,
+    "width": 167.33333333333334,
     "tabOrder": 0
   },
   "visual": {
@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                      "Entity": "fact_sales"
                     }
                   },
                   "Property": "Receita Bruta"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Receita Bruta",
+              "queryRef": "fact_sales.Receita Bruta",
               "nativeQueryRef": "Receita Bruta"
             }
           ]
@@ -58,7 +58,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "16D"
                 }
               }
             },
@@ -92,7 +92,7 @@
             }
           },
           "selector": {
-            "metadata": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Receita Bruta"
+            "metadata": "fact_sales.Receita Bruta"
           }
         }
       ],
@@ -173,6 +173,19 @@
             "id": "default"
           }
         }
+      ],
+      "fillCustom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -203,23 +216,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "369ac1850e6690864c09",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
-              }
-            },
-            "Property": "Receita Bruta"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

@@ -1,0 +1,297 @@
+table fact_sales
+	lineageTag: 05b6306f-755e-4982-8439-f87f0f9af832
+
+	/// Receita bruta = orderqty x unitprice, somada no grao do item. Teste de aceite do CEO: 12.646.112,1607 em 2011.
+	measure 'Receita Bruta' = SUM('fact_sales'[gross_revenue])
+		formatString: R$ #,##0.00
+		lineageTag: 6b8512c6-7026-4b24-a223-8c9b61efdf82
+
+	/// Receita liquida = linetotal da origem (receita bruta menos desconto).
+	measure 'Receita Líquida' = SUM('fact_sales'[net_revenue])
+		formatString: R$ #,##0.00
+		lineageTag: ceea070d-c0de-44ee-abb1-935a7901bf7d
+
+	/// Contagem de pedidos distintos. Nunca COUNTROWS: a fato esta no grao do item, um pedido tem varias linhas.
+	measure 'Número de Pedidos' = DISTINCTCOUNT('fact_sales'[sales_order_id])
+		formatString: #,##0
+		lineageTag: 7b5200a1-24c9-4303-9c57-0157a1974339
+
+	/// Soma de unidades vendidas (order_quantity).
+	measure 'Itens Vendidos' = SUM('fact_sales'[order_quantity])
+		formatString: #,##0
+		lineageTag: bf8db27f-9f88-48f3-aa9c-1d73e4b587bb
+
+	/// Receita liquida dividida pelo numero de pedidos distintos.
+	measure 'Ticket Médio' = DIVIDE([Receita Líquida], [Número de Pedidos])
+		formatString: R$ #,##0.00
+		lineageTag: c48acf12-dbcb-4d1a-a9f9-e05ae2b2953d
+
+	/// Desconto total dividido pela receita bruta.
+	measure 'Taxa de Desconto' = DIVIDE(SUM('fact_sales'[discount_amount]), [Receita Bruta])
+		formatString: 0.0%
+		lineageTag: 80d8443a-fdba-4d39-af02-0b8a8334fecd
+
+	/// Participacao de pedidos por canal (online / revenda). Sem esse indicador, ticket medio e outras comparacoes por pais/motivo podem ser lidas como efeito de mercado quando na verdade sao efeito de mix de canal.
+	measure 'Mix de Canal' =
+			VAR PctOnline = DIVIDE(CALCULATE([Número de Pedidos], fact_sales[channel] = "online"), [Número de Pedidos])
+			VAR PctRevenda = DIVIDE(CALCULATE([Número de Pedidos], fact_sales[channel] = "revenda"), [Número de Pedidos])
+			RETURN FORMAT(PctOnline, "0%") & " / " & FORMAT(PctRevenda, "0%")
+		lineageTag: aaa792ee-2006-48d5-9c0d-3406d5515b55
+
+	/// Percentual de clientes com mais de um pedido no periodo filtrado.
+	measure 'Taxa de Recorrência' =
+			VAR ClientesRecorrentes =
+			    CALCULATE(
+			        DISTINCTCOUNT(fact_sales[customer_key]),
+			        FILTER(
+			            VALUES(fact_sales[customer_key]),
+			            CALCULATE(DISTINCTCOUNT(fact_sales[sales_order_id])) > 1
+			        )
+			    )
+			RETURN DIVIDE(ClientesRecorrentes, DISTINCTCOUNT(fact_sales[customer_key]))
+		formatString: 0.0%
+		lineageTag: 2fa0cb85-e456-4d31-bd3d-79d3aee6e083
+
+	/// Data da ultima venda do produto no contexto de filtro atual. So aparece em branco no nivel de produto (linha folha da Matriz); em qualquer outro contexto (categoria, total) retorna vazio de proposito, pra responder 'por data da venda' do briefing sem misturar granularidades diferentes numa mesma coluna.
+	measure 'Data da Venda' = IF(HASONEVALUE(dim_product[Produto]), MAX(fact_sales[order_date]), BLANK())
+		formatString: dd/mm/yyyy
+		lineageTag: 2e87c234-9256-4b55-89c4-8da24f5d4da2
+
+	/// Canal (online/revenda) com maior receita liquida no contexto de filtro atual. Usado em tabelas com grao de cliente ou cidade, onde um mesmo cliente/cidade pode ter pedidos em mais de um canal - mostra o canal predominante, nao todos.
+	measure 'Canal Predominante' =
+			VAR t = TOPN(1, SUMMARIZE(fact_sales, fact_sales[channel], "r", CALCULATE([Receita Líquida])), [r])
+			RETURN MAXX(t, fact_sales[channel])
+		lineageTag: c3e46ed9-4dd6-4a28-b16a-b2e66513de2b
+
+	/// Alias de Receita Liquida usado especificamente nas 3 tabelas de detalhe (Top 10 Clientes, Ranking de Cidades, Matriz), onde o briefing e o mockup chamam a coluna de 'Valor', nao 'Receita Liquida'. Mesmo numero, so o rotulo muda - nao usar em KPIs/graficos, que continuam com Receita Liquida.
+	measure Valor = [Receita Líquida]
+		formatString: R$ #,##0.00
+		lineageTag: af399721-f476-4bed-9c83-f2ef04753cc5
+
+	/// Alias de Itens Vendidos usado nas tabelas de detalhe (Top 10 Clientes, Matriz), onde o briefing chama a coluna de 'quantidade comprada'. Mesmo numero, so o rotulo muda.
+	measure Quantidade = [Itens Vendidos]
+		formatString: #,##0
+		lineageTag: f0d7025d-5984-4872-bad0-715732dda738
+
+	/// Titulo dinamico do grafico de linha, varia conforme o botao selecionado no toggle Metrica (Receita/Pedidos).
+	measure 'Título Receita por Mês' =
+			SWITCH(
+			    TRUE(),
+			    SELECTEDVALUE('Métrica (Receita/Pedidos)'[Métrica (Receita/Pedidos) Fields]) = "'fact_sales'[Número de Pedidos]", "Pedidos por mês / ano",
+			    SELECTEDVALUE('Métrica (Receita/Pedidos)'[Métrica (Receita/Pedidos) Fields]) = "'fact_sales'[Itens Vendidos]", "Quantidade por mês / ano",
+			    "Receita por mês / ano"
+			)
+		lineageTag: fdfb85e7-3d15-4b6f-9cff-5331ec8a0373
+
+	/// Titulo dinamico do grafico de barras por tipo de cartao, varia conforme o botao selecionado no toggle Metrica (Cartao).
+	measure 'Título Cartão' =
+			SWITCH(
+			    TRUE(),
+			    SELECTEDVALUE('Métrica (Cartão)'[Métrica (Cartão) Fields]) = "'fact_sales'[Número de Pedidos]", "Pedidos por tipo de cartão",
+			    SELECTEDVALUE('Métrica (Cartão)'[Métrica (Cartão) Fields]) = "'fact_sales'[Itens Vendidos]", "Quantidade por tipo de cartão",
+			    "Receita por tipo de cartão"
+			)
+		lineageTag: 8a1f2c9d-6b4e-4a17-9d3c-5e7f0a2b1c8d
+
+	column sales_order_detail_id
+		dataType: int64
+		formatString: 0
+		lineageTag: d18d4f4e-94dc-4698-aeb7-763ce6c9ef75
+		summarizeBy: none
+		sourceColumn: sales_order_detail_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_order_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 859eac75-fde2-4925-8ca8-8a2e2beeccdc
+		summarizeBy: none
+		sourceColumn: sales_order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_order_number
+		dataType: string
+		lineageTag: ac9c344b-ada1-466e-afcc-470d007aa2bf
+		summarizeBy: none
+		sourceColumn: sales_order_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9847065b-1234-4a5b-9c8b-4a9e463e4f86
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: b50fa260-15de-49c5-b262-0474f6e86980
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 55857052-94ae-45e3-b1c4-0c300e851943
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column bill_to_geography_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 28613732-8823-42e5-b160-47e8275f15f4
+		summarizeBy: none
+		sourceColumn: bill_to_geography_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column credit_card_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 8dddd648-1302-4844-a5bc-082e1e734e74
+		summarizeBy: none
+		sourceColumn: credit_card_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory_key
+		dataType: int64
+		formatString: 0
+		lineageTag: d44901f3-ae57-44b8-9f9c-5a111cba4558
+		summarizeBy: none
+		sourceColumn: territory_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column special_offer_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 66445397-0b81-407f-80fe-a1a918984250
+		summarizeBy: none
+		sourceColumn: special_offer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column salesperson_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 05d8637b-e131-4724-b162-813c720f4805
+		summarizeBy: none
+		sourceColumn: salesperson_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: int64
+		formatString: 0
+		lineageTag: e9f3fc76-cebf-482a-830a-3e0d737b81b4
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		lineageTag: 34a25dd8-1fdb-4ef5-b952-3f34e6c3bb15
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_promotion_reason
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1e28298d-b8d2-4828-bf2e-8bd6b2c64fe2
+		summarizeBy: none
+		sourceColumn: has_promotion_reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_price
+		dataType: double
+		lineageTag: 9f3c5efa-3a78-44ef-8a35-1af65a97a056
+		summarizeBy: none
+		sourceColumn: unit_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column unit_price_discount_rate
+		dataType: double
+		lineageTag: 78f2a522-38ba-458c-ba58-1601f3da3796
+		summarizeBy: none
+		sourceColumn: unit_price_discount_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column order_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: e334c217-8334-40fb-ac01-5fdb2314d680
+		summarizeBy: sum
+		sourceColumn: order_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column gross_revenue
+		dataType: double
+		lineageTag: 73470855-f0d9-4414-9c5d-2198f3ccf20c
+		summarizeBy: sum
+		sourceColumn: gross_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column discount_amount
+		dataType: double
+		lineageTag: 006cef5b-2c77-445f-919a-4dbdeec7947e
+		summarizeBy: sum
+		sourceColumn: discount_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_revenue
+		dataType: double
+		lineageTag: f8da5327-6519-4324-834b-68951bcfb428
+		summarizeBy: sum
+		sourceColumn: net_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Promoção = IF(fact_sales[has_promotion_reason], "Com promoção", "Sem promoção")
+		dataType: string
+		lineageTag: 59fd0f92-07e0-461b-9d61-cb44c4873f1e
+
+	/// Status mapeado como texto para exibicao na tabela Pedidos Detalhados. fact_sales[status] e degenerada (valor constante 5 em 100% das linhas, ja documentado em stg_adventure_works__salesorderheader.yml); nao ha slicer ou grafico dedicado por decisao do usuario.
+	column 'Status (Texto)' = "Faturado"
+		lineageTag: 6584249e-801c-4c92-8095-537a5651cd9b
+
+	partition '`workspace` `dbt_jessefreire_marts` `fact_sales`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    fact_sales_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="fact_sales",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    fact_sales_dbt_jessefreire_marts_workspace_Table
+

@@ -37,7 +37,9 @@ table 'Métrica (Receita/Pedidos)'
 		mode: import
 		source =
 				{
-				    ("Receita", NAMEOF('`workspace` `dbt_jessefreire_marts` `fact_sales`'[Receita Líquida]), 0),
-				    ("Pedidos", NAMEOF('`workspace` `dbt_jessefreire_marts` `fact_sales`'[Número de Pedidos]), 1)
+				    ("Receita", NAMEOF('fact_sales'[Receita Líquida]), 0),
+				    ("Pedidos", NAMEOF('fact_sales'[Número de Pedidos]), 1),
+				    ("Quantidade", NAMEOF('fact_sales'[Itens Vendidos]), 2),
+				    ("Ticket Médio", NAMEOF('fact_sales'[Ticket Médio]), 3)
 				}
 

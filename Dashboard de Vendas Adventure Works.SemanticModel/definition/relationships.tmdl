@@ -1,42 +1,42 @@
 relationship AutoDetected_2978d52e-9461-46b3-ab6c-c3567d1d4f7f
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`'.sales_reason_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_sales_reason`'.sales_reason_key
+	fromColumn: bridge_order_sales_reason.sales_reason_key
+	toColumn: dim_sales_reason.sales_reason_key
 
 relationship AutoDetected_e9a2f32c-00c5-4269-9972-2dfd7466628a
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.credit_card_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_credit_card`'.credit_card_key
+	fromColumn: fact_sales.credit_card_key
+	toColumn: dim_credit_card.credit_card_key
 
 relationship AutoDetected_751fc34a-57ca-4930-b17e-59385af4d9a1
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.customer_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_customer`'.customer_key
+	fromColumn: fact_sales.customer_key
+	toColumn: dim_customer.customer_key
 
 relationship AutoDetected_d97cade9-af8d-448f-9929-2a38cfc0ae8c
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.bill_to_geography_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_geography`'.bill_to_geography_key
+	fromColumn: fact_sales.bill_to_geography_key
+	toColumn: dim_geography.bill_to_geography_key
 
 relationship AutoDetected_6d8a7113-42c3-4b6f-afeb-3cceb905ab09
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.product_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_product`'.product_key
+	fromColumn: fact_sales.product_key
+	toColumn: dim_product.product_key
 
 relationship AutoDetected_c34f410b-d154-4bda-ab79-e4e9143040ef
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.salesperson_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_salesperson`'.salesperson_key
+	fromColumn: fact_sales.salesperson_key
+	toColumn: dim_salesperson.salesperson_key
 
 relationship AutoDetected_1190de5b-ca9e-49d1-b897-ff973c6317e8
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.special_offer_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_special_offer`'.special_offer_key
+	fromColumn: fact_sales.special_offer_key
+	toColumn: dim_special_offer.special_offer_key
 
 relationship AutoDetected_c6c48ec6-95de-4a61-abfc-992fc0bbd9a4
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.territory_key
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_territory`'.territory_key
+	fromColumn: fact_sales.territory_key
+	toColumn: dim_territory.territory_key
 
 relationship '`workspace` `dbt_jessefreire_marts` `fact_sales`_order_date_`workspace` `dbt_jessefreire_marts` `dim_dates`_date_day'
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.order_date
-	toColumn: '`workspace` `dbt_jessefreire_marts` `dim_dates`'.date_day
+	fromColumn: fact_sales.order_date
+	toColumn: dim_dates.date_day
 
 relationship '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`_sales_order_id_`workspace` `dbt_jessefreire_marts` `fact_sales`_sales_order_id'
 	crossFilteringBehavior: bothDirections
 	toCardinality: many
-	fromColumn: '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`'.sales_order_id
-	toColumn: '`workspace` `dbt_jessefreire_marts` `fact_sales`'.sales_order_id
+	fromColumn: bridge_order_sales_reason.sales_order_id
+	toColumn: fact_sales.sales_order_id
 

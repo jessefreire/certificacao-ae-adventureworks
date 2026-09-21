@@ -1,0 +1,251 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, "Segoe UI", sans-serif; color: #1B2A4A; background: #EEF2F8; }
+    a { color: #0078ED; } a:hover { color: #0050EB; }
+    .card { background: #fff; border-radius: 8px; }
+    .label { font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: #5B6B85; font-weight: 700; }
+    .tab { padding: 6px 16px; border-radius: 14px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .tab-active { background: #fff; color: #0641C8; }
+    .tab-inactive { background: rgba(255,255,255,0.28); color: #fff; }
+    .chip { padding:7px 10px; display:flex; align-items:center; gap:8px; font-size:12px; color:#1B2A4A; background:#F5F8FC; border:1px solid #D7DEEA; border-radius:6px; white-space:nowrap; }
+    .field { display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .field-label { font-size:11px; color:#5B6B85; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .field-box { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 8px; font-size:12px; color:#1B2A4A; background:#fff; border:1px solid #D7DEEA; border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .chev-svg { flex-shrink:0; }
+    .row { border-bottom: 1px solid #EDF1F5; padding: 7px 8px; display:flex; gap:12px; font-size:12px; align-items:center; }
+    .row-head { font-weight:700; color:#5B6B85; font-size:11px; text-transform:uppercase; letter-spacing:0.02em; }
+    .scrollbox { overflow-y: auto; }
+    .scrollbox::-webkit-scrollbar { width: 8px; }
+    .scrollbox::-webkit-scrollbar-track { background: #F5F8FC; }
+    .scrollbox::-webkit-scrollbar-thumb { background: #B9C6DA; border-radius: 4px; }
+    .bar-fill { height: 14px; background: #0078ED; border-radius: 3px; }
+  </style>
+</helmet>
+<div style="width:1280px; min-height:1319px; display:flex; flex-direction:column; background:#EEF2F8;">
+
+  <!-- Header -->
+  <div style="background:#0641C8; padding:14px 24px; display:flex; align-items:center; gap:16px; position:relative;">
+    <div style="width:32px; height:32px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 17L9 7L12 12L15 6L21 17" stroke="#0641C8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="19" r="2.6" stroke="#0641C8" stroke-width="1.6"/></svg>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1px;">
+      <div style="color:#fff; font-size:18px; font-weight:700; letter-spacing:0.01em;">Adventure Works</div>
+      <div style="color:rgba(255,255,255,0.6); font-size:10px;">Atualizado em 17/09/2026 08:42</div>
+    </div>
+    <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); color:#fff; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Dashboard de Vendas</div>
+    <div style="margin-left:auto; display:flex; gap:6px;">
+      <div class="tab tab-inactive">Início</div>
+      <div class="tab tab-active">Visão Geral &amp; Produtos</div>
+      <div class="tab tab-inactive">Clientes</div>
+      <div class="tab tab-inactive">Análise Geográfica</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 24px; display:flex; flex-direction:column; gap:16px;">
+
+    <!-- Filtros -->
+    <div class="card" style="padding:12px 14px; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px 10px;">
+        <div class="field">
+          <div class="field-label">Ano</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Mês</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Cidade</div>
+          <div class="field-box">Todas (558) <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Estado</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">País</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Categoria de Produto</div>
+          <div class="field-box">Todas <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Produto</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Tipo de Cartão</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Motivo da Venda</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; border-top:1px solid #EDF1F5; padding-top:8px;">
+        <a href="#" style="font-size:12px; font-weight:700; white-space:nowrap; display:flex; align-items:center; gap:4px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6h12z" stroke="#0078ED" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Limpar filtros
+        </a>
+      </div>
+    </div>
+
+    <!-- KPIs (1-7) -->
+    <div style="display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap:10px;">
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Receita Bruta</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">R$ 12,65M</div>
+      </div>
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Receita Líquida</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">R$ 12,64M</div>
+      </div>
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Número de Pedidos</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">31.465</div>
+      </div>
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Itens Vendidos</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">278.420</div>
+      </div>
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Ticket Médio</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">R$ 401,86</div>
+      </div>
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Taxa de Desconto</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">0,48%</div>
+        <div style="font-size:10px; color:#5B6B85;">da receita bruta</div>
+      </div>
+      <div class="card" style="padding:12px 10px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Mix de Canal</div>
+        <div style="font-size:19px; font-weight:700; white-space:nowrap; color:#032164;">88% / 12%</div>
+        <div style="font-size:10px; color:#5B6B85;">online / revenda</div>
+      </div>
+    </div>
+
+    <!-- Evolução temporal -->
+    <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; align-items:center;">
+        <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Receita por mês / ano</div>
+        <div style="margin-left:auto; display:flex; gap:6px;">
+          <div class="tab" style="padding:4px 12px; border-radius:12px; font-size:10px; background:#0641C8; color:#fff;">Receita</div>
+          <div class="tab" style="padding:4px 12px; border-radius:12px; font-size:10px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Pedidos</div>
+          <div class="tab" style="padding:4px 12px; border-radius:12px; font-size:10px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Quantidade</div>
+          <div class="tab" style="padding:4px 12px; border-radius:12px; font-size:10px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Ticket Médio</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:baseline; gap:8px;">
+        <div style="font-size:14px; font-weight:700; color:#032164;">Touring-1000 Yellow, 60</div>
+        <div style="font-size:11px; color:#5B6B85;">produto com maior ticket médio no filtro atual — R$ 738,87</div>
+      </div>
+      <svg viewBox="0 0 1000 260" style="width:100%; height:260px;" preserveAspectRatio="none">
+        <defs>
+          <filter id="tooltipShadow" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1B2A4A" flood-opacity="0.18"></feDropShadow>
+          </filter>
+        </defs>
+        <line x1="0" y1="230" x2="1000" y2="230" stroke="#D7DEEA" stroke-width="1"></line>
+        <line x1="0" y1="60" x2="1000" y2="60" stroke="#EEF2F8" stroke-width="1"></line>
+        <line x1="0" y1="120" x2="1000" y2="120" stroke="#EEF2F8" stroke-width="1"></line>
+        <line x1="0" y1="180" x2="1000" y2="180" stroke="#EEF2F8" stroke-width="1"></line>
+        <polyline fill="none" stroke="#0078ED" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+          points="0,205 64,200 128,195 191,198 255,190 319,185 383,178 447,182 489,170
+                  553,110 617,90 681,95 745,80 809,85 872,70 936,65 1000,55"></polyline>
+        <line x1="489" y1="15" x2="489" y2="230" stroke="#8BC7F7" stroke-width="1.5" stroke-dasharray="4 4"></line>
+        <text x="497" y="26" font-size="12" fill="#0641C8" font-family="Arial, sans-serif" font-weight="700">jun/2013</text>
+        <text x="497" y="42" font-size="10" fill="#5B6B85" font-family="Arial, sans-serif">quebra ~3x nos pedidos online</text>
+        <text x="0" y="248" font-size="11" fill="#5B6B85" font-family="Arial, sans-serif">2011</text>
+        <text x="457" y="248" font-size="11" fill="#5B6B85" font-family="Arial, sans-serif">2013</text>
+        <text x="963" y="248" font-size="11" fill="#5B6B85" font-family="Arial, sans-serif">2014</text>
+
+        <!-- Tooltip (hover no PBI: ano/mês + medida ativa) -->
+        <line x1="809" y1="85" x2="809" y2="105" stroke="#B9C6DA" stroke-width="1" stroke-dasharray="2 2"></line>
+        <circle cx="809" cy="85" r="4" fill="#0078ED" stroke="#fff" stroke-width="2"></circle>
+        <rect x="712" y="105" width="150" height="50" rx="6" fill="#fff" stroke="#D7DEEA" stroke-width="1" filter="url(#tooltipShadow)"></rect>
+        <text x="724" y="122" font-size="11" font-weight="700" fill="#1B2A4A" font-family="Arial, sans-serif">set/2013</text>
+        <rect x="724" y="130" width="8" height="8" fill="#0078ED"></rect>
+        <text x="736" y="138" font-size="10" fill="#5B6B85" font-family="Arial, sans-serif">Receita</text>
+        <text x="850" y="138" font-size="11" font-weight="700" fill="#032164" font-family="Arial, sans-serif" text-anchor="end">R$ 1,28M</text>
+      </svg>
+    </div>
+
+    <!-- Comparação + Ticket médio por produto -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Comparação — ticket médio com e sem promoção (mesmo canal)</div>
+        <div style="display:flex; flex-direction:column; gap:14px; flex:1; justify-content:center;">
+          <div class="row" style="border-bottom:none;"><div style="width:170px; color:#5B6B85;">Online, com Promotion</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:18px; width:95%; background:#0078ED; border-radius:3px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 1.810</span></div></div>
+          <div class="row" style="border-bottom:none;"><div style="width:170px; color:#5B6B85;">Online, sem Promotion</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:18px; width:43%; background:#0078ED; border-radius:3px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 824</span></div></div>
+        </div>
+        <div style="font-size:10px; color:#5B6B85;">Ticket 2,2x maior com promoção, no mesmo canal (online) — motivo de venda só existe no canal online.</div>
+      </div>
+      <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Ticket médio por produto</div>
+        <div style="display:flex; flex-direction:column; gap:6px; flex:1; justify-content:center;">
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:180px; color:#5B6B85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Touring-1000 Yellow, 60</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:14px; width:100%; background:#0078ED; border-radius:3px;"></div><span style="font-size:11px; font-weight:700; color:#032164; white-space:nowrap;">R$ 738,87</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:180px; color:#5B6B85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Road-250 Black, 44</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:14px; width:99%; background:#0078ED; border-radius:3px;"></div><span style="font-size:11px; font-weight:700; color:#032164; white-space:nowrap;">R$ 730,38</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:180px; color:#5B6B85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Mountain-200 Silver, 38</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:14px; width:98%; background:#0078ED; border-radius:3px;"></div><span style="font-size:11px; font-weight:700; color:#032164; white-space:nowrap;">R$ 727,45</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:180px; color:#5B6B85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Road-150 Red, 62</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:14px; width:96%; background:#0078ED; border-radius:3px;"></div><span style="font-size:11px; font-weight:700; color:#032164; white-space:nowrap;">R$ 710,17</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:180px; color:#5B6B85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Mountain-200 Black, 42</div><div style="flex:1; display:flex; align-items:center; gap:8px;"><div style="height:14px; width:94%; background:#0078ED; border-radius:3px;"></div><span style="font-size:11px; font-weight:700; color:#032164; white-space:nowrap;">R$ 694,86</span></div></div>
+        </div>
+        <div style="font-size:10px; color:#5B6B85;">Top 5 produtos por ticket médio no filtro atual.</div>
+      </div>
+    </div>
+
+    <!-- Matriz -->
+    <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; align-items:center;">
+        <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Matriz — pedidos, quantidade e valor por categoria/produto</div>
+      </div>
+      <div style="display:flex; align-items:baseline; gap:24px;">
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <div style="font-size:20px; font-weight:700; color:#032164;">238</div>
+          <div style="font-size:11px; color:#5B6B85;">de 504 produtos nunca venderam</div>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <div style="font-size:14px; font-weight:700; color:#032164;">Water Bottle - 30 oz.</div>
+          <div style="font-size:11px; color:#5B6B85;">produto destaque no filtro atual — 546 un.</div>
+        </div>
+      </div>
+      <div class="row row-head" style="background:#F5F8FC; border-radius:4px;"><div style="flex:1;">categoria / produto</div><div style="width:100px;">pedidos</div><div style="width:130px;">valor</div><div style="width:120px;">ticket médio</div><div style="width:100px;">qtd.</div></div>
+      <div class="scrollbox" style="height:250px;">
+        <div class="row" style="background:#F5F8FC; font-weight:700;">
+          <div style="flex:1; display:flex; align-items:center; gap:6px;"><span style="display:inline-flex; align-items:center; justify-content:center; width:12px; height:12px; border:1px solid #0641C8; border-radius:2px; font-size:10px; line-height:1; color:#0641C8; font-weight:700;">&minus;</span> Bikes</div>
+          <div style="width:100px;">5.425</div><div style="width:130px;">R$ 3.898.950</div><div style="width:120px;">R$ 718,61</div><div style="width:100px;">5.930</div>
+        </div>
+        <div class="row"><div style="flex:1; padding-left:20px;">Mountain-200 Black, 42</div><div style="width:100px;">1.284</div><div style="width:130px; font-weight:700;">R$ 892.400</div><div style="width:120px;">R$ 694,86</div><div style="width:100px;">1.412</div></div>
+        <div class="row"><div style="flex:1; padding-left:20px;">Road-150 Red, 62</div><div style="width:100px;">1.190</div><div style="width:130px; font-weight:700;">R$ 845.100</div><div style="width:120px;">R$ 710,17</div><div style="width:100px;">1.305</div></div>
+        <div class="row"><div style="flex:1; padding-left:20px;">Touring-1000 Yellow, 60</div><div style="width:100px;">1.056</div><div style="width:130px; font-weight:700;">R$ 780.250</div><div style="width:120px;">R$ 738,87</div><div style="width:100px;">1.140</div></div>
+        <div class="row"><div style="flex:1; padding-left:20px;">Mountain-200 Silver, 38</div><div style="width:100px;">980</div><div style="width:130px; font-weight:700;">R$ 712.900</div><div style="width:120px;">R$ 727,45</div><div style="width:100px;">1.075</div></div>
+        <div class="row"><div style="flex:1; padding-left:20px;">Road-250 Black, 44</div><div style="width:100px;">915</div><div style="width:130px; font-weight:700;">R$ 668.300</div><div style="width:120px;">R$ 730,38</div><div style="width:100px;">998</div></div>
+        <div class="row" style="background:#F5F8FC; font-weight:700;">
+          <div style="flex:1; display:flex; align-items:center; gap:6px;"><span style="display:inline-flex; align-items:center; justify-content:center; width:12px; height:12px; border:1px solid #5B6B85; border-radius:2px; font-size:10px; line-height:1; color:#5B6B85; font-weight:700;">+</span> Accessories</div>
+          <div style="width:100px;">8.500</div><div style="width:130px;">R$ 3.100.000</div><div style="width:120px;">R$ 364,71</div><div style="width:100px;">15.200</div>
+        </div>
+        <div class="row" style="background:#F5F8FC; font-weight:700;">
+          <div style="flex:1; display:flex; align-items:center; gap:6px;"><span style="display:inline-flex; align-items:center; justify-content:center; width:12px; height:12px; border:1px solid #5B6B85; border-radius:2px; font-size:10px; line-height:1; color:#5B6B85; font-weight:700;">+</span> Components</div>
+          <div style="width:100px;">12.000</div><div style="width:130px;">R$ 4.200.000</div><div style="width:120px;">R$ 350,00</div><div style="width:100px;">18.400</div>
+        </div>
+        <div class="row" style="background:#F5F8FC; font-weight:700;">
+          <div style="flex:1; display:flex; align-items:center; gap:6px;"><span style="display:inline-flex; align-items:center; justify-content:center; width:12px; height:12px; border:1px solid #5B6B85; border-radius:2px; font-size:10px; line-height:1; color:#5B6B85; font-weight:700;">+</span> Clothing</div>
+          <div style="width:100px;">5.540</div><div style="width:130px;">R$ 1.447.162</div><div style="width:120px;">R$ 261,19</div><div style="width:100px;">9.800</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

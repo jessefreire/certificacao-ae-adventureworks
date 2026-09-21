@@ -33,6 +33,19 @@
           }
         }
       }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
     ]
   },
   "resourcePackages": [
@@ -52,18 +65,33 @@
       "type": "RegisteredResources",
       "items": [
         {
+          "name": "AdventureWorks-Logo-Card.svg",
+          "path": "AdventureWorks-Logo-Card.svg",
+          "type": "Image"
+        },
+        {
+          "name": "AdventureWorks-Logo-Header.svg",
+          "path": "AdventureWorks-Logo-Header.svg",
+          "type": "Image"
+        },
+        {
+          "name": "AnaliseGeografica-fundo@1x12513730515601806.png",
+          "path": "AnaliseGeografica-fundo@1x12513730515601806.png",
+          "type": "Image"
+        },
+        {
+          "name": "Clientes-fundo@2x9859950347839423.png",
+          "path": "Clientes-fundo@2x9859950347839423.png",
+          "type": "Image"
+        },
+        {
           "name": "Storm.json",
           "path": "Storm.json",
           "type": "CustomTheme"
         },
         {
-          "name": "AdventureWorks-VisaoGeral-fundo.svg",
-          "path": "AdventureWorks-VisaoGeral-fundo.svg",
-          "type": "Image"
-        },
-        {
-          "name": "AdventureWorks-Detalhe-fundo.svg",
-          "path": "AdventureWorks-Detalhe-fundo.svg",
+          "name": "VisaoGeralProdutos-fundo@2x2820760109892614.png",
+          "path": "VisaoGeralProdutos-fundo@2x2820760109892614.png",
           "type": "Image"
         }
       ]
@@ -75,6 +103,7 @@
     "defaultDrillFilterOtherVisuals": true,
     "allowChangeFilterTypes": true,
     "useEnhancedTooltips": true,
+    "filterPaneHiddenInEditMode": true,
     "useDefaultAggregateDisplayName": true,
     "queryLimitOption": "None",
     "customMemoryLimit": "1048576",

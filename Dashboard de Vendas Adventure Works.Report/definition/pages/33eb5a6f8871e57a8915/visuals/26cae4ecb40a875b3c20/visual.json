@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "26cae4ecb40a875b3c20",
   "position": {
-    "x": 335,
-    "y": 251,
-    "z": 5000,
-    "height": 92,
-    "width": 299,
-    "tabOrder": 5000
+    "x": 911.33333333333337,
+    "y": 236.66666666666666,
+    "z": 7000,
+    "height": 93.333333333333329,
+    "width": 167.33333333333334,
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                      "Entity": "fact_sales"
                     }
                   },
                   "Property": "Taxa de Desconto"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Taxa de Desconto",
+              "queryRef": "fact_sales.Taxa de Desconto",
               "nativeQueryRef": "Taxa de Desconto"
             }
           ]
@@ -58,7 +58,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "16D"
                 }
               }
             },
@@ -159,6 +159,19 @@
             "id": "default"
           }
         }
+      ],
+      "fillCustom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -189,23 +202,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "990d47adb6be5c07db11",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
-              }
-            },
-            "Property": "Taxa de Desconto"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "9c8543cfb9ab439564e0",
   "position": {
-    "x": 24,
-    "y": 251,
-    "z": 4000,
-    "height": 92,
-    "width": 299,
-    "tabOrder": 4000
+    "x": 554.16666666666674,
+    "y": 259.16666666666669,
+    "z": 6000,
+    "height": 71.666666666666671,
+    "width": 166.66666666666669,
+    "tabOrder": 6000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                      "Entity": "fact_sales"
                     }
                   },
                   "Property": "Itens Vendidos"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Itens Vendidos",
+              "queryRef": "fact_sales.Itens Vendidos",
               "nativeQueryRef": "Itens Vendidos"
             }
           ]
@@ -58,7 +58,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "16D"
                 }
               }
             },
@@ -92,7 +92,7 @@
             }
           },
           "selector": {
-            "metadata": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Itens Vendidos"
+            "metadata": "fact_sales.Itens Vendidos"
           }
         }
       ],
@@ -173,6 +173,19 @@
             "id": "default"
           }
         }
+      ],
+      "fillCustom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -203,23 +216,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "7b86b3340b319583829b",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
-              }
-            },
-            "Property": "Itens Vendidos"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

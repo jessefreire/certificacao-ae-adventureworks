@@ -1,0 +1,44 @@
+table 'Dimensão Geográfica (Ticket Médio)'
+	lineageTag: 7b529442-ca19-4f2c-8715-da82a7c36293
+
+	column 'Dimensão Geográfica (Ticket Médio) Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bf322d6b-1ecb-45db-ab5e-0d0fa5caa869
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	column 'Dimensão Geográfica (Ticket Médio) Fields'
+		dataType: string
+		isHidden
+		lineageTag: 6a19fcf0-ddc3-4464-b3ec-d360c76d03ab
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Dimensão Geográfica (Ticket Médio) Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Dimensão Geográfica (Ticket Médio)'
+		dataType: string
+		lineageTag: b0697ec1-1d51-4845-991b-1ac1c528fdd5
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Dimensão Geográfica (Ticket Médio) Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Dimensão Geográfica (Ticket Médio) Fields'
+
+	partition 'Dimensão Geográfica (Ticket Médio)' = calculated
+		mode: import
+		source =
+				{
+				    ("País", NAMEOF('dim_geography'[billing_country]), 0),
+				    ("Estado", NAMEOF('dim_geography'[state_province]), 1),
+				    ("Cidade", NAMEOF('dim_geography'[Cidade]), 2)
+				}
+

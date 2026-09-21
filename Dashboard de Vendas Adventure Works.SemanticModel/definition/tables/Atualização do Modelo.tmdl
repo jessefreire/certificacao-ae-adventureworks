@@ -1,0 +1,18 @@
+/// Tabela auxiliar de 1 linha usada para expor a data/hora do ultimo calculo do modelo (NOW() e recalculado a cada refresh). Fonte da medida Ultima Atualizacao exibida no cabecalho do dashboard.
+table 'Atualização do Modelo'
+	isHidden
+	lineageTag: 13cd1e1a-b38e-4d6b-a28d-3315ba347908
+
+	/// Data e hora do ultimo calculo do modelo (equivale ao ultimo refresh em modo Import). Usada no cabecalho das duas paginas do dashboard.
+	measure 'Última Atualização' = "Atualizado em " & FORMAT(MAX('Atualização do Modelo'[Data]), "DD/MM/YYYY HH:mm")
+		lineageTag: 2ef86b8d-8d7e-431b-837c-87461787483d
+
+	column Data
+		lineageTag: 05efc8c8-99a6-4bcf-bf03-139a19b0979d
+		isNameInferred
+		sourceColumn: [Data]
+
+	partition 'Atualização do Modelo' = calculated
+		mode: import
+		source = ROW("Data", NOW())
+

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "561c5780b56787370146",
   "position": {
-    "x": 24,
-    "y": 359,
-    "z": 8000,
-    "height": 323,
-    "width": 813,
-    "tabOrder": 8000
+    "x": 22.222222222222221,
+    "y": 344.44444444444446,
+    "z": 11000,
+    "height": 341.11111111111109,
+    "width": 1233.3333333333333,
+    "tabOrder": 11000
   },
   "visual": {
     "visualType": "lineChart",
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
+                      "Entity": "dim_dates"
                     }
                   },
                   "Property": "year"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_dates`.year",
+              "queryRef": "dim_dates.year",
               "nativeQueryRef": "year",
               "active": true
             },
@@ -35,15 +35,15 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
+                      "Entity": "dim_dates"
                     }
                   },
                   "Property": "month_name"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_dates`.month_name",
+              "queryRef": "dim_dates.month_name",
               "nativeQueryRef": "month_name",
-              "active": true
+              "active": false
             }
           ]
         },
@@ -54,15 +54,15 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                      "Entity": "fact_sales"
                     }
                   },
-                  "Property": "Número de Pedidos"
+                  "Property": "Receita Líquida"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Número de Pedidos",
-              "nativeQueryRef": "Pedidos",
-              "displayName": "Pedidos"
+              "queryRef": "fact_sales.Receita Líquida",
+              "nativeQueryRef": "Receita",
+              "displayName": "Receita"
             }
           ],
           "fieldParameters": [
@@ -82,37 +82,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
-                  }
-                },
-                "Property": "Número de Pedidos"
-              }
-            },
-            "direction": "Descending"
-          },
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
-                  }
-                },
-                "Property": "month_name"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -196,6 +165,39 @@
           }
         }
       ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "showTooltipButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeaderTooltip": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Este gráfico tem hierarquia Ano > Mês. Passe o mouse no canto superior direito pra ver os ícones de drill: expandir/recolher todos os níveis, ir um nível abaixo (mês) ou voltar um nível acima (ano).'"
+                }
+              }
+            }
+          }
+        }
+      ],
       "title": [
         {
           "properties": {
@@ -208,8 +210,13 @@
             },
             "text": {
               "expr": {
-                "Literal": {
-                  "Value": "'Receita por mês / ano'"
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_sales"
+                    }
+                  },
+                  "Property": "Título Receita por Mês"
                 }
               }
             },
@@ -227,7 +234,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "11D"
                 }
               }
             },
@@ -242,6 +249,13 @@
               "expr": {
                 "Literal": {
                   "Value": "'left'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Arial'"
                 }
               }
             }
@@ -266,32 +280,19 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "dc1b77273668b51a11cc",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
-              }
-            },
-            "Property": "year"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
         "name": "00eccd6e2416016e5142",
         "field": {
           "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
+                "Entity": "dim_dates"
               }
             },
             "Property": "month"
           }
         },
-        "type": "Advanced"
+        "type": "Advanced",
+        "howCreated": "User"
       }
     ]
   }

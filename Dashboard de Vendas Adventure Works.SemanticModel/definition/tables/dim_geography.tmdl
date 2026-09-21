@@ -1,0 +1,121 @@
+table dim_geography
+	lineageTag: b2960d20-3149-4bb9-a7e8-f7ffe8e4ae1f
+
+	/// Participacao da cidade (ou do contexto atual de geografia) na receita liquida total. Usado no Ranking de Cidades.
+	measure '% da Receita Líquida (Geografia)' =
+			DIVIDE(
+			    [Receita Líquida],
+			    CALCULATE([Receita Líquida], ALL('dim_geography'))
+			)
+		formatString: 0.0%
+		lineageTag: 3302f2eb-aa00-40ce-9cbf-a620101a0493
+
+	/// Soma da receita liquida das 5 cidades com maior faturamento no contexto de filtro atual.
+	measure 'Receita Top 5 Cidades' = SUMX(TOPN(5, VALUES(dim_geography[Cidade]), CALCULATE([Receita Líquida])), CALCULATE([Receita Líquida]))
+		lineageTag: 37be1479-0a9c-4983-88e4-662658278f4e
+
+	/// Participacao das 5 cidades de maior faturamento na receita liquida total. Usado no Ranking de Cidades pra mostrar concentracao geografica.
+	measure '% Receita Top 5 Cidades' = DIVIDE([Receita Top 5 Cidades], CALCULATE([Receita Líquida], ALL(dim_geography)))
+		lineageTag: 672c9916-efb8-4fa1-9920-060973e0a2cc
+
+	/// Quantidade de cidades distintas com pelo menos uma venda no contexto de filtro atual.
+	measure 'Cidades Que Vendem' = CALCULATE(DISTINCTCOUNT(dim_geography[Cidade]), FILTER(dim_geography, CALCULATE(COUNTROWS(fact_sales)) > 0))
+		lineageTag: 5fc065f7-b97f-46be-a57b-e4f7338b81ca
+
+	/// Legenda de apoio pra exibir acima da tabela de Ranking de Cidades, mostrando quantas cidades vendem e a concentracao das 5 maiores.
+	measure 'Ranking Cidades (Texto)' = FORMAT([Cidades Que Vendem], "#,##0") & " cidades que vendem — top 5 concentra " & FORMAT([% Receita Top 5 Cidades], "0.0%")
+		lineageTag: c926d58d-80b9-4166-b9da-9103e5fea3b9
+
+	/// Legenda de apoio (sem o numero) pra exibir ao lado do big number de Cidades Que Vendem.
+	measure 'Ranking Cidades (Texto Legenda)' = "cidades que vendem — top 5 concentra " & FORMAT([% Receita Top 5 Cidades], "0.0%")
+		lineageTag: 46c1306c-ff7d-4ccc-a0ec-8da0d296c47a
+
+	/// Posicao da cidade dentro do recorte visivel da tabela Ranking de Cidades, ordenado por Receita Liquida.
+	measure 'Ranking Cidade' =
+			VAR sel = SELECTEDVALUE('Dimensão Geográfica (Ranking)'[Dimensão Geográfica (Ranking) Fields])
+			RETURN
+			SWITCH(
+			    TRUE(),
+			    sel = NAMEOF('dim_geography'[billing_country]), RANKX(ALLSELECTED(dim_geography[billing_country]), CALCULATE([Receita Líquida]), , DESC),
+			    sel = NAMEOF('dim_geography'[state_province]), RANKX(ALLSELECTED(dim_geography[state_province]), CALCULATE([Receita Líquida]), , DESC),
+			    RANKX(ALLSELECTED(dim_geography[Cidade]), CALCULATE([Receita Líquida]), , DESC)
+			)
+		lineageTag: e76cf1d6-171d-4df1-8d1a-cdf5200ac292
+
+	measure 'Ticket Médio por Dimensão (Título)' =
+			VAR sel = SELECTEDVALUE('Dimensão Geográfica (Ticket Médio)'[Dimensão Geográfica (Ticket Médio) Fields])
+			RETURN "Ticket médio por " & SWITCH(TRUE(),
+			    sel = NAMEOF('dim_geography'[billing_country]), "país",
+			    sel = NAMEOF('dim_geography'[state_province]), "estado",
+			    sel = NAMEOF('dim_geography'[Cidade]), "cidade",
+			    "país"
+			)
+		lineageTag: ebc6edf6-254d-46d8-adf8-cd0c8a46545d
+
+	column bill_to_geography_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 1315165f-6553-4636-891b-cbf267f07bbc
+		summarizeBy: none
+		sourceColumn: bill_to_geography_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 4f173c8b-4885-446b-ae5e-dc89cd900d10
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state_province_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0fd4b05b-8ea7-4fa4-bbe0-7da89669973b
+		summarizeBy: none
+		sourceColumn: state_province_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cidade
+		dataType: string
+		lineageTag: 30eb86e4-3d11-4c91-a0ca-82582dc4b53f
+		summarizeBy: none
+		sourceColumn: city_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column state_province
+		dataType: string
+		lineageTag: 38de07ef-e739-495c-a99c-0b6aa5e5a6c8
+		summarizeBy: none
+		sourceColumn: state_province
+
+		annotation SummarizationSetBy = Automatic
+
+	column billing_country
+		dataType: string
+		lineageTag: d840569d-1a06-4af9-9ee8-3f8d403a04ae
+		summarizeBy: none
+		sourceColumn: billing_country
+
+		annotation SummarizationSetBy = Automatic
+
+	column postal_code
+		dataType: string
+		lineageTag: af3a1465-3429-4951-ab23-768153b6a8d9
+		summarizeBy: none
+		sourceColumn: postal_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '`workspace` `dbt_jessefreire_marts` `dim_geography`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    dim_geography_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="dim_geography",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    dim_geography_dbt_jessefreire_marts_workspace_Table
+

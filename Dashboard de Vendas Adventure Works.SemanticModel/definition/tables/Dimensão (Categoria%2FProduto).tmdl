@@ -37,7 +37,7 @@ table 'Dimensão (Categoria/Produto)'
 		mode: import
 		source =
 				{
-				    ("Categoria", NAMEOF('`workspace` `dbt_jessefreire_marts` `dim_product`'[category]), 0),
-				    ("Produto", NAMEOF('`workspace` `dbt_jessefreire_marts` `dim_product`'[product_name]), 1)
+				    ("Categoria", NAMEOF('dim_product'[Categoria]), 0),
+				    ("Produto", NAMEOF('dim_product'[Produto]), 1)
 				}
 

@@ -1,0 +1,44 @@
+table 'Dimensão Geográfica (Ranking)'
+	lineageTag: 7ee079f8-f532-4695-a93c-88359102f033
+
+	column 'Dimensão Geográfica (Ranking) Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 63cc6c92-4237-4d67-a743-2192221c1743
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	column 'Dimensão Geográfica (Ranking) Fields'
+		dataType: string
+		isHidden
+		lineageTag: 691c8dc1-1fd2-4867-93f6-d3b57e957ef1
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Dimensão Geográfica (Ranking) Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Dimensão Geográfica (Ranking)'
+		dataType: string
+		lineageTag: 58c9aec7-28b4-4db8-a1d5-c99a9302c775
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Dimensão Geográfica (Ranking) Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Dimensão Geográfica (Ranking) Fields'
+
+	partition 'Dimensão Geográfica (Ranking)' = calculated
+		mode: import
+		source =
+				{
+				    ("País", NAMEOF('dim_geography'[billing_country]), 0),
+				    ("Estado", NAMEOF('dim_geography'[state_province]), 1),
+				    ("Cidade", NAMEOF('dim_geography'[Cidade]), 2)
+				}
+

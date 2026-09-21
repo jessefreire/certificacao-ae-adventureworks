@@ -1,0 +1,85 @@
+table bridge_order_sales_reason
+	lineageTag: cbdffdb5-2528-4ee2-9348-1563f92cbcc3
+
+	/// Receita liquida do pedido multiplicada por allocation_factor (1/numero de motivos do pedido), somada linha a linha da ponte. Nunca some receita da fato direto atraves da ponte: infla o resultado em ~29%.
+	measure 'Receita por Motivo de Venda' =
+			SUMX(
+			    'bridge_order_sales_reason',
+			    'bridge_order_sales_reason'[allocation_factor]
+			        * CALCULATE(SUM('fact_sales'[net_revenue]))
+			)
+		formatString: R$ #,##0.00
+		lineageTag: fdacd63c-9d91-40c1-afea-b5df3621ec85
+
+	/// Motivo de venda com maior receita alocada (via allocation_factor) no contexto de filtro atual. Usado em tabelas com grao de cliente ou cidade - mostra o motivo predominante, nao todos os que o cliente/cidade teve.
+	measure 'Motivo Predominante' =
+			VAR t = TOPN(1, SUMMARIZE(bridge_order_sales_reason, dim_sales_reason[reason_name], "r", [Receita por Motivo de Venda]), [r])
+			RETURN MAXX(t, dim_sales_reason[reason_name])
+		lineageTag: 5451d3d5-4801-41ea-98f0-2b7fe4e070b7
+
+	/// Pedidos alocados por allocation_factor (1/numero de motivos do pedido) - soma 1 por pedido no total, evita contar 2x um pedido com mais de um motivo.
+	measure 'Pedidos por Motivo de Venda' =
+			SUMX(
+			    'bridge_order_sales_reason',
+			    'bridge_order_sales_reason'[allocation_factor]
+			)
+		formatString: #,##0
+		lineageTag: fe0fc371-0ff7-4fe6-a287-a37b15f32662
+
+	/// Itens vendidos multiplicados por allocation_factor (1/numero de motivos do pedido), somados linha a linha da ponte. Nunca some quantidade da fato direto atraves da ponte: infla o resultado.
+	measure 'Quantidade por Motivo de Venda' =
+			SUMX(
+			    'bridge_order_sales_reason',
+			    'bridge_order_sales_reason'[allocation_factor]
+			        * CALCULATE(SUM('fact_sales'[order_quantity]))
+			)
+		formatString: #,##0
+		lineageTag: fdbb3820-c4c6-49a6-b979-488b6e8fc005
+
+	/// Titulo dinamico do grafico de barras, varia conforme o botao selecionado no toggle Metrica (Motivo).
+	measure 'Título Motivo de Venda' =
+			SWITCH(
+			    TRUE(),
+			    SELECTEDVALUE('Métrica (Motivo)'[Métrica (Motivo) Fields]) = "'bridge_order_sales_reason'[Pedidos por Motivo de Venda]", "Pedidos por motivo de venda",
+			    SELECTEDVALUE('Métrica (Motivo)'[Métrica (Motivo) Fields]) = "'bridge_order_sales_reason'[Quantidade por Motivo de Venda]", "Quantidade por motivo de venda",
+			    "Receita por motivo de venda"
+			)
+		lineageTag: f3eaa652-e02b-4047-a44d-317d86b95c8e
+
+	column sales_order_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 53b069ab-6310-4925-aaeb-b9e6fdc7d18c
+		summarizeBy: none
+		sourceColumn: sales_order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_reason_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 12c9c4ee-92f2-4c5c-bbc6-cd0296b46189
+		summarizeBy: none
+		sourceColumn: sales_reason_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column allocation_factor
+		dataType: double
+		lineageTag: 3e26d664-f3f9-4788-adbc-be4437257f29
+		summarizeBy: sum
+		sourceColumn: allocation_factor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    bridge_order_sales_reason_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="bridge_order_sales_reason",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    bridge_order_sales_reason_dbt_jessefreire_marts_workspace_Table
+

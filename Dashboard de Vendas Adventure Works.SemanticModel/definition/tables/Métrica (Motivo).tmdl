@@ -1,0 +1,44 @@
+table 'Métrica (Motivo)'
+	lineageTag: 75a477d0-1425-4132-a8e3-4d85a5afbcef
+
+	column 'Métrica (Motivo) Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 336df3ab-4582-4e25-9963-8c3569c14355
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	column 'Métrica (Motivo) Fields'
+		dataType: string
+		isHidden
+		lineageTag: bdc82431-9c8e-4ecf-93ba-76170cc6ea92
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Métrica (Motivo) Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Métrica (Motivo)'
+		dataType: string
+		lineageTag: f67c613e-8d09-4b37-a14a-59a227dc52cb
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Métrica (Motivo) Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Métrica (Motivo) Fields'
+
+	partition 'Métrica (Motivo)' = calculated
+		mode: import
+		source =
+				{
+				    ("Receita", NAMEOF('bridge_order_sales_reason'[Receita por Motivo de Venda]), 0),
+				    ("Pedidos", NAMEOF('bridge_order_sales_reason'[Pedidos por Motivo de Venda]), 1),
+				    ("Quantidade", NAMEOF('bridge_order_sales_reason'[Quantidade por Motivo de Venda]), 2)
+				}
+

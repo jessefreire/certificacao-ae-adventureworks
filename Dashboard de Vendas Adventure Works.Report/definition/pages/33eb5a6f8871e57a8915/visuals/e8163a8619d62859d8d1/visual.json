@@ -3,11 +3,11 @@
   "name": "e8163a8619d62859d8d1",
   "position": {
     "x": 24,
-    "y": 81,
-    "z": 11000,
+    "y": 91,
+    "z": 27000,
     "height": 76,
-    "width": 133,
-    "tabOrder": 11000
+    "width": 240,
+    "tabOrder": 26000
   },
   "visual": {
     "visualType": "slicer",
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
+                      "Entity": "dim_dates"
                     }
                   },
                   "Property": "year"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_dates`.year",
+              "queryRef": "dim_dates.year",
               "nativeQueryRef": "year",
               "active": true
             }
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Período'"
+                  "Value": "'Ano'"
                 }
               }
             },
@@ -86,7 +86,25 @@
             "textSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
+      ],
+      "dropdown": [
+        {
+          "properties": {
+            "accentBarShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -154,25 +172,25 @@
             }
           }
         }
-      ]
-    }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "7c1405668201e0b320b0",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `dim_dates`"
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
               }
-            },
-            "Property": "year"
+            }
           }
-        },
-        "type": "Advanced"
-      }
-    ]
+        }
+      ]
+    },
+    "syncGroup": {
+      "groupName": "barraFiltrosGlobal_Ano",
+      "fieldChanges": false,
+      "filterChanges": true
+    }
   }
 }

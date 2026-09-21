@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, "Segoe UI", sans-serif; color: #1B2A4A; background: #EEF2F8; }
+    a { color: #0078ED; } a:hover { color: #0050EB; }
+    .card { background: #fff; border-radius: 8px; }
+    .label { font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: #5B6B85; font-weight: 700; }
+    .tab { padding: 6px 16px; border-radius: 14px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .tab-active { background: #fff; color: #0641C8; }
+    .tab-inactive { background: rgba(255,255,255,0.28); color: #fff; }
+    .field { display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .field-label { font-size:11px; color:#5B6B85; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .field-box { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:6px 8px; font-size:12px; color:#1B2A4A; background:#fff; border:1px solid #D7DEEA; border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .chev-svg { flex-shrink:0; }
+    .row { border-bottom: 1px solid #EDF1F5; padding: 7px 8px; display:flex; gap:12px; font-size:12px; align-items:center; }
+    .row-head { font-weight:700; color:#5B6B85; font-size:11px; text-transform:uppercase; letter-spacing:0.02em; }
+    .scrollbox { overflow-y: auto; }
+    .scrollbox::-webkit-scrollbar { width: 8px; }
+    .scrollbox::-webkit-scrollbar-track { background: #F5F8FC; }
+    .scrollbox::-webkit-scrollbar-thumb { background: #B9C6DA; border-radius: 4px; }
+  </style>
+</helmet>
+<div style="width:1280px; min-height:1262px; display:flex; flex-direction:column; background:#EEF2F8;">
+
+  <!-- Header -->
+  <div style="background:#0641C8; padding:14px 24px; display:flex; align-items:center; gap:16px; position:relative;">
+    <div style="width:32px; height:32px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 17L9 7L12 12L15 6L21 17" stroke="#0641C8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="19" r="2.6" stroke="#0641C8" stroke-width="1.6"/></svg>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1px;">
+      <div style="color:#fff; font-size:18px; font-weight:700; letter-spacing:0.01em;">Adventure Works</div>
+      <div style="color:rgba(255,255,255,0.6); font-size:10px;">Atualizado em 17/09/2026 08:42</div>
+    </div>
+    <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); color:#fff; font-size:14px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; white-space:nowrap;">Dashboard de Vendas</div>
+    <div style="margin-left:auto; display:flex; gap:6px;">
+      <div class="tab tab-inactive">Início</div>
+      <div class="tab tab-inactive">Visão Geral &amp; Produtos</div>
+      <div class="tab tab-active">Clientes</div>
+      <div class="tab tab-inactive">Análise Geográfica</div>
+    </div>
+  </div>
+
+  <div style="padding:20px 24px; display:flex; flex-direction:column; gap:16px;">
+
+    <!-- Filtros -->
+    <div class="card" style="padding:12px 14px; display:flex; flex-direction:column; gap:10px;">
+      <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px 10px;">
+        <div class="field">
+          <div class="field-label">Ano</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Mês</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Cidade</div>
+          <div class="field-box">Todas (558) <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Estado</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">País</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Categoria de Produto</div>
+          <div class="field-box">Todas <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Produto</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Tipo de Cartão</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Motivo da Venda</div>
+          <div class="field-box">Todos <svg class="chev-svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1L5 5L9 1" stroke="#5B6B85" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; border-top:1px solid #EDF1F5; padding-top:8px;">
+        <a href="#" style="font-size:12px; font-weight:700; white-space:nowrap; display:flex; align-items:center; gap:4px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6h12z" stroke="#0078ED" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Limpar filtros
+        </a>
+      </div>
+    </div>
+
+    <!-- KPIs (6-10) -->
+    <div style="display:grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap:12px;">
+      <div class="card" style="padding:14px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Taxa de Desconto</div>
+        <div style="font-size:22px; font-weight:700; white-space:nowrap; color:#032164;">0,48%</div>
+        <div style="font-size:11px; color:#5B6B85;">da receita bruta</div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Mix de Canal</div>
+        <div style="font-size:22px; font-weight:700; white-space:nowrap; color:#032164;">88% / 12%</div>
+        <div style="font-size:11px; color:#5B6B85;">online / revenda</div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Taxa de Recorrência</div>
+        <div style="font-size:22px; font-weight:700; white-space:nowrap; color:#032164;">39,1%</div>
+        <div style="font-size:11px; color:#5B6B85;">clientes com &gt;1 pedido</div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">Receita Top 10 Clientes</div>
+        <div style="font-size:22px; font-weight:700; white-space:nowrap; color:#032164;">R$ 910 mil</div>
+      </div>
+      <div class="card" style="padding:14px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;">
+        <div class="label">% Receita Top 10 Clientes</div>
+        <div style="font-size:22px; font-weight:700; white-space:nowrap; color:#032164;">7,2%</div>
+        <div style="font-size:11px; color:#5B6B85;">concentração baixa</div>
+      </div>
+    </div>
+
+    <!-- Top 10 clientes + Receita por motivo -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+      <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Ranking clientes por valor de transação</div>
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <div style="font-size:20px; font-weight:700; color:#032164;">R$ 1.206.055</div>
+          <div style="font-size:11px; color:#5B6B85;">soma dos top 10 (9,5% da receita total)</div>
+        </div>
+        <div class="row row-head" style="background:#F5F8FC; border-radius:4px;"><div style="width:20px;">#</div><div style="flex:1;">cliente</div><div style="width:90px;">valor</div><div style="width:70px;">pedidos</div><div style="width:70px;">qtd.</div></div>
+        <div class="scrollbox" style="height:192px;">
+          <div class="row"><div style="width:20px; color:#5B6B85;">01</div><div style="flex:1;">Cliente 000123</div><div style="width:90px; font-weight:700;">R$ 158.420</div><div style="width:70px; color:#5B6B85;">42</div><div style="width:70px; color:#5B6B85;">58</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">02</div><div style="flex:1;">Cliente 000456</div><div style="width:90px; font-weight:700;">R$ 142.980</div><div style="width:70px; color:#5B6B85;">38</div><div style="width:70px; color:#5B6B85;">51</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">03</div><div style="flex:1;">Cliente 000789</div><div style="width:90px; font-weight:700;">R$ 138.210</div><div style="width:70px; color:#5B6B85;">35</div><div style="width:70px; color:#5B6B85;">47</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">04</div><div style="flex:1;">Cliente 001011</div><div style="width:90px; font-weight:700;">R$ 129.640</div><div style="width:70px; color:#5B6B85;">33</div><div style="width:70px; color:#5B6B85;">44</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">05</div><div style="flex:1;">Cliente 001322</div><div style="width:90px; font-weight:700;">R$ 121.075</div><div style="width:70px; color:#5B6B85;">31</div><div style="width:70px; color:#5B6B85;">41</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">06</div><div style="flex:1;">Cliente 001588</div><div style="width:90px; font-weight:700;">R$ 114.390</div><div style="width:70px; color:#5B6B85;">29</div><div style="width:70px; color:#5B6B85;">39</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">07</div><div style="flex:1;">Cliente 001830</div><div style="width:90px; font-weight:700;">R$ 108.760</div><div style="width:70px; color:#5B6B85;">27</div><div style="width:70px; color:#5B6B85;">37</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">08</div><div style="flex:1;">Cliente 002044</div><div style="width:90px; font-weight:700;">R$ 101.225</div><div style="width:70px; color:#5B6B85;">26</div><div style="width:70px; color:#5B6B85;">34</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">09</div><div style="flex:1;">Cliente 002267</div><div style="width:90px; font-weight:700;">R$ 97.510</div><div style="width:70px; color:#5B6B85;">24</div><div style="width:70px; color:#5B6B85;">32</div></div>
+          <div class="row"><div style="width:20px; color:#5B6B85;">10</div><div style="flex:1;">Cliente 002489</div><div style="width:90px; font-weight:700;">R$ 93.845</div><div style="width:70px; color:#5B6B85;">23</div><div style="width:70px; color:#5B6B85;">31</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center;">
+          <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Receita por motivo de venda</div>
+          <div style="margin-left:auto; display:flex; gap:5px;">
+            <div class="tab" style="padding:3px 9px; border-radius:10px; font-size:9px; background:#0641C8; color:#fff;">Receita</div>
+            <div class="tab" style="padding:3px 9px; border-radius:10px; font-size:9px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Pedidos</div>
+            <div class="tab" style="padding:3px 9px; border-radius:10px; font-size:9px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Quantidade</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; padding:6px 0; flex:1; justify-content:center;">
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:80px; color:#5B6B85;">Preço</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:100%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 4,2M</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:80px; color:#5B6B85;">Promo</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:74%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 3,1M</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:80px; color:#5B6B85;">Marketing</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:52%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 2,2M</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:80px; color:#5B6B85;">Revisão</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:40%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 1,7M</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:80px; color:#5B6B85;">Outro</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:31%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 1,3M</span></div></div>
+          <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:80px; color:#5B6B85;">Não inf.</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:17%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 0,7M</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tipo de Cartão -->
+    <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; align-items:center;">
+        <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Pedidos, quantidade e valor por tipo de cartão</div>
+        <div style="margin-left:auto; display:flex; gap:5px;">
+          <div class="tab" style="padding:3px 9px; border-radius:10px; font-size:9px; background:#0641C8; color:#fff;">Receita</div>
+          <div class="tab" style="padding:3px 9px; border-radius:10px; font-size:9px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Pedidos</div>
+          <div class="tab" style="padding:3px 9px; border-radius:10px; font-size:9px; background:#fff; color:#5B6B85; border:1px solid #D7DEEA;">Quantidade</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; padding:6px 0;">
+        <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:110px; color:#5B6B85;">Visa</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:100%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 5,1M</span></div></div>
+        <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:110px; color:#5B6B85;">Mastercard</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:71%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 3,6M</span></div></div>
+        <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:110px; color:#5B6B85;">Amex</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:46%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 2,3M</span></div></div>
+        <div class="row" style="border-bottom:none; padding:5px 8px;"><div style="width:110px; color:#5B6B85;">Vista/Boleto</div><div style="flex:1; display:flex; align-items:center; gap:10px;"><div style="height:18px; width:32%; background:#0078ED; border-radius:4px;"></div><span style="font-size:12px; font-weight:700; color:#032164; white-space:nowrap;">R$ 1,6M</span></div></div>
+      </div>
+    </div>
+
+    <!-- Pedidos Detalhados -->
+    <div class="card" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:13px; font-weight:700; color:#1B2A4A;">Pedidos detalhados</div>
+      <div style="display:flex; align-items:baseline; gap:8px;">
+        <div style="font-size:20px; font-weight:700; color:#032164;">31.465</div>
+        <div style="font-size:11px; color:#5B6B85;">pedidos no filtro atual — use os filtros acima pra localizar um pedido</div>
+      </div>
+      <div class="row row-head" style="background:#F5F8FC; border-radius:4px;"><div style="width:90px;">pedido</div><div style="width:90px;">data</div><div style="flex:1;">cliente</div><div style="flex:1;">produto</div><div style="width:100px;">cartão</div><div style="width:80px;">status</div><div style="width:110px;">cidade</div><div style="width:60px;">uf</div><div style="width:90px;">país</div><div style="width:60px;">qtd.</div><div style="width:90px;">valor</div></div>
+      <div class="scrollbox" style="height:220px;">
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71001</div><div style="width:90px; color:#5B6B85;">15/08/2026</div><div style="flex:1;">Cliente 000123</div><div style="flex:1;">Mountain-200 Black, 42</div><div style="width:100px; color:#5B6B85;">Visa</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">Seattle</div><div style="width:60px; color:#5B6B85;">WA</div><div style="width:90px; color:#5B6B85;">US</div><div style="width:60px;">2</div><div style="width:90px; font-weight:700;">R$ 1.390</div></div>
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71001</div><div style="width:90px; color:#5B6B85;">15/08/2026</div><div style="flex:1;">Cliente 000123</div><div style="flex:1;">Water Bottle - 30 oz.</div><div style="width:100px; color:#5B6B85;">Visa</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">Seattle</div><div style="width:60px; color:#5B6B85;">WA</div><div style="width:90px; color:#5B6B85;">US</div><div style="width:60px;">1</div><div style="width:90px; font-weight:700;">R$ 15</div></div>
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71002</div><div style="width:90px; color:#5B6B85;">15/08/2026</div><div style="flex:1;">Cliente 000456</div><div style="flex:1;">Road-150 Red, 62</div><div style="width:100px; color:#5B6B85;">Mastercard</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">Toronto</div><div style="width:60px; color:#5B6B85;">ON</div><div style="width:90px; color:#5B6B85;">CA</div><div style="width:60px;">1</div><div style="width:90px; font-weight:700;">R$ 710</div></div>
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71003</div><div style="width:90px; color:#5B6B85;">14/08/2026</div><div style="flex:1;">Cliente 000789</div><div style="flex:1;">Touring-1000 Yellow, 60</div><div style="width:100px; color:#5B6B85;">Visa</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">London</div><div style="width:60px; color:#5B6B85;">ENG</div><div style="width:90px; color:#5B6B85;">UK</div><div style="width:60px;">1</div><div style="width:90px; font-weight:700;">R$ 739</div></div>
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71003</div><div style="width:90px; color:#5B6B85;">14/08/2026</div><div style="flex:1;">Cliente 000789</div><div style="flex:1;">Mountain-200 Silver, 38</div><div style="width:100px; color:#5B6B85;">Visa</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">London</div><div style="width:60px; color:#5B6B85;">ENG</div><div style="width:90px; color:#5B6B85;">UK</div><div style="width:60px;">1</div><div style="width:90px; font-weight:700;">R$ 727</div></div>
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71004</div><div style="width:90px; color:#5B6B85;">14/08/2026</div><div style="flex:1;">Cliente 001011</div><div style="flex:1;">Road-250 Black, 44</div><div style="width:100px; color:#5B6B85;">Amex</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">Paris</div><div style="width:60px; color:#5B6B85;">IDF</div><div style="width:90px; color:#5B6B85;">FR</div><div style="width:60px;">3</div><div style="width:90px; font-weight:700;">R$ 2.191</div></div>
+        <div class="row"><div style="width:90px; color:#5B6B85;">SO71005</div><div style="width:90px; color:#5B6B85;">13/08/2026</div><div style="flex:1;">Cliente 001322</div><div style="flex:1;">Sport-100 Helmet, Red</div><div style="width:100px; color:#5B6B85;">Mastercard</div><div style="width:80px; color:#5B6B85;">Faturado</div><div style="width:110px; color:#5B6B85;">Portland</div><div style="width:60px; color:#5B6B85;">OR</div><div style="width:90px; color:#5B6B85;">US</div><div style="width:60px;">4</div><div style="width:90px; font-weight:700;">R$ 168</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

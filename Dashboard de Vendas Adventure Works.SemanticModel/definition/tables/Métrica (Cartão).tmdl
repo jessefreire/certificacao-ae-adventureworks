@@ -1,0 +1,44 @@
+table 'Métrica (Cartão)'
+	lineageTag: 35503f0a-cb64-476a-970f-3537ebf0c057
+
+	column 'Métrica (Cartão) Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3851c1c3-5d53-4645-8a3a-02c4531f7050
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	column 'Métrica (Cartão) Fields'
+		dataType: string
+		isHidden
+		lineageTag: f6772fce-e404-4ee6-aa76-fc537e139587
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Métrica (Cartão) Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Métrica (Cartão)'
+		dataType: string
+		lineageTag: e705c764-6b65-4860-88cf-be427dc04d5d
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Métrica (Cartão) Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Métrica (Cartão) Fields'
+
+	partition 'Métrica (Cartão)' = calculated
+		mode: import
+		source =
+				{
+				    ("Receita", NAMEOF('fact_sales'[Receita Líquida]), 0),
+				    ("Pedidos", NAMEOF('fact_sales'[Número de Pedidos]), 1),
+				    ("Quantidade", NAMEOF('fact_sales'[Itens Vendidos]), 2)
+				}
+

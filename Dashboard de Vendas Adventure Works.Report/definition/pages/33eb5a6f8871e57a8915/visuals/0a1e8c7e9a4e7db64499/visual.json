@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "0a1e8c7e9a4e7db64499",
   "position": {
-    "x": 711,
-    "y": 81,
-    "z": 16000,
+    "x": 25.25,
+    "y": 155,
+    "z": 31000,
     "height": 76,
-    "width": 133,
-    "tabOrder": 16000
+    "width": 240,
+    "tabOrder": 31000
   },
   "visual": {
     "visualType": "slicer",
@@ -20,14 +20,14 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_product`"
+                      "Entity": "dim_product"
                     }
                   },
-                  "Property": "category"
+                  "Property": "Categoria"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_product`.category",
-              "nativeQueryRef": "category",
+              "queryRef": "dim_product.Categoria",
+              "nativeQueryRef": "Categoria",
               "active": true
             }
           ]
@@ -86,7 +86,20 @@
             "textSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropdown": [
+        {
+          "properties": {
+            "accentBarShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -154,7 +167,25 @@
             }
           }
         }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
+    },
+    "syncGroup": {
+      "groupName": "barraFiltrosGlobal_Categoria",
+      "fieldChanges": false,
+      "filterChanges": true
     }
   }
 }

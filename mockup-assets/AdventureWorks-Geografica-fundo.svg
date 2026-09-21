@@ -1,0 +1,31 @@
+<svg width="1280" height="1520" viewBox="0 0 1280 1520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+
+  <rect x="0" y="0" width="1280" height="1520" fill="#EEF2F8"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1280" height="61" fill="#0641C8"/>
+  <circle cx="40" cy="30" r="16" fill="#fff"/>
+  <path d="M28 34L35 22L39 28L43 20L52 34" stroke="#0641C8" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="39" cy="37" r="2.9" stroke="#0641C8" stroke-width="1.8" fill="none"/>
+  <text x="66" y="26" font-size="18" font-weight="700" fill="#fff">Adventure Works</text>
+  <text x="510" y="35" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="1" fill="#fff">DASHBOARD DE VENDAS</text>
+
+  <!-- Nav (Análise Geográfica ativo) -->
+  <rect x="645" y="11" width="90" height="38" rx="19" fill="#ffffff" opacity="0.28"/>
+  <text x="690" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Início</text>
+  <rect x="745" y="11" width="195" height="38" rx="19" fill="#ffffff" opacity="0.28"/>
+  <text x="842" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Visão Geral &amp; Produtos</text>
+  <rect x="950" y="11" width="100" height="38" rx="19" fill="#ffffff" opacity="0.28"/>
+  <text x="1000" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Clientes</text>
+  <rect x="1060" y="11" width="170" height="38" rx="19" fill="#0078ED"/>
+  <text x="1145" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Análise Geográfica</text>
+
+  <!-- Filtros -->
+  <rect x="24" y="81" width="1232" height="207" rx="8" fill="#fff"/>
+
+  <!-- Ticket medio por pais -->
+  <rect x="24" y="262" width="1232" height="328" rx="8" fill="#fff"/>
+
+  <!-- Ranking geografico -->
+  <rect x="24" y="606" width="1232" height="470" rx="8" fill="#fff"/>
+</svg>

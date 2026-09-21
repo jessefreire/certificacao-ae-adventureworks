@@ -13,19 +13,24 @@ annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
 annotation PBI_QueryOrder = ["`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`","`workspace` `dbt_jessefreire_marts` `dim_credit_card`","`workspace` `dbt_jessefreire_marts` `dim_customer`","`workspace` `dbt_jessefreire_marts` `dim_dates`","`workspace` `dbt_jessefreire_marts` `dim_geography`","`workspace` `dbt_jessefreire_marts` `dim_sales_reason`","`workspace` `dbt_jessefreire_marts` `dim_product`","`workspace` `dbt_jessefreire_marts` `dim_salesperson`","`workspace` `dbt_jessefreire_marts` `dim_special_offer`","`workspace` `dbt_jessefreire_marts` `dim_territory`","`workspace` `dbt_jessefreire_marts` `fact_sales`"]
 
-ref table '`workspace` `dbt_jessefreire_marts` `bridge_order_sales_reason`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_credit_card`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_customer`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_dates`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_geography`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_sales_reason`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_product`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_salesperson`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_special_offer`'
-ref table '`workspace` `dbt_jessefreire_marts` `dim_territory`'
-ref table '`workspace` `dbt_jessefreire_marts` `fact_sales`'
+ref table bridge_order_sales_reason
+ref table dim_credit_card
+ref table dim_customer
+ref table dim_dates
+ref table dim_geography
+ref table dim_sales_reason
+ref table dim_product
+ref table dim_salesperson
+ref table dim_special_offer
+ref table dim_territory
+ref table fact_sales
 ref table 'Dimensão (Categoria/Produto)'
 ref table 'Métrica (Receita/Pedidos)'
+ref table 'Atualização do Modelo'
+ref table 'Métrica (Motivo)'
+ref table 'Métrica (Cartão)'
+ref table 'Dimensão Geográfica (Ticket Médio)'
+ref table 'Dimensão Geográfica (Ranking)'
 
 ref cultureInfo pt-BR
 

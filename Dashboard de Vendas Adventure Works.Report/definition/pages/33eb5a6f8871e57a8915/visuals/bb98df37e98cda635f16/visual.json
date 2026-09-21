@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "bb98df37e98cda635f16",
   "position": {
-    "x": 573,
-    "y": 81,
-    "z": 15000,
+    "x": 1016,
+    "y": 91,
+    "z": 30000,
     "height": 76,
-    "width": 133,
-    "tabOrder": 15000
+    "width": 240,
+    "tabOrder": 30000
   },
   "visual": {
     "visualType": "slicer",
@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `dim_geography`"
+                      "Entity": "dim_geography"
                     }
                   },
                   "Property": "billing_country"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `dim_geography`.billing_country",
+              "queryRef": "dim_geography.billing_country",
               "nativeQueryRef": "billing_country",
               "active": true
             }
@@ -86,7 +86,25 @@
             "textSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
+      ],
+      "dropdown": [
+        {
+          "properties": {
+            "accentBarShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -154,7 +172,25 @@
             }
           }
         }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
+    },
+    "syncGroup": {
+      "groupName": "barraFiltrosGlobal_Pais",
+      "fieldChanges": false,
+      "filterChanges": true
     }
   }
 }

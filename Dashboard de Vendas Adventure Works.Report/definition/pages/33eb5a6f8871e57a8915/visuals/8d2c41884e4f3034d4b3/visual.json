@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "8d2c41884e4f3034d4b3",
   "position": {
-    "x": 646,
-    "y": 165,
-    "z": 2000,
-    "height": 74,
-    "width": 299,
-    "tabOrder": 2000
+    "x": 380,
+    "y": 259.16666666666669,
+    "z": 4000,
+    "height": 71.666666666666671,
+    "width": 166.66666666666669,
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
+                      "Entity": "fact_sales"
                     }
                   },
                   "Property": "Número de Pedidos"
                 }
               },
-              "queryRef": "`workspace` `dbt_jessefreire_marts` `fact_sales`.Número de Pedidos",
+              "queryRef": "fact_sales.Número de Pedidos",
               "nativeQueryRef": "Número de Pedidos"
             }
           ]
@@ -58,7 +58,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "16D"
                 }
               }
             },
@@ -95,7 +95,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'NÚMERO DE PEDIDOS'"
+                  "Value": "'Nº DE PEDIDOS'"
                 }
               }
             },
@@ -159,6 +159,19 @@
             "id": "default"
           }
         }
+      ],
+      "fillCustom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -189,23 +202,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "e8cde25e9d70540e35ec",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "`workspace` `dbt_jessefreire_marts` `fact_sales`"
-              }
-            },
-            "Property": "Número de Pedidos"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

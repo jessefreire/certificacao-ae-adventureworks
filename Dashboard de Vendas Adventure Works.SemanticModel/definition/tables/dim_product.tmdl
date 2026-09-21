@@ -1,0 +1,136 @@
+table dim_product
+	lineageTag: 879c8912-5ad3-4f34-8d37-1cabc0902d4e
+
+	/// Contagem total de produtos no catalogo, independente de terem vendido ou nao.
+	measure 'Total de Produtos' = COUNTROWS(dim_product)
+		lineageTag: 87af04ff-e704-4963-9f37-4557b564711f
+
+	/// Quantidade de produtos do catalogo sem nenhuma linha de venda em fact_sales, no contexto de filtro atual.
+	measure 'Produtos Nunca Venderam' =
+			CALCULATE(
+			    COUNTROWS(dim_product),
+			    FILTER(dim_product, CALCULATE(COUNTROWS(fact_sales)) = 0)
+			)
+		lineageTag: e747802d-cf56-46b9-be2e-1395b2c75b64
+
+	/// Nome do produto com mais itens vendidos no contexto de filtro atual. Responde a pergunta do briefing sobre o produto mais vendido por motivo de venda quando o filtro Motivo da Venda = Promotion estiver selecionado.
+	measure 'Produto Destaque' =
+			VAR t = TOPN(1, VALUES(dim_product[Produto]), CALCULATE([Itens Vendidos]))
+			RETURN MAXX(t, dim_product[Produto])
+		lineageTag: 8e34fb90-a2f8-49c9-af29-6a65f1bf6c33
+
+	/// Itens vendidos do produto retornado por Produto Destaque.
+	measure 'Itens Vendidos (Produto Destaque)' = MAXX(TOPN(1, VALUES(dim_product[Produto]), CALCULATE([Itens Vendidos])), CALCULATE([Itens Vendidos]))
+		lineageTag: b254dfe9-c732-4f39-a01b-00849648aa91
+
+	/// Texto pronto pra exibicao: quantidade de produtos do catalogo sem nenhuma venda, sobre o total do catalogo.
+	measure 'Produtos Nunca Venderam (Texto)' = FORMAT([Produtos Nunca Venderam], "0") & " de " & FORMAT([Total de Produtos], "0") & " produtos nunca venderam"
+		lineageTag: 364f18d6-3a7e-4d40-93e1-d8bcd721a575
+
+	/// Produto com mais itens vendidos no contexto de filtro atual, formatado pra exibicao direta em card/legenda.
+	measure 'Produto Destaque (Texto)' = IF(ISBLANK([Itens Vendidos (Produto Destaque)]), "sem vendas no filtro atual", [Produto Destaque] & " — " & FORMAT([Itens Vendidos (Produto Destaque)], "#,##0") & " un.")
+		lineageTag: 7545f0c8-b291-4ab1-93f0-b02ddd5ad85a
+
+	/// Legenda de apoio (sem o numero) pra exibir ao lado do big number de Produtos Nunca Venderam.
+	measure 'Produtos Nunca Venderam (Legenda)' = "de " & FORMAT([Total de Produtos], "0") & " produtos nunca venderam"
+		lineageTag: 95c0294e-bafb-40c5-811a-016b5cbc70f5
+
+	/// Legenda de apoio (sem o nome do produto) pra exibir ao lado do big number de Produto Destaque.
+	measure 'Produto Destaque (Legenda)' = IF(ISBLANK([Itens Vendidos (Produto Destaque)]), "sem vendas no filtro atual", "produto destaque no filtro atual — " & FORMAT([Itens Vendidos (Produto Destaque)], "#,##0") & " un.")
+		lineageTag: 237377e6-866d-4291-8bc7-03fca210a2f3
+
+	/// Nome do produto com maior ticket medio no contexto de filtro atual. Usado no callout da pagina Produtos e no card de Ticket Medio por pais em Geografia.
+	measure 'Produto Maior Ticket Médio' =
+			VAR t = TOPN(1, VALUES(dim_product[Produto]), CALCULATE([Ticket Médio]))
+			RETURN MAXX(t, dim_product[Produto])
+		lineageTag: 17d13278-375b-4033-9715-0f3d0ed3a6af
+
+	/// Valor de ticket medio do produto retornado por Produto Maior Ticket Medio, no mesmo contexto de filtro.
+	measure 'Ticket Médio (Produto Maior Ticket Médio)' = CALCULATE([Ticket Médio], TREATAS({[Produto Maior Ticket Médio]}, dim_product[Produto]))
+		formatString: R$ #,##0.00
+		lineageTag: 6a375f17-14f4-43b9-8323-cbcbc10f2734
+
+	/// Produto com maior ticket medio no contexto de filtro atual, formatado pra exibicao direta em card/callout.
+	measure 'Produto Maior Ticket Médio (Texto)' = IF(ISBLANK([Ticket Médio (Produto Maior Ticket Médio)]), "sem vendas no filtro atual", [Produto Maior Ticket Médio] & " — " & FORMAT([Ticket Médio (Produto Maior Ticket Médio)], "R$ #,##0.00"))
+		lineageTag: 03bd66f1-2af2-4afa-be4a-0baded07348c
+
+	/// Legenda de apoio (sem o nome do produto) pra exibir ao lado do nome do produto com maior ticket medio.
+	measure 'Produto Maior Ticket Médio (Legenda)' = IF(ISBLANK([Ticket Médio (Produto Maior Ticket Médio)]), "sem vendas no filtro atual", "produto com maior ticket médio no filtro atual — " & FORMAT([Ticket Médio (Produto Maior Ticket Médio)], "R$ #,##0.00"))
+		lineageTag: 1920d418-27cb-4d20-92a6-224af0367497
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 86effc4d-7bfe-499e-a0e5-0a27c02e6a6b
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		lineageTag: 1e45c676-ae13-485f-afb3-3b7adb7767cf
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_number
+		dataType: string
+		lineageTag: c7ac9e47-7aeb-4429-ac0a-d049f8b3d898
+		summarizeBy: none
+		sourceColumn: product_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column subcategory
+		dataType: string
+		lineageTag: 1bf31040-e27c-4ce1-988b-561e89904757
+		summarizeBy: none
+		sourceColumn: subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: 6c859c61-d1ad-44e4-8cb9-f5000dca89b2
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column list_price
+		dataType: double
+		lineageTag: 785cba1f-1500-46c7-94f1-6d459445c86d
+		summarizeBy: none
+		sourceColumn: list_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column color
+		dataType: string
+		lineageTag: 341175b0-6ca0-4755-b8de-8b1266f122a0
+		summarizeBy: none
+		sourceColumn: color
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_line
+		dataType: string
+		lineageTag: 2d33447f-4fd7-4b7d-b22e-19d3a80fdc68
+		summarizeBy: none
+		sourceColumn: product_line
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '`workspace` `dbt_jessefreire_marts` `dim_product`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    dim_product_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="dim_product",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    dim_product_dbt_jessefreire_marts_workspace_Table
+

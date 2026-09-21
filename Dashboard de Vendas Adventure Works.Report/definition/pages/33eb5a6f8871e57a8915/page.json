@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "33eb5a6f8871e57a8915",
-  "displayName": "Visão Geral",
-  "displayOption": "FitToPage",
-  "height": 874,
+  "displayName": "Visão Geral & Produtos",
+  "displayOption": "FitToWidth",
+  "height": 1319,
   "width": 1280,
   "objects": {
     "background": [
@@ -14,7 +14,7 @@
               "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'AdventureWorks-VisaoGeral-fundo.svg'"
+                    "Value": "'VisaoGeralProdutos-fundo@2x.png'"
                   }
                 }
               },
@@ -23,7 +23,7 @@
                   "ResourcePackageItem": {
                     "PackageName": "RegisteredResources",
                     "PackageType": 1,
-                    "ItemName": "AdventureWorks-VisaoGeral-fundo.svg"
+                    "ItemName": "VisaoGeralProdutos-fundo@2x2820760109892614.png"
                   }
                 }
               },
@@ -46,5 +46,6 @@
         }
       }
     ]
-  }
+  },
+  "visibility": "HiddenInViewMode"
 }

@@ -35,6 +35,6 @@ dbt_internal_packages/
 # O .pbix e so o formato de exportacao final pra entrega, gerado a partir do PBIP.
 *.pbix
 
-# Estado local do Power BI Desktop — nao versionar (por-maquina, cache binario)
-.pbi/cache.abf
-.pbi/localSettings.json
+# Estado local do Power BI Desktop — nao versionar (por-maquina, cache binario).
+# Sem prefixo porque a pasta .pbi aparece dentro de .Report/ e .SemanticModel/, nao na raiz.
+.pbi/

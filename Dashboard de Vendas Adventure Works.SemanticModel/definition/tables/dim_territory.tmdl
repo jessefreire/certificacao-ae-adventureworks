@@ -1,0 +1,45 @@
+table dim_territory
+	lineageTag: a4271990-6acf-49bc-98cf-e3c6b408f7d8
+
+	column territory_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 514bb010-ced6-47d2-8d85-efd44ac3b2a0
+		summarizeBy: none
+		sourceColumn: territory_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory_name
+		dataType: string
+		lineageTag: 49640c53-3ed6-402e-8da1-b7db67fa5a94
+		summarizeBy: none
+		sourceColumn: territory_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory_country
+		dataType: string
+		lineageTag: 687f5d2d-cd8a-4c61-b8b6-75204bd0ba07
+		summarizeBy: none
+		sourceColumn: territory_country
+
+		annotation SummarizationSetBy = Automatic
+
+	column territory_group
+		dataType: string
+		lineageTag: 7eb5f160-b967-45c3-816a-f2d6fc89935a
+		summarizeBy: none
+		sourceColumn: territory_group
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '`workspace` `dbt_jessefreire_marts` `dim_territory`' = m
+		mode: import
+		source =
+				let
+				    Fonte = Databricks.Catalogs("dbc-2f14373c-ae6c.cloud.databricks.com", "/sql/1.0/warehouses/845ae824dc279622", [Catalog="workspace", Database="dbt_jessefreire_marts", QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    dim_territory_dbt_jessefreire_marts_workspace_Table = Fonte{[Item="dim_territory",Schema="dbt_jessefreire_marts",Catalog="workspace",Kind="Table"]}[Data]
+				in
+				    dim_territory_dbt_jessefreire_marts_workspace_Table
+

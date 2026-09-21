@@ -1,8 +1,10 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
+    "paginacapa0000000001",
     "33eb5a6f8871e57a8915",
-    "detalhe0001"
+    "detalhe0001",
+    "paginageografica001"
   ],
-  "activePageName": "33eb5a6f8871e57a8915"
+  "activePageName": "paginacapa0000000001"
 }
