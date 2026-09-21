@@ -41,7 +41,7 @@ Duas relações exigiram atenção manual:
   pra fato (a primeira tentativa, com filtro de uma via, propagava a direção errada:
   a fato filtrava a ponte, não o contrário).
 
-### 1.3 Tabelas de field parameter — 6 no total, uma órfã
+### 1.3 Tabelas de field parameter — 5 no total
 
 Os toggles de métrica/dimensão do mockup (os botões "Receita / Pedidos / Quantidade",
 "País / Estado / Cidade") são implementados como **field parameters**: tabelas
@@ -55,15 +55,16 @@ opções que apontam pra uma medida ou coluna real via `NAMEOF`.
 | `Métrica (Cartão)` | Clientes — "Pedidos, quantidade e valor por tipo de cartão" | Receita, Pedidos, Quantidade |
 | `Dimensão Geográfica (Ticket Médio)` | Análise Geográfica — "Ticket médio por [país/estado/cidade]" | País, Estado, Cidade |
 | `Dimensão Geográfica (Ranking)` | Análise Geográfica — "Ranking geográfico por valor de transação" | País, Estado, Cidade |
-| `Dimensão (Categoria/Produto)` | **nenhum** — tentativa abandonada (ver §3.1) | Categoria, Produto |
 
 O botão visual de cada toggle é um `advancedSlicerVisual` (estilo "Cards") ligado à
 tabela do field parameter — ligação padrão, `Column` no papel `Values`. O gráfico/tabela
 que o toggle controla usa o field parameter no papel de categoria ou de valor (`Y`),
 dependendo do caso (ver §3.2 sobre como isso é montado no PBIR).
 
-`Dimensão (Categoria/Produto)` continua no modelo sem uso — candidata a remoção antes
-da entrega final (ver §4).
+A tabela `Dimensão (Categoria/Produto)` (tentativa abandonada de seletor na matriz —
+ver §3.1) foi removida do modelo via MCP (`table_operations` `Delete`, com
+`shouldCascadeDelete: true`), depois de confirmado que não tinha nenhum visual
+usando-a.
 
 ### 1.4 Medidas — 45 no total, todas com descrição no TMDL
 
@@ -301,15 +302,13 @@ outra ação (guardrail já registrado no `CLAUDE.md`).
 
 ## 4. Pendências conhecidas (não bloqueantes)
 
-- **`Dimensão (Categoria/Produto)`** (tentativa abandonada, §3.1) ainda existe no
-  modelo, sem uso — candidata a remoção antes da entrega final.
-- Os botões do menu de navegação (`navMenu*`), embutidos visualmente no fundo de cada
-  página, ainda têm o texto do `actionButton` original visível/fantasma por baixo —
-  precisam virar transparentes na interface do Desktop (ajuste manual pendente do
-  usuário, não um problema de dado).
 - A auditoria de modelo (§5) é de uma versão anterior do relatório — vale rodar de
   novo (`/pbi-modelo-review`) antes da entrega final, já que o modelo cresceu de 11
   para 45 medidas e ganhou 6 tabelas novas desde a última rodada.
+
+As duas pendências anteriores já foram resolvidas: a tabela `Dimensão
+(Categoria/Produto)` foi removida do modelo (§1.3), e os botões do menu de navegação
+tiveram a transparência do texto de fundo corrigida na interface do Desktop.
 
 ## 5. Auditoria do modelo
 
