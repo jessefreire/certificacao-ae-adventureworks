@@ -22,8 +22,15 @@ Dashboard — POWER BI (decidido)
   público, e a conta é Free Edition e pessoal.
 
 
-Vídeo (YouTube, Drive ou Dropbox)
-  PENDENTE — Etapa 10.
+Vídeo (Google Drive, acesso público)
+  https://drive.google.com/file/d/1jyz3HL-RiE5WyCHZq5E4CHq41IodZBmw/view
+  COMPLETO — Etapa 10. 9 min 55 s, dentro do limite de 10 minutos.
+
+
+Pasta completa da submissão (Google Drive, acesso público)
+  https://drive.google.com/drive/folders/1Y5AQ28PcTjHx15cEH0WsdNBHs5XasEk4
+  Todos os entregáveis em um lugar só: vídeo, .pbix, modelo conceitual,
+  mockup, notebook da análise exploratória e apresentação.
 
 
 Também vão na pasta da submissão, como arquivo e não como link:
