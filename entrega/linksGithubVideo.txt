@@ -6,15 +6,15 @@ submissão, e que TODO link esteja com acesso PÚBLICO — sem isso a correção
 trava.
 
 
-Vídeo (Google Drive, acesso público)
-  https://drive.google.com/file/d/1jyz3HL-RiE5WyCHZq5E4CHq41IodZBmw/view
-  COMPLETO — Etapa 10. 9 min 55 s, dentro do limite de 10 minutos.
-
-
-GitHub (projeto de transformação, com os modelos dbt)
+1. GitHub (projeto de transformação, com os modelos dbt)
   https://github.com/jessefreire/certificacao-ae-adventureworks
   O projeto vive na raiz deste repositório — nada de subpasta.
   COMPLETO: dbt build fecha em 234/234 testes e modelos verdes.
+
+
+2. Vídeo (Google Drive, acesso público)
+  https://drive.google.com/file/d/1jyz3HL-RiE5WyCHZq5E4CHq41IodZBmw/view
+  COMPLETO — Etapa 10. 9 min 55 s, dentro do limite de 10 minutos.
 
 
 Dashboard — POWER BI (decidido)

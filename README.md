@@ -31,7 +31,7 @@ databricks/    o que roda no Databricks (os dois notebooks)
 scripts/       geradores e linter — o notebook de ingestão é gerado, não escrito à mão
 models/        os modelos dbt (Etapa 5)
 dbt_project.yml, packages.yml — na raiz, porque o projeto dbt E a raiz do repositorio
-entrega/       linksVideo.txt — vídeo, GitHub e Drive, o arquivo de texto que o briefing exige
+entrega/       linksGithubVideo.txt — GitHub, vídeo e Drive, o arquivo de texto que o briefing exige
 ```
 
 ## Etapas
@@ -47,7 +47,7 @@ entrega/       linksVideo.txt — vídeo, GitHub e Drive, o arquivo de texto que
 | 7 | Dashboard | **Power BI** — `.pbix` com as medidas DAX documentadas dentro do arquivo · [doc](docs/07-dashboard.md) | **completa** — 4 páginas, 45 medidas |
 | 8 | Regras de negócio | [`docs/08-regras-de-negocio.md`](docs/08-regras-de-negocio.md) | **completa** |
 | 9 | Apresentação | slides em PDF | **completa** |
-| 10 | Vídeo | até 10 min · [link](entrega/linksVideo.txt) | **completa** — 9 min 55 s |
+| 10 | Vídeo | até 10 min · [link](entrega/linksGithubVideo.txt) | **completa** — 9 min 55 s |
 | 11 | Planejamento do projeto | PDF — opcional | — |
 
 ## Os oito entregáveis, e onde cada um está
@@ -58,20 +58,20 @@ entrega"` é critério de nota. O mapa 1:1:
 | O briefing pede | Onde está |
 |---|---|
 | Notebook da análise exploratória, em Python ou SQL, com código, gráficos e comentário por insight | `databricks/02-analise-exploratoria.py` |
-| Link do repositório com os modelos dbt | `entrega/linksVideo.txt` — projeto dbt no ar, 234/234 testes verdes |
+| Link do repositório com os modelos dbt | `entrega/linksGithubVideo.txt` — projeto dbt no ar, 234/234 testes verdes |
 | PDF do modelo conceitual | `Desafio/entregaveis/` (fora do git), gerado de [`docs/03.01-modelo-conceitual.md`](docs/03.01-modelo-conceitual.md) |
 | JPEG do mockup, feito no Figma | `Desafio/entregaveis/` (fora do git) — 4 JPEGs, um por página do mockup de alta fidelidade |
 | PBIX com as medidas DAX documentadas dentro do arquivo | `Desafio/desafio-adventureworks/powerbi/Dashboard de Vendas Adventure Works.pbip` — **Power BI**, AI/BI descartado |
 | Arquivo com a documentação das regras de negócio | [`docs/08-regras-de-negocio.md`](docs/08-regras-de-negocio.md), exportado em PDF |
 | Apresentação em slides | `Desafio/entregaveis/` (fora do git) — exportada em PDF |
-| Vídeo | link público no Drive, em `entrega/linksVideo.txt` |
+| Vídeo | link público no Drive, em `entrega/linksGithubVideo.txt` |
 
 **A ingestão não está nessa lista** — o briefing não pede artefato de ingestão, nem script nem
 notebook, e a lista de demonstrações obrigatórias do vídeo também não tem item de ingestão. Ela
 é infraestrutura, e é por isso que cabe num arquivo só.
 
 Todo link entregue precisa estar com **acesso público**, o que o briefing repete
-explicitamente. Ver `entrega/linksVideo.txt`.
+explicitamente. Ver `entrega/linksGithubVideo.txt`.
 
 ## Base de dados
 
