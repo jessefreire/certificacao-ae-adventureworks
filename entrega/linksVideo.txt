@@ -6,6 +6,11 @@ submissão, e que TODO link esteja com acesso PÚBLICO — sem isso a correção
 trava.
 
 
+Vídeo (Google Drive, acesso público)
+  https://drive.google.com/file/d/1jyz3HL-RiE5WyCHZq5E4CHq41IodZBmw/view
+  COMPLETO — Etapa 10. 9 min 55 s, dentro do limite de 10 minutos.
+
+
 GitHub (projeto de transformação, com os modelos dbt)
   https://github.com/jessefreire/certificacao-ae-adventureworks
   O projeto vive na raiz deste repositório — nada de subpasta.
@@ -20,11 +25,6 @@ Dashboard — POWER BI (decidido)
   arquivo (campo de descrição de cada medida).
   A alternativa do AI/BI do Databricks foi descartada — ela exigiria link
   público, e a conta é Free Edition e pessoal.
-
-
-Vídeo (Google Drive, acesso público)
-  https://drive.google.com/file/d/1jyz3HL-RiE5WyCHZq5E4CHq41IodZBmw/view
-  COMPLETO — Etapa 10. 9 min 55 s, dentro do limite de 10 minutos.
 
 
 Pasta completa da submissão (Google Drive, acesso público)
